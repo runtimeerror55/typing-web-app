@@ -1,0 +1,17 @@
+.typing-paragraph {
+      width: 500px;
+      height: 300px;
+      color: aquamarine;
+      padding: 10px;
+}
+
+.typing-letter {
+      font-size: 20px;
+}
+
+.active-right {
+      color: black;
+}
+
+.active-wrong {
+}
