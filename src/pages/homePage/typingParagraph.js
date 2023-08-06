@@ -5,14 +5,33 @@ const data = [
       ..."south africa may not be getting as many international fixtures as other teams but their players are being exposed to a higher level of competition at the franchise level",
 ];
 export const TypingParagraph = () => {
-      const [currentIndex, setCurrentIndex] = useState(-1);
-      const [currentKey, setCurrentKey] = useState("abcdef");
-      console.log(currentIndex, currentKey);
+      const [typingState, setTypingState] = useState({
+            paragraphCurrentIndex: -1,
+            paragraphNextIndex: 0,
+            currentLetterClass: "typing-letter",
+      });
+
       const keyDownHandler = (event) => {
-            setCurrentIndex((previous) => {
-                  return previous + 1;
-            });
-            setCurrentKey(event.key);
+            if (event.key === data[typingState.paragraphNextIndex]) {
+                  setTypingState((previous) => {
+                        return {
+                              paragraphCurrentIndex:
+                                    previous.paragraphNextIndex,
+                              paragraphNextIndex:
+                                    previous.paragraphNextIndex + 1,
+                              currentLetterClass: "active-right",
+                        };
+                  });
+            } else {
+                  setTypingState((previous) => {
+                        return {
+                              paragraphCurrentIndex:
+                                    previous.paragraphNextIndex,
+                              paragraphNextIndex: previous.paragraphNextIndex,
+                              currentLetterClass: "active-wrong",
+                        };
+                  });
+            }
       };
       return (
             <div
@@ -21,17 +40,14 @@ export const TypingParagraph = () => {
                   tabIndex={0}
             >
                   {data.map((letter, index) => {
+                        let className = "";
+                        if (index === typingState.paragraphCurrentIndex) {
+                              className = typingState.currentLetterClass;
+                        } else if (index < typingState.paragraphCurrentIndex) {
+                              className = "active-right";
+                        }
                         return (
-                              <span
-                                    className={
-                                          data[currentIndex] === currentKey &&
-                                          index === currentIndex
-                                                ? styles["typing-letter"] +
-                                                  " " +
-                                                  styles["active-right"]
-                                                : styles["typing-letter"]
-                                    }
-                              >
+                              <span className={styles[className]}>
                                     {letter}
                               </span>
                         );

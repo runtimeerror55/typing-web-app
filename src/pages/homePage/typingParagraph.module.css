@@ -3,10 +3,8 @@
       height: 300px;
       color: aquamarine;
       padding: 10px;
-}
-
-.typing-letter {
-      font-size: 20px;
+      letter-spacing: 3px;
+      font-size: 22px;
 }
 
 .active-right {
@@ -14,4 +12,6 @@
 }
 
 .active-wrong {
+      color: red;
+      font-size: 20px;
 }
