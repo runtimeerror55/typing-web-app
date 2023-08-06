@@ -9,8 +9,15 @@ export const TypingParagraph = () => {
             paragraphCurrentIndex: -1,
             paragraphNextIndex: 0,
             currentLetterClass: "typing-letter",
+            started: false,
       });
-
+      const [timer, setTimer] = useState({
+            elapsedTime: 0,
+            timerId: undefined,
+      });
+      if (timer.elapsedTime === 15) {
+            clearInterval(timer.timerId);
+      }
       const keyDownHandler = (event) => {
             if (event.key === data[typingState.paragraphNextIndex]) {
                   setTypingState((previous) => {
@@ -20,6 +27,7 @@ export const TypingParagraph = () => {
                               paragraphNextIndex:
                                     previous.paragraphNextIndex + 1,
                               currentLetterClass: "active-right",
+                              started: true,
                         };
                   });
             } else {
@@ -29,29 +37,46 @@ export const TypingParagraph = () => {
                                     previous.paragraphNextIndex,
                               paragraphNextIndex: previous.paragraphNextIndex,
                               currentLetterClass: "active-wrong",
+                              started: true,
                         };
                   });
             }
+            if (!typingState.started) {
+                  const timerId = setInterval(() => {
+                        setTimer((previous) => {
+                              return {
+                                    elapsedTime: previous.elapsedTime + 1,
+                                    timerId: previous.timerId,
+                              };
+                        });
+                  }, 1000);
+                  setTimer({ elapsedTime: 0, timerId });
+            }
       };
       return (
-            <div
-                  className={styles["typing-paragraph"]}
-                  onKeyDown={keyDownHandler}
-                  tabIndex={0}
-            >
-                  {data.map((letter, index) => {
-                        let className = "";
-                        if (index === typingState.paragraphCurrentIndex) {
-                              className = typingState.currentLetterClass;
-                        } else if (index < typingState.paragraphCurrentIndex) {
-                              className = "active-right";
-                        }
-                        return (
-                              <span className={styles[className]}>
-                                    {letter}
-                              </span>
-                        );
-                  })}
-            </div>
+            <>
+                  <div className={styles["timer"]}>{timer.elapsedTime}</div>
+                  <div
+                        className={styles["typing-paragraph"]}
+                        onKeyDown={keyDownHandler}
+                        tabIndex={0}
+                  >
+                        {data.map((letter, index) => {
+                              let className = "";
+                              if (index === typingState.paragraphCurrentIndex) {
+                                    className = typingState.currentLetterClass;
+                              } else if (
+                                    index < typingState.paragraphCurrentIndex
+                              ) {
+                                    className = "active-right";
+                              }
+                              return (
+                                    <span className={styles[className]}>
+                                          {letter}
+                                    </span>
+                              );
+                        })}
+                  </div>
+            </>
       );
 };

@@ -6,12 +6,6 @@ export const NavBar = () => {
                   <nav className={styles["nav-bar"]}>
                         <h1 class={styles.logo}>TYPINGO</h1>
 
-                        <input
-                              className={styles["search-bar"]}
-                              placeholder="search products"
-                              name="search"
-                        ></input>
-
                         <div>
                               <Link to={"/"} className={styles["nav-link"]}>
                                     HOME

@@ -1,12 +1,17 @@
 .typing-paragraph {
-      width: 500px;
+      width: 900px;
       height: 300px;
-      color: aquamarine;
+      color: #e9e0d2;
       padding: 10px;
       letter-spacing: 3px;
       font-size: 22px;
 }
 
+.timer {
+      color: white;
+      font-size: 20px;
+      padding: 10px;
+}
 .active-right {
       color: black;
 }

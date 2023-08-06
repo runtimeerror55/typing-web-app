@@ -2,11 +2,20 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background-color: #173f35;
 }
 
 .main {
       flex-grow: 1;
       display: flex;
-      justify-content: center;
+
       align-items: center;
+      flex-direction: column;
+}
+
+.typing-section {
+      margin: auto;
 }
