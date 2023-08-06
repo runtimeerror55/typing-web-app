@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./typingParagraph.module.css";
+import { TestStats } from "./testStats";
 
 const data = [
       ..."south africa may not be getting as many international fixtures as other teams but their players are being exposed to a higher level of competition at the franchise level",
@@ -11,12 +12,14 @@ export const TypingParagraph = () => {
             currentLetterClass: "typing-letter",
             started: false,
       });
-      const [timer, setTimer] = useState({
+      const [testStats, setTestStats] = useState({
             elapsedTime: 0,
             timerId: undefined,
+            numberOfRightCharacters: 0,
+            numberOfWrongCharacters: 0,
       });
-      if (timer.elapsedTime === 15) {
-            clearInterval(timer.timerId);
+      if (testStats.elapsedTime === 15) {
+            clearInterval(testStats.timerId);
       }
       const keyDownHandler = (event) => {
             if (event.key === data[typingState.paragraphNextIndex]) {
@@ -30,6 +33,14 @@ export const TypingParagraph = () => {
                               started: true,
                         };
                   });
+
+                  setTestStats((previous) => {
+                        return {
+                              ...previous,
+                              numberOfRightCharacters:
+                                    previous.numberOfRightCharacters + 1,
+                        };
+                  });
             } else {
                   setTypingState((previous) => {
                         return {
@@ -40,22 +51,32 @@ export const TypingParagraph = () => {
                               started: true,
                         };
                   });
+                  setTestStats((previous) => {
+                        return {
+                              ...previous,
+                              numberOfWrongCharacters:
+                                    previous.numberOfWrongCharacters + 1,
+                        };
+                  });
             }
             if (!typingState.started) {
                   const timerId = setInterval(() => {
-                        setTimer((previous) => {
+                        setTestStats((previous) => {
                               return {
+                                    ...previous,
                                     elapsedTime: previous.elapsedTime + 1,
-                                    timerId: previous.timerId,
                               };
                         });
                   }, 1000);
-                  setTimer({ elapsedTime: 0, timerId });
+                  setTestStats((previous) => {
+                        return { ...previous, timerId };
+                  });
             }
       };
       return (
             <>
-                  <div className={styles["timer"]}>{timer.elapsedTime}</div>
+                  <TestStats testStats={testStats}></TestStats>
+
                   <div
                         className={styles["typing-paragraph"]}
                         onKeyDown={keyDownHandler}
