@@ -1,11 +1,16 @@
 import styles from "./quickSettings.module.css";
-export const QuickSettings = () => {
+export const QuickSettings = ({ setTimer }) => {
       return (
             <>
                   <section className={styles["filtering-section"]}>
                         <div className={styles["filtering-form"]}>
                               <div>
-                                    <select name="time">
+                                    <select
+                                          name="time"
+                                          onChange={(event) => {
+                                                setTimer(+event.target.value);
+                                          }}
+                                    >
                                           <option value="" disabled selected>
                                                 TIMER
                                           </option>

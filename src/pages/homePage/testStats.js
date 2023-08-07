@@ -1,5 +1,5 @@
 import styles from "./testStats.module.css";
-export const TestStats = ({ testStats }) => {
+export const TestStats = ({ testStats, typingState }) => {
       const wpm =
             Math.floor(
                   (testStats.numberOfRightCharacters / 5) *
@@ -17,10 +17,18 @@ export const TestStats = ({ testStats }) => {
                   <div className={styles["test-stat"]}>
                         {testStats.elapsedTime}
                   </div>
-                  <div className={styles["test-stat"]}>wpm: {wpm}</div>
-                  <div className={styles["test-stat"]}>
-                        accuracy: {accuracy}
-                  </div>
+                  {!typingState.finished ? (
+                        ""
+                  ) : (
+                        <div className={styles["test-stat"]}>wpm: {wpm}</div>
+                  )}
+                  {!typingState.finished ? (
+                        ""
+                  ) : (
+                        <div className={styles["test-stat"]}>
+                              accuracy: {accuracy}
+                        </div>
+                  )}
             </div>
       );
 };
