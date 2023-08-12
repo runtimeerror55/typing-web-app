@@ -1,0 +1,50 @@
+.page {
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background-color: #173f35;
+      width: 100vw;
+      align-items: center;
+}
+
+.main {
+      width: 70%;
+}
+
+.all-time-stats-section {
+      display: flex;
+      justify-content: space-evenly;
+}
+
+.all-time-stat {
+      width: 200px;
+      height: 200px;
+      color: white;
+      background-color: darkslategrey;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 50%;
+}
+
+.characters-bar-graph-section {
+      height: 500px;
+      width: 100%;
+}
+
+.last-ten-tests-table {
+      margin-top: 20px;
+      color: white;
+      width: 100%;
+      text-align: center;
+      background-color: darkslategray;
+      border: 2px solid white;
+}
+/* 
+.test {
+      display: flex;
+      justify-content: space-around;
+} */

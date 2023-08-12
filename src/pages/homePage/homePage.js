@@ -5,15 +5,13 @@ import styles from "./homePage.module.css";
 import { useRef, useState } from "react";
 
 export const HomePage = () => {
-      const [timer, setTimer] = useState(60);
+      const [timer, setTimer] = useState(15);
 
       const restartButtonRef = useRef();
       const pageKeyDownHandler = (event) => {
-            console.log(event);
             event.preventDefault();
             event.stopPropagation();
             if (event.key === "Tab") {
-                  console.log("tab");
                   restartButtonRef.current.focus();
             }
       };
@@ -37,4 +35,10 @@ export const HomePage = () => {
                   </main>
             </div>
       );
+};
+
+export const homePageLoader = async () => {
+      const response = await fetch("http://localhost:8080");
+      const data = await response.json();
+      return data;
 };

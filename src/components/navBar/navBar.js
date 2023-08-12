@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import styles from "./navBar.module.css";
 export const NavBar = () => {
       return (
@@ -16,7 +16,7 @@ export const NavBar = () => {
                                           " " +
                                           styles["nav-link"]
                                     }
-                                    to={"/account/cart"}
+                                    to={"/stats"}
                               >
                                     STATS
                               </Link>

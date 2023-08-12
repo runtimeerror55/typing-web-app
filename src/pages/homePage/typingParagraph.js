@@ -1,87 +1,135 @@
-import { forwardRef, useEffect, useRef, useState } from "react";
+import {
+      forwardRef,
+      useEffect,
+      useMemo,
+      useReducer,
+      useRef,
+      useState,
+} from "react";
 import styles from "./typingParagraph.module.css";
 import { TestStats } from "./testStats";
+import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
+import { postTestStats } from "../../actions/actions";
+import { useLoaderData } from "react-router-dom";
+
+const initialTypingState = {
+      paragraphCurrentIndex: -1,
+      paragraphNextIndex: 0,
+      currentLetterClass: "typing-letter",
+      started: false,
+      finished: false,
+};
+
+const updateCharactersStats = (action, testStats, currentCharacter) => {
+      if (action.type === "right hit") {
+            if (testStats["charactersStats"][currentCharacter] === undefined) {
+                  testStats["charactersStats"][currentCharacter] = {
+                        totalNumberOfRightHits: 1,
+                        totalNumberOfWrongHits: 0,
+                  };
+            } else {
+                  testStats["charactersStats"][currentCharacter]
+                        .totalNumberOfRightHits++;
+            }
+            testStats["totalNumberOfRightHits"]++;
+      } else {
+            if (testStats["charactersStats"][currentCharacter] === undefined) {
+                  testStats["charactersStats"][currentCharacter] = {
+                        totalNumberOfRightHits: 0,
+                        totalNumberOfWrongHits: 1,
+                  };
+            } else {
+                  testStats["charactersStats"][currentCharacter]
+                        .totalNumberOfWrongHits++;
+            }
+            testStats["totalNumberOfWrongHits"]++;
+      }
+};
 
 const data = [
       ..."south africa may not be getting as many international fixtures as other teams but their players are being exposed to a higher level of competition at the franchise level",
 ];
 export const TypingParagraph = forwardRef((props, ref) => {
+      const paragraph = useLoaderData();
+      const data = [...paragraph];
+      console.log(data);
       const typingParagraphRef = useRef();
+
+      const [typingState, dispatch] = useReducer(
+            typingParagraphReducer,
+            initialTypingState
+      );
+
+      const [timerState, setTimerState] = useState({
+            elapsedTime: 0,
+            timerId: undefined,
+      });
+
+      const testStats = useMemo(() => {
+            return {
+                  totalNumberOfRightHits: 0,
+                  totalNumberOfWrongHits: 0,
+                  wpm: 0,
+                  accuracy: 0,
+                  charactersStats: {},
+            };
+      }, [timerState.timerId]);
+
       useEffect(() => {
             typingParagraphRef.current.focus();
       }, []);
-      const [typingState, setTypingState] = useState({
-            paragraphCurrentIndex: -1,
-            paragraphNextIndex: 0,
-            currentLetterClass: "typing-letter",
-            started: false,
-            finished: false,
-      });
-      const [testStats, setTestStats] = useState({
-            elapsedTime: 0,
-            timerId: undefined,
-            numberOfRightCharacters: 0,
-            numberOfWrongCharacters: 0,
-      });
-      console.log(typeof props.timer, typeof testStats.elapsedTime);
-      if (testStats.elapsedTime === props.timer && !typingState.finished) {
-            clearInterval(testStats.timerId);
-            setTypingState((previous) => {
-                  return { ...previous, finished: true };
-            });
+      useEffect(() => {
+            if (typingState.finished) {
+                  postTestStats(testStats);
+            }
+      }, [typingState.finished]);
+
+      if (timerState.elapsedTime === props.timer && !typingState.finished) {
+            console.log(testStats);
+            testStats.wpm =
+                  Math.floor(
+                        (testStats.totalNumberOfRightHits / 5) *
+                              (60 / timerState.elapsedTime)
+                  ) || 0;
+            testStats.accuracy =
+                  Math.floor(
+                        (testStats.totalNumberOfRightHits /
+                              (testStats.totalNumberOfRightHits +
+                                    testStats.totalNumberOfWrongHits)) *
+                              100
+                  ) || 0;
+            clearInterval(timerState.timerId);
+            dispatch({ type: "finished test" });
       }
 
       const keyDownHandler = (event) => {
             if (!typingState.finished) {
                   if (event.key === data[typingState.paragraphNextIndex]) {
-                        setTypingState((previous) => {
-                              return {
-                                    paragraphCurrentIndex:
-                                          previous.paragraphNextIndex,
-                                    paragraphNextIndex:
-                                          previous.paragraphNextIndex + 1,
-                                    currentLetterClass: "active-right",
-                                    started: true,
-                              };
-                        });
-
-                        setTestStats((previous) => {
-                              return {
-                                    ...previous,
-                                    numberOfRightCharacters:
-                                          previous.numberOfRightCharacters + 1,
-                              };
-                        });
+                        dispatch({ type: "right hit" });
+                        updateCharactersStats(
+                              { type: "right hit" },
+                              testStats,
+                              data[typingState.paragraphNextIndex]
+                        );
                   } else {
-                        setTypingState((previous) => {
-                              return {
-                                    paragraphCurrentIndex:
-                                          previous.paragraphNextIndex,
-                                    paragraphNextIndex:
-                                          previous.paragraphNextIndex,
-                                    currentLetterClass: "active-wrong",
-                                    started: true,
-                              };
-                        });
-                        setTestStats((previous) => {
-                              return {
-                                    ...previous,
-                                    numberOfWrongCharacters:
-                                          previous.numberOfWrongCharacters + 1,
-                              };
-                        });
+                        dispatch({ type: "wrong hit" });
+                        updateCharactersStats(
+                              { type: "wrong hit" },
+                              testStats,
+                              data[typingState.paragraphNextIndex]
+                        );
                   }
 
-                  if (testStats.timerId === undefined) {
+                  if (timerState.timerId === undefined) {
                         const timerId = setInterval(() => {
-                              setTestStats((previous) => {
+                              setTimerState((previous) => {
                                     return {
                                           ...previous,
                                           elapsedTime: previous.elapsedTime + 1,
                                     };
                               });
                         }, 1000);
-                        setTestStats((previous) => {
+                        setTimerState((previous) => {
                               return { ...previous, timerId };
                         });
                   }
@@ -89,25 +137,15 @@ export const TypingParagraph = forwardRef((props, ref) => {
       };
 
       const restartHandler = () => {
-            setTypingState({
-                  paragraphCurrentIndex: -1,
-                  paragraphNextIndex: 0,
-                  currentLetterClass: "typing-letter",
-                  started: false,
-                  finished: false,
-            });
-            clearInterval(testStats.timerId);
-            setTestStats({
+            dispatch({ type: "reset" });
+            clearInterval(timerState.timerId);
+            setTimerState({
                   elapsedTime: 0,
                   timerId: undefined,
-                  numberOfRightCharacters: 0,
-                  numberOfWrongCharacters: 0,
             });
       };
 
       const focusHandler = (event) => {
-            console.log(event.curretTarget, event.target);
-
             event.target.style.backgroundColor = "grey";
       };
 
@@ -129,6 +167,7 @@ export const TypingParagraph = forwardRef((props, ref) => {
                   <TestStats
                         testStats={testStats}
                         typingState={typingState}
+                        timerState={timerState}
                   ></TestStats>
 
                   <div

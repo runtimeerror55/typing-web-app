@@ -5,3 +5,6 @@
       text-decoration: none;
       outline: none;
 }
+body {
+      overflow-x: hidden;
+}
