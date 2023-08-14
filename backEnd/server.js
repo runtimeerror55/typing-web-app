@@ -25,17 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", async (request, response) => {
       const commonWords = await commonWordsModel.findOne({});
 
-      let paragraph = "";
-      for (let i = 0; i < 40; i++) {
+      let words = [];
+      for (let i = 0; i < 100; i++) {
             const randomNumber = Math.floor(Math.random() * 980);
-            paragraph += commonWords.words[randomNumber];
-            if (i != 39) {
-                  paragraph += " ";
-            }
-            console.log(randomNumber);
+            words.push(commonWords.words[randomNumber]);
+            words.push(" ");
       }
-      console.log(paragraph);
-      response.json(paragraph);
+
+      response.json(words);
 });
 
 app.post("/stats", async (request, response) => {
@@ -140,7 +137,7 @@ app.post("/stats", async (request, response) => {
 
 app.get("/stats", async (request, respone) => {
       const testsHistory = await testsHistoryModel
-            .findOne({})
+            .findOne({}, { tests: { $slice: 7 } })
             .populate("tests");
 
       if (testsHistory === null) {

@@ -1,5 +1,5 @@
 import { NavBar } from "../../components/navBar/navBar";
-import { TypingParagraph } from "./typingParagraph";
+import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
 import { useRef, useState } from "react";
@@ -25,10 +25,10 @@ export const HomePage = () => {
                   <main className={styles["main"]}>
                         <QuickSettings setTimer={setTimer}></QuickSettings>
                         <section className={styles["typing-section"]}>
-                              <TypingParagraph
+                              <TypingArea
                                     ref={restartButtonRef}
                                     timer={timer}
-                              ></TypingParagraph>
+                              ></TypingArea>
                         </section>
 
                         <footer></footer>

@@ -1,5 +1,6 @@
 import {
       forwardRef,
+      useCallback,
       useEffect,
       useMemo,
       useReducer,
@@ -11,6 +12,12 @@ import { TestStats } from "./testStats";
 import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
 import { postTestStats } from "../../actions/actions";
 import { useLoaderData } from "react-router-dom";
+import wipe from "../../assets/sounds/wipe.mp3";
+import { Howl, Howler } from "howler";
+
+const x = new Howl({
+      src: [wipe],
+});
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -46,25 +53,104 @@ const updateCharactersStats = (action, testStats, currentCharacter) => {
       }
 };
 
-const data = [
-      ..."south africa may not be getting as many international fixtures as other teams but their players are being exposed to a higher level of competition at the franchise level",
-];
-export const TypingParagraph = forwardRef((props, ref) => {
-      const paragraph = useLoaderData();
-      const data = [...paragraph];
-      console.log(data);
-      const typingParagraphRef = useRef();
+const updateWpmAndAccuracy = (timerState, testStats) => {
+      testStats.wpm =
+            Math.floor(
+                  (testStats.totalNumberOfRightHits / 5) *
+                        (60 / timerState.elapsedTime)
+            ) || 0;
+      testStats.accuracy =
+            Math.floor(
+                  (testStats.totalNumberOfRightHits /
+                        (testStats.totalNumberOfRightHits +
+                              testStats.totalNumberOfWrongHits)) *
+                        100
+            ) || 0;
+};
 
-      const [typingState, dispatch] = useReducer(
-            typingParagraphReducer,
-            initialTypingState
-      );
+const createtypingParagraphJsx = (words, typingState, wordRef) => {
+      const paragraph = [];
+      let index = -1;
+      for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            const temporary = [];
+            for (let j = 0; j < word.length; j++) {
+                  let className = "";
+                  index++;
+                  if (index === typingState.paragraphCurrentIndex) {
+                        className = styles[typingState.currentLetterClass];
+                  } else if (index < typingState.paragraphCurrentIndex) {
+                        className = styles["active-right"];
+                  }
+                  if (index === typingState.paragraphNextIndex) {
+                        if (className === "") {
+                              className = styles["active-next-character"];
+                        } else {
+                              className +=
+                                    " " + styles["active-next-character"];
+                        }
+                  }
+                  if (word[j] === " ") {
+                        temporary.push(
+                              <span
+                                    className={
+                                          styles["letter"] + " " + className
+                                    }
+                              >
+                                    &nbsp;
+                              </span>
+                        );
+                  } else {
+                        temporary.push(
+                              <span
+                                    //
+                                    className={
+                                          styles["letter"] + " " + className
+                                    }
+                              >
+                                    {word[j]}
+                              </span>
+                        );
+                  }
+            }
+            if (
+                  typingState.paragraphNextIndex <= index &&
+                  typingState.paragraphNextIndex > index - word.length
+            ) {
+                  paragraph.push(
+                        <div ref={wordRef} className={styles["word"]}>
+                              {temporary}
+                        </div>
+                  );
+            } else {
+                  paragraph.push(
+                        <div className={styles["word"]}>{temporary}</div>
+                  );
+            }
+      }
+
+      return paragraph;
+};
+
+export const TypingArea = forwardRef((props, ref) => {
+      const words = useLoaderData();
 
       const [timerState, setTimerState] = useState({
             elapsedTime: 0,
             timerId: undefined,
       });
+      const [typingState, dispatch] = useReducer(
+            typingParagraphReducer,
+            initialTypingState
+      );
 
+      const letters = useMemo(() => {
+            const letters = [];
+            for (let i = 0; i < words.length; i++) {
+                  letters.push(...words[i]);
+            }
+            return letters;
+      }, []);
       const testStats = useMemo(() => {
             return {
                   totalNumberOfRightHits: 0,
@@ -75,48 +161,37 @@ export const TypingParagraph = forwardRef((props, ref) => {
             };
       }, [timerState.timerId]);
 
-      useEffect(() => {
-            typingParagraphRef.current.focus();
-      }, []);
-      useEffect(() => {
-            if (typingState.finished) {
-                  postTestStats(testStats);
-            }
-      }, [typingState.finished]);
+      const typingParagraphRef = useRef();
+      const wordRef = useRef(null);
+
+      const paragraph = createtypingParagraphJsx(words, typingState, wordRef);
 
       if (timerState.elapsedTime === props.timer && !typingState.finished) {
-            console.log(testStats);
-            testStats.wpm =
-                  Math.floor(
-                        (testStats.totalNumberOfRightHits / 5) *
-                              (60 / timerState.elapsedTime)
-                  ) || 0;
-            testStats.accuracy =
-                  Math.floor(
-                        (testStats.totalNumberOfRightHits /
-                              (testStats.totalNumberOfRightHits +
-                                    testStats.totalNumberOfWrongHits)) *
-                              100
-                  ) || 0;
             clearInterval(timerState.timerId);
+            updateWpmAndAccuracy(timerState, testStats);
+            console.log(testStats);
             dispatch({ type: "finished test" });
       }
 
       const keyDownHandler = (event) => {
+            x.play();
+
             if (!typingState.finished) {
-                  if (event.key === data[typingState.paragraphNextIndex]) {
+                  if (event.key === letters[typingState.paragraphNextIndex]) {
                         dispatch({ type: "right hit" });
                         updateCharactersStats(
                               { type: "right hit" },
                               testStats,
-                              data[typingState.paragraphNextIndex]
+                              letters[typingState.paragraphNextIndex],
+                              timerState
                         );
                   } else {
                         dispatch({ type: "wrong hit" });
                         updateCharactersStats(
                               { type: "wrong hit" },
                               testStats,
-                              data[typingState.paragraphNextIndex]
+                              letters[typingState.paragraphNextIndex],
+                              timerState
                         );
                   }
 
@@ -162,6 +237,25 @@ export const TypingParagraph = forwardRef((props, ref) => {
       const restartOnBlurHandler = (event) => {
             event.target.style.backgroundColor = "white";
       };
+
+      useEffect(() => {
+            if (
+                  wordRef.current.offsetTop >= 120 ||
+                  wordRef.current.offsetTop % 40 === 0
+            ) {
+                  wordRef.current.scrollIntoView(false);
+            }
+      }, [wordRef.current]);
+
+      useEffect(() => {
+            typingParagraphRef.current.focus();
+      }, []);
+      useEffect(() => {
+            if (typingState.finished) {
+                  postTestStats(testStats);
+            }
+      }, [typingState.finished]);
+
       return (
             <>
                   <TestStats
@@ -176,40 +270,7 @@ export const TypingParagraph = forwardRef((props, ref) => {
                         ref={typingParagraphRef}
                         tabIndex={0}
                   >
-                        {data.map((letter, index) => {
-                              let className = "";
-                              if (index === typingState.paragraphCurrentIndex) {
-                                    className =
-                                          styles[
-                                                typingState.currentLetterClass
-                                          ];
-                              } else if (
-                                    index < typingState.paragraphCurrentIndex
-                              ) {
-                                    className = styles["active-right"];
-                              }
-                              if (index === typingState.paragraphNextIndex) {
-                                    if (className === "") {
-                                          className =
-                                                styles["active-next-character"];
-                                    } else {
-                                          className +=
-                                                " " +
-                                                styles["active-next-character"];
-                                    }
-                              }
-                              return (
-                                    <span
-                                          className={
-                                                styles["letter"] +
-                                                " " +
-                                                className
-                                          }
-                                    >
-                                          {letter}
-                                    </span>
-                              );
-                        })}
+                        {paragraph}
                   </div>
                   <button
                         ref={ref}
