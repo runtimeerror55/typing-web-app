@@ -7,11 +7,14 @@ import {
       useRef,
       useState,
 } from "react";
+import { useLoaderData } from "react-router-dom";
 import styles from "./typingParagraph.module.css";
 import { TestStats } from "./testStats";
 import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
 import { postTestStats } from "../../actions/actions";
-import { useLoaderData } from "react-router-dom";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -279,7 +282,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     onKeyDown={restartKeyDownHandler}
                                     onBlur={restartOnBlurHandler}
                               >
-                                    Reload
+                                    <FontAwesomeIcon icon={faRotate} />
                               </button>
                               <button
                                     ref={ref}
@@ -289,7 +292,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     onKeyDown={restartKeyDownHandler}
                                     onBlur={restartOnBlurHandler}
                               >
-                                    Retry
+                                    <FontAwesomeIcon icon={faForward} />
                               </button>
                         </div>
                   </div>
