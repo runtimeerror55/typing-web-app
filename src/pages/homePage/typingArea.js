@@ -12,12 +12,6 @@ import { TestStats } from "./testStats";
 import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
 import { postTestStats } from "../../actions/actions";
 import { useLoaderData } from "react-router-dom";
-import wipe from "../../assets/sounds/wipe.mp3";
-import { Howl, Howler } from "howler";
-
-const x = new Howl({
-      src: [wipe],
-});
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -174,7 +168,7 @@ export const TypingArea = forwardRef((props, ref) => {
       }
 
       const keyDownHandler = (event) => {
-            x.play();
+            props.typingSound.play();
 
             if (!typingState.finished) {
                   if (event.key === letters[typingState.paragraphNextIndex]) {
@@ -258,11 +252,47 @@ export const TypingArea = forwardRef((props, ref) => {
 
       return (
             <>
-                  <TestStats
-                        testStats={testStats}
-                        typingState={typingState}
-                        timerState={timerState}
-                  ></TestStats>
+                  <div className={styles["test-stats"]}>
+                        <div className={styles["test-stat"]}>
+                              {timerState.elapsedTime}
+                        </div>
+                        {!typingState.finished ? (
+                              ""
+                        ) : (
+                              <div className={styles["test-stat"]}>
+                                    wpm: {testStats.wpm}
+                              </div>
+                        )}
+                        {!typingState.finished ? (
+                              ""
+                        ) : (
+                              <div className={styles["test-stat"]}>
+                                    accuracy: {testStats.accuracy}
+                              </div>
+                        )}
+                        <div>
+                              <button
+                                    ref={ref}
+                                    className={styles["restart-button"]}
+                                    onClick={restartHandler}
+                                    onFocus={focusHandler}
+                                    onKeyDown={restartKeyDownHandler}
+                                    onBlur={restartOnBlurHandler}
+                              >
+                                    Reload
+                              </button>
+                              <button
+                                    ref={ref}
+                                    className={styles["restart-button"]}
+                                    onClick={restartHandler}
+                                    onFocus={focusHandler}
+                                    onKeyDown={restartKeyDownHandler}
+                                    onBlur={restartOnBlurHandler}
+                              >
+                                    Retry
+                              </button>
+                        </div>
+                  </div>
 
                   <div
                         className={styles["typing-paragraph"]}
@@ -272,16 +302,6 @@ export const TypingArea = forwardRef((props, ref) => {
                   >
                         {paragraph}
                   </div>
-                  <button
-                        ref={ref}
-                        className={styles["restart-button"]}
-                        onClick={restartHandler}
-                        onFocus={focusHandler}
-                        onKeyDown={restartKeyDownHandler}
-                        onBlur={restartOnBlurHandler}
-                  >
-                        Restart
-                  </button>
             </>
       );
 });

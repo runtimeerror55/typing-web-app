@@ -1,3 +1,16 @@
+.test-stats {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+}
+
+.test-stat {
+      color: white;
+      font-size: 20px;
+      padding: 10px;
+      font-style: italic;
+}
+
 .typing-paragraph {
       width: 900px;
       height: 120px;
@@ -37,7 +50,7 @@
 
 .restart-button {
       width: fit-content;
-
+      height: fit-content;
       font-style: italic;
       font-weight: bold;
       font-size: 13px;

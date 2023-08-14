@@ -16,6 +16,7 @@
 .all-time-stats-section {
       display: flex;
       justify-content: space-evenly;
+      padding: 10px;
 }
 
 .all-time-stat {
@@ -33,6 +34,7 @@
 .characters-bar-graph-section {
       height: 500px;
       width: 100%;
+      padding: 10px;
 }
 
 .last-ten-tests-table {

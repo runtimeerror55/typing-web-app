@@ -5,6 +5,17 @@ import styles from "./statsPage.module.css";
 
 export const StatsPage = () => {
       const loaderData = useLoaderData();
+      const lastTenTestsStats = { wpm: 0, accuracy: 0 };
+      lastTenTestsStats.wpm = loaderData.tests.reduce(
+            (total, current, currentIndex) => {
+                  return (
+                        (current.wpm + total * currentIndex) /
+                        (currentIndex + 1)
+                  );
+            },
+            0
+      );
+      console.log(lastTenTestsStats);
       return (
             <div className={styles["page"]}>
                   <NavBar></NavBar>
@@ -17,6 +28,10 @@ export const StatsPage = () => {
                                                 loaderData.averageAccuracy
                                           )}
                                     </h1>
+                              </div>
+                              <div className={styles["all-time-stat"]}>
+                                    <h4>Average Wpm</h4>
+                                    <h1>{Math.floor(loaderData.averageWpm)}</h1>
                               </div>
                               <div className={styles["all-time-stat"]}>
                                     <h4>Average Wpm</h4>

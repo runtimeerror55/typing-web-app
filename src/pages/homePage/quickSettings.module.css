@@ -1,10 +1,8 @@
 .filtering-section {
       margin: 10px;
-      width: 900px;
-}
-
-.filtering-form {
       display: flex;
+      background-color: cadetblue;
+      border-radius: 20px;
       justify-content: space-between;
 }
 

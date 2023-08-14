@@ -1,13 +1,22 @@
+import { useRef, useState } from "react";
 import { NavBar } from "../../components/navBar/navBar";
 import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
-import { useRef, useState } from "react";
+import wipe from "../../assets/sounds/wipe.mp3";
+import flastTwo from "../../assets/sounds/flash-2.mp3";
+import { Howl } from "howler";
 
 export const HomePage = () => {
       const [timer, setTimer] = useState(15);
-
+      const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
       const restartButtonRef = useRef();
+
+      const typingSound = new Howl({
+            src: [typingSoundPath],
+      });
+      console.log(typingSound);
+
       const pageKeyDownHandler = (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -23,14 +32,17 @@ export const HomePage = () => {
             >
                   <NavBar></NavBar>
                   <main className={styles["main"]}>
-                        <QuickSettings setTimer={setTimer}></QuickSettings>
                         <section className={styles["typing-section"]}>
                               <TypingArea
                                     ref={restartButtonRef}
                                     timer={timer}
+                                    typingSound={typingSound}
                               ></TypingArea>
                         </section>
-
+                        <QuickSettings
+                              setTimer={setTimer}
+                              setTypingSoundPath={setTypingSoundPath}
+                        ></QuickSettings>
                         <footer></footer>
                   </main>
             </div>
