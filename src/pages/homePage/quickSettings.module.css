@@ -1,7 +1,7 @@
 .filtering-section {
       margin: 10px;
       display: flex;
-      background-color: cadetblue;
+      background-color: brown;
       border-radius: 20px;
       justify-content: space-between;
 }
@@ -10,13 +10,32 @@ select {
       font-style: italic;
       font-weight: bold;
       font-size: 13px;
-      background-color: white;
+      background-color: transparent;
       padding-left: 12px;
       padding-right: 12px;
       padding-top: 5px;
       padding-bottom: 5px;
       border-radius: 20px;
       color: black;
-      margin: 5px;
-      border: 1px solid black;
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-top: 3px;
+      margin-bottom: 4px;
+}
+
+/* quickSettings background-color : #1e5a27,
+   quickSettings color: white;
+   font awesome icons bg:  #1e5a27,
+   font awsome icons color: white;
+  page ackground-color: #173f35;
+   */
+
+.filtering-section-green-theme {
+      background-color: #5fdc72;
+}
+.filtering-section-blue-theme {
+      background-color: #5facdc;
+}
+.filtering-section-violet-theme {
+      background-color: #e48be3;
 }

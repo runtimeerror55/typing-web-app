@@ -62,5 +62,18 @@
       border-radius: 20px;
       color: black;
       margin: 5px;
-      border: 1px solid black;
+}
+
+.icon-green-theme {
+      background-color: #5fdc72;
+      color: black;
+}
+.icon-blue-theme {
+      background-color: #5facdc;
+      color: black;
+}
+
+.icon-violet-theme {
+      background-color: #e48be3;
+      color: black;
 }

@@ -218,7 +218,7 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       const focusHandler = (event) => {
-            event.target.style.backgroundColor = "grey";
+            event.target.style.border = "1px solid black";
       };
 
       const restartKeyDownHandler = (event) => {
@@ -232,7 +232,7 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       const restartOnBlurHandler = (event) => {
-            event.target.style.backgroundColor = "white";
+            event.target.style.border = "none";
       };
 
       useEffect(() => {
@@ -252,7 +252,7 @@ export const TypingArea = forwardRef((props, ref) => {
                   postTestStats(testStats);
             }
       }, [typingState.finished]);
-
+      console.log(props.theme);
       return (
             <>
                   <div className={styles["test-stats"]}>
@@ -276,7 +276,11 @@ export const TypingArea = forwardRef((props, ref) => {
                         <div>
                               <button
                                     ref={ref}
-                                    className={styles["restart-button"]}
+                                    className={
+                                          styles["restart-button"] +
+                                          " " +
+                                          styles[`icon-${props.theme}`]
+                                    }
                                     onClick={restartHandler}
                                     onFocus={focusHandler}
                                     onKeyDown={restartKeyDownHandler}
@@ -286,7 +290,11 @@ export const TypingArea = forwardRef((props, ref) => {
                               </button>
                               <button
                                     ref={ref}
-                                    className={styles["restart-button"]}
+                                    className={
+                                          styles["restart-button"] +
+                                          " " +
+                                          styles[`icon-${props.theme}`]
+                                    }
                                     onClick={restartHandler}
                                     onFocus={focusHandler}
                                     onKeyDown={restartKeyDownHandler}

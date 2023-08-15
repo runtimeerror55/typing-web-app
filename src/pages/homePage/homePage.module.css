@@ -5,7 +5,7 @@
       font-family: Arial, sans-serif;
       line-height: 1.5;
       color: #333;
-      background-color: #173f35;
+      background-color: "black";
 }
 
 .main {
@@ -21,4 +21,16 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+}
+
+.home-page-green-theme {
+      background-color: #173f35;
+}
+
+.home-page-blue-theme {
+      background-color: #17373f;
+}
+
+.home-page-violet-theme {
+      background-color: #34173f;
 }

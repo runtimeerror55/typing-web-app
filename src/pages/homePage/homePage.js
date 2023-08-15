@@ -11,6 +11,7 @@ export const HomePage = () => {
       const [timer, setTimer] = useState(15);
       const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
       const restartButtonRef = useRef();
+      const [theme, setTheme] = useState("green-theme");
 
       const typingSound = new Howl({
             src: [typingSoundPath],
@@ -26,7 +27,9 @@ export const HomePage = () => {
       };
       return (
             <div
-                  className={styles["page"]}
+                  className={
+                        styles["page"] + " " + styles[`home-page-${theme}`]
+                  }
                   onKeyDown={pageKeyDownHandler}
                   tabIndex={0}
             >
@@ -37,11 +40,14 @@ export const HomePage = () => {
                                     ref={restartButtonRef}
                                     timer={timer}
                                     typingSound={typingSound}
+                                    theme={theme}
                               ></TypingArea>
                         </section>
                         <QuickSettings
                               setTimer={setTimer}
                               setTypingSoundPath={setTypingSoundPath}
+                              theme={theme}
+                              setTheme={setTheme}
                         ></QuickSettings>
                         <footer></footer>
                   </main>
@@ -54,3 +60,6 @@ export const homePageLoader = async () => {
       const data = await response.json();
       return data;
 };
+
+// #5f147a violet(bg),white(text),
+// #173f35 green (bg),white(text),
