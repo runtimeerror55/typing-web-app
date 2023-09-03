@@ -1,6 +1,16 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Form, useNavigate } from "react-router-dom";
 import styles from "./navBar.module.css";
+import { useContext } from "react";
+import { authContext } from "../../context/auth";
 export const NavBar = () => {
+      const { token, user, setToken, setUser } = useContext(authContext);
+      const navigate = useNavigate();
+      const logoutHandler = () => {
+            localStorage.removeItem("token");
+            setToken(null);
+            setUser(null);
+            navigate("/");
+      };
       return (
             <>
                   <nav className={styles["nav-bar"]}>
@@ -20,12 +30,29 @@ export const NavBar = () => {
                               >
                                     STATS
                               </Link>
-                              <Link
-                                    to="/account"
-                                    className={styles["nav-link"]}
-                              >
-                                    ACCOUNT
-                              </Link>
+                              {token ? (
+                                    <button
+                                          onClick={logoutHandler}
+                                          className={styles["logout-button"]}
+                                    >
+                                          LOGOUT
+                                    </button>
+                              ) : (
+                                    <>
+                                          <Link
+                                                to="/login"
+                                                className={styles["nav-link"]}
+                                          >
+                                                LOGIN
+                                          </Link>
+                                          <Link
+                                                to="/register"
+                                                className={styles["nav-link"]}
+                                          >
+                                                REGISTER
+                                          </Link>
+                                    </>
+                              )}
                         </div>
                   </nav>
             </>

@@ -49,19 +49,21 @@
 }
 
 .restart-button {
-      width: fit-content;
-      height: fit-content;
+      width: 30px;
+      height: 30px;
       font-style: italic;
       font-weight: bold;
-      font-size: 13px;
+      font-size: 14px;
       background-color: white;
-      padding-left: 12px;
-      padding-right: 12px;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      border-radius: 20px;
+      border-radius: 59%;
       color: black;
       margin: 5px;
+}
+
+.paragraph-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 }
 
 .icon-green-theme {
@@ -74,6 +76,6 @@
 }
 
 .icon-violet-theme {
-      background-color: #e48be3;
+      background-color: #c280f1;
       color: black;
 }

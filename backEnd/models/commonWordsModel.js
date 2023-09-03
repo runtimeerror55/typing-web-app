@@ -8,6 +8,6 @@ const commonWordsSchema = mongoose.Schema({
       ],
 });
 
-commonWordsModel = mongoose.model("commonWords", commonWordsSchema);
+const commonWordsModel = mongoose.model("commonWords", commonWordsSchema);
 
 module.exports = commonWordsModel;

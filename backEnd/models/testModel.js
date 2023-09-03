@@ -149,6 +149,6 @@ const testSchema = mongoose.Schema({
       },
 });
 
-testModel = mongoose.model("tests", testSchema);
+const testModel = mongoose.model("tests", testSchema);
 
 module.exports = testModel;

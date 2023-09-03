@@ -7,14 +7,15 @@ import {
       useRef,
       useState,
 } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useFetcher, useLoaderData } from "react-router-dom";
 import styles from "./typingParagraph.module.css";
 import { TestStats } from "./testStats";
 import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
 import { postTestStats } from "../../actions/actions";
-
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
+import { ColorRing } from "react-loader-spinner";
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -130,8 +131,8 @@ const createtypingParagraphJsx = (words, typingState, wordRef) => {
 };
 
 export const TypingArea = forwardRef((props, ref) => {
-      const words = useLoaderData();
-
+      const [words, setWords] = useState(props.data);
+      const [showParagraphLoader, setShowParagraphLoader] = useState(false);
       const [timerState, setTimerState] = useState({
             elapsedTime: 0,
             timerId: undefined,
@@ -147,7 +148,7 @@ export const TypingArea = forwardRef((props, ref) => {
                   letters.push(...words[i]);
             }
             return letters;
-      }, []);
+      }, [words]);
       const testStats = useMemo(() => {
             return {
                   totalNumberOfRightHits: 0,
@@ -173,8 +174,9 @@ export const TypingArea = forwardRef((props, ref) => {
       const keyDownHandler = (event) => {
             props.typingSound.play();
 
-            if (!typingState.finished) {
+            if (!typingState.finished && event.key !== "Tab") {
                   if (event.key === letters[typingState.paragraphNextIndex]) {
+                        console.log("right hit");
                         dispatch({ type: "right hit" });
                         updateCharactersStats(
                               { type: "right hit" },
@@ -218,7 +220,7 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       const focusHandler = (event) => {
-            event.target.style.border = "1px solid black";
+            event.target.style.border = "3px solid black";
       };
 
       const restartKeyDownHandler = (event) => {
@@ -236,9 +238,11 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       useEffect(() => {
+            console.log(wordRef);
             if (
-                  wordRef.current.offsetTop >= 120 ||
-                  wordRef.current.offsetTop % 40 === 0
+                  wordRef.current &&
+                  (wordRef.current.offsetTop >= 120 ||
+                        wordRef.current.offsetTop % 40 === 0)
             ) {
                   wordRef.current.scrollIntoView(false);
             }
@@ -249,10 +253,77 @@ export const TypingArea = forwardRef((props, ref) => {
       }, []);
       useEffect(() => {
             if (typingState.finished) {
-                  postTestStats(testStats);
+                  const api = async () => {
+                        const response = await postTestStats(testStats);
+                        if (response.status === "success") {
+                              toast.success(response.message, {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "colored",
+                              });
+                        } else {
+                              toast.error(response.message, {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "colored",
+                              });
+                        }
+                  };
+
+                  api();
             }
       }, [typingState.finished]);
-      console.log(props.theme);
+
+      const realodParagraphFetcher = useFetcher();
+      const realodParagraphFetcherStatus =
+            realodParagraphFetcher.state === "idle" &&
+            realodParagraphFetcher.data;
+
+      useEffect(() => {
+            if (realodParagraphFetcherStatus) {
+                  const data = realodParagraphFetcher.data;
+                  if (data.loaderData.status === "success") {
+                        console.log(data);
+                        setWords(data.loaderData.words);
+                        setShowParagraphLoader(false);
+
+                        toast.success(data.loaderData.message, {
+                              position: "top-right",
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "colored",
+                        });
+                  } else {
+                        toast.error(data.loaderData.message, {
+                              position: "top-right",
+                              autoClose: 5000,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: "colored",
+                        });
+                  }
+            } else if (realodParagraphFetcher.state !== "idle") {
+                  setShowParagraphLoader(true);
+            }
+      }, [realodParagraphFetcher]);
+
       return (
             <>
                   <div className={styles["test-stats"]}>
@@ -273,6 +344,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     accuracy: {testStats.accuracy}
                               </div>
                         )}
+
                         <div>
                               <button
                                     ref={ref}
@@ -288,20 +360,27 @@ export const TypingArea = forwardRef((props, ref) => {
                               >
                                     <FontAwesomeIcon icon={faRotate} />
                               </button>
-                              <button
-                                    ref={ref}
-                                    className={
-                                          styles["restart-button"] +
-                                          " " +
-                                          styles[`icon-${props.theme}`]
-                                    }
-                                    onClick={restartHandler}
-                                    onFocus={focusHandler}
-                                    onKeyDown={restartKeyDownHandler}
-                                    onBlur={restartOnBlurHandler}
+
+                              <realodParagraphFetcher.Form
+                                    action="/"
+                                    method="get"
                               >
-                                    <FontAwesomeIcon icon={faForward} />
-                              </button>
+                                    <button
+                                          type="submit"
+                                          ref={ref}
+                                          className={
+                                                styles["restart-button"] +
+                                                " " +
+                                                styles[`icon-${props.theme}`]
+                                          }
+                                          onFocus={focusHandler}
+                                          onKeyDown={restartKeyDownHandler}
+                                          onBlur={restartOnBlurHandler}
+                                          onClick={restartHandler}
+                                    >
+                                          <FontAwesomeIcon icon={faForward} />
+                                    </button>
+                              </realodParagraphFetcher.Form>
                         </div>
                   </div>
 
@@ -311,7 +390,27 @@ export const TypingArea = forwardRef((props, ref) => {
                         ref={typingParagraphRef}
                         tabIndex={0}
                   >
-                        {paragraph}
+                        {showParagraphLoader ? (
+                              <div className={styles["paragraph-loader"]}>
+                                    <ColorRing
+                                          visible={true}
+                                          height="80"
+                                          width="80"
+                                          ariaLabel="blocks-loading"
+                                          wrapperStyle={{}}
+                                          wrapperClass="blocks-wrapper"
+                                          colors={[
+                                                "#e15b64",
+                                                "#f47e60",
+                                                "#f8b26a",
+                                                "#abbd81",
+                                                "#849b87",
+                                          ]}
+                                    />
+                              </div>
+                        ) : (
+                              paragraph
+                        )}
                   </div>
             </>
       );

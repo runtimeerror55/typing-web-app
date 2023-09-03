@@ -7,12 +7,29 @@ const testsHistorySchema = mongoose.Schema({
                   ref: "tests",
             },
       ],
+      user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+      },
       totalNumberOfTests: Number,
       averageAccuracy: Number,
       averageWpm: Number,
       totalNumberOfRightHits: Number,
       totalNumberOfWrongHits: Number,
-
+      settings: {
+            timer: {
+                  type: Number,
+                  default: 15,
+            },
+            theme: {
+                  type: String,
+                  default: "green-theme",
+            },
+            sound: {
+                  type: String,
+                  default: "confettiEdited",
+            },
+      },
       charactersStats: {
             " ": {
                   totalNumberOfRightHits: Number,

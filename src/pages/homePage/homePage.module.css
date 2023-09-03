@@ -6,6 +6,8 @@
       line-height: 1.5;
       color: #333;
       background-color: "black";
+      align-items: center;
+      justify-content: center;
 }
 
 .main {
@@ -24,13 +26,13 @@
 }
 
 .home-page-green-theme {
-      background-color: #173f35;
+      background-color: #1a866b;
 }
 
 .home-page-blue-theme {
-      background-color: #17373f;
+      background-color: #29779e;
 }
 
 .home-page-violet-theme {
-      background-color: #34173f;
+      background-color: #5d1a86;
 }

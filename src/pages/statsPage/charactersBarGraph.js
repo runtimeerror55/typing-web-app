@@ -33,25 +33,28 @@ const options = {
       },
 };
 
-const data = {
-      labels: ["a", "a", "a", "a", "a", "a", "a"],
-      datasets: [
-            {
-                  label: "accuracy",
-                  data: [
-                        60, 70, 80, 90, 60, 70, 80, 90, 55, 45, 72, 53, 98, 12,
-                        19,
-                  ],
+export const CharactersBartGraph = ({ loaderData, theme }) => {
+      const themes = {
+            "green-theme": "#5fdc72",
+            "blue-theme": "#5facdc",
+            "violet-theme": "#c280f1",
+      };
 
-                  borderColor: "#FF6384",
-                  backgroundColor: "darkcyan",
-            },
-      ],
-};
+      const data = {
+            labels: ["a", "a", "a", "a", "a", "a", "a"],
+            datasets: [
+                  {
+                        label: "accuracy",
+                        data: [
+                              60, 70, 80, 90, 60, 70, 80, 90, 55, 45, 72, 53,
+                              98, 12, 19,
+                        ],
 
-export const CharactersBartGraph = () => {
-      const loaderData = useLoaderData();
-      console.log(loaderData);
+                        backgroundColor: themes[theme],
+                  },
+            ],
+      };
+
       data.labels = Object.keys(loaderData.charactersStats).map((character) => {
             return character.toUpperCase();
       });

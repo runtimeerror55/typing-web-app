@@ -4,13 +4,32 @@
       font-family: Arial, sans-serif;
       line-height: 1.5;
       color: #333;
-      background-color: #173f35;
       width: 100vw;
       align-items: center;
+      min-height: 100vh;
+      background-color: white;
+}
+
+.page.green-theme {
+      background-color: #1a866b;
+}
+.page.blue-theme {
+      background-color: #29779e;
+}
+.page.violet-theme {
+      background-color: #5d1a86;
+}
+
+.loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-grow: 1;
 }
 
 .main {
       width: 70%;
+      flex-grow: 1;
 }
 
 .all-time-stats-section {
@@ -20,15 +39,23 @@
 }
 
 .all-time-stat {
-      width: 200px;
-      height: 200px;
-      color: white;
-      background-color: darkslategrey;
+      width: 150px;
+      height: 150px;
+      color: black;
       display: flex;
       align-items: center;
       flex-direction: column;
       justify-content: center;
       border-radius: 50%;
+}
+.all-time-stat.green-theme {
+      background-color: #5fdc72;
+}
+.all-time-stat.blue-theme {
+      background-color: #5facdc;
+}
+.all-time-stat.violet-theme {
+      background-color: #c280f1;
 }
 
 .characters-bar-graph-section {
@@ -39,14 +66,19 @@
 
 .last-ten-tests-table {
       margin-top: 20px;
-      color: white;
+      color: black;
       width: 100%;
       text-align: center;
-      background-color: darkslategray;
-      border: 2px solid white;
+      border: 2px solid black;
 }
-/* 
-.test {
-      display: flex;
-      justify-content: space-around;
-} */
+
+.last-ten-tests-table.green-theme {
+      background-color: #5fdc72;
+}
+
+.last-ten-tests-table.blue-theme {
+      background-color: #5facdc;
+}
+.last-ten-tests-table.violet-theme {
+      background-color: #c280f1;
+}
