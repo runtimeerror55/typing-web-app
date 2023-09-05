@@ -3,12 +3,13 @@ import styles from "./navBar.module.css";
 import { useContext } from "react";
 import { authContext } from "../../context/auth";
 export const NavBar = () => {
-      const { token, user, setToken, setUser } = useContext(authContext);
+      const { token, user, setToken, setUser, logout } =
+            useContext(authContext);
+
       const navigate = useNavigate();
+
       const logoutHandler = () => {
-            localStorage.removeItem("token");
-            setToken(null);
-            setUser(null);
+            logout();
             navigate("/");
       };
       return (

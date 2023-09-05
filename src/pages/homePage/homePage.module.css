@@ -8,6 +8,8 @@
       background-color: "black";
       align-items: center;
       justify-content: center;
+      background-color: #1a866b;
+      transition: background-color 0.5s linear;
 }
 
 .main {

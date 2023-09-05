@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
 import { ColorRing } from "react-loader-spinner";
+import { toastOptions } from "../../utilities/utilities";
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -224,8 +225,6 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       const restartKeyDownHandler = (event) => {
-            console.log(event.key);
-
             if (event.key === "Enter") {
                   event.target.click();
                   typingParagraphRef.current.focus();
@@ -238,7 +237,6 @@ export const TypingArea = forwardRef((props, ref) => {
       };
 
       useEffect(() => {
-            console.log(wordRef);
             if (
                   wordRef.current &&
                   (wordRef.current.offsetTop >= 120 ||
@@ -256,27 +254,9 @@ export const TypingArea = forwardRef((props, ref) => {
                   const api = async () => {
                         const response = await postTestStats(testStats);
                         if (response.status === "success") {
-                              toast.success(response.message, {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: "colored",
-                              });
+                              toast.success(response.message, toastOptions);
                         } else {
-                              toast.error(response.message, {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                    theme: "colored",
-                              });
+                              toast.error(response.message, toastOptions);
                         }
                   };
 
@@ -284,45 +264,26 @@ export const TypingArea = forwardRef((props, ref) => {
             }
       }, [typingState.finished]);
 
-      const realodParagraphFetcher = useFetcher();
-      const realodParagraphFetcherStatus =
-            realodParagraphFetcher.state === "idle" &&
-            realodParagraphFetcher.data;
+      const loadNextParagraphFetcher = useFetcher({ revalidate: false });
+      const loadNextParagraphFetcherStatus =
+            loadNextParagraphFetcher.state === "idle" &&
+            loadNextParagraphFetcher.data;
 
       useEffect(() => {
-            if (realodParagraphFetcherStatus) {
-                  const data = realodParagraphFetcher.data;
+            if (loadNextParagraphFetcherStatus) {
+                  const data = loadNextParagraphFetcher.data;
                   if (data.loaderData.status === "success") {
-                        console.log(data);
                         setWords(data.loaderData.words);
                         setShowParagraphLoader(false);
-
-                        toast.success(data.loaderData.message, {
-                              position: "top-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
+                        typingParagraphRef.current.focus();
+                        toast.success(data.loaderData.message, toastOptions);
                   } else {
-                        toast.error(data.loaderData.message, {
-                              position: "top-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
+                        toast.error(data.loaderData.message, toastOptions);
                   }
-            } else if (realodParagraphFetcher.state !== "idle") {
+            } else if (loadNextParagraphFetcher.state !== "idle") {
                   setShowParagraphLoader(true);
             }
-      }, [realodParagraphFetcher]);
+      }, [loadNextParagraphFetcher]);
 
       return (
             <>
@@ -349,7 +310,7 @@ export const TypingArea = forwardRef((props, ref) => {
                               <button
                                     ref={ref}
                                     className={
-                                          styles["restart-button"] +
+                                          styles["load-next-paragraph-button"] +
                                           " " +
                                           styles[`icon-${props.theme}`]
                                     }
@@ -361,15 +322,20 @@ export const TypingArea = forwardRef((props, ref) => {
                                     <FontAwesomeIcon icon={faRotate} />
                               </button>
 
-                              <realodParagraphFetcher.Form
+                              <loadNextParagraphFetcher.Form
                                     action="/"
                                     method="get"
+                                    className={
+                                          styles["load-next-paragraph-form"]
+                                    }
                               >
                                     <button
                                           type="submit"
                                           ref={ref}
                                           className={
-                                                styles["restart-button"] +
+                                                styles[
+                                                      "load-next-paragraph-button"
+                                                ] +
                                                 " " +
                                                 styles[`icon-${props.theme}`]
                                           }
@@ -380,7 +346,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     >
                                           <FontAwesomeIcon icon={faForward} />
                                     </button>
-                              </realodParagraphFetcher.Form>
+                              </loadNextParagraphFetcher.Form>
                         </div>
                   </div>
 

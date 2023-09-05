@@ -1,25 +1,36 @@
 import { useRef, useState, Suspense } from "react";
-import { Await, defer, useLoaderData } from "react-router-dom";
+import { useAsyncValue, useLoaderData } from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
 import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
-import wipe from "../../assets/sounds/wipe.mp3";
 import flastTwo from "../../assets/sounds/flash-2.mp3";
 import { Howl } from "howler";
-import { ColorRing } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { getToken } from "../../utilities/authentication";
+const defaultSettings = {
+      theme: "green-theme",
+      sound: "confettiEdited",
+      timer: 15,
+};
 
 export const HomePage = () => {
-      const { loaderData } = useLoaderData();
+      const loaderData = useAsyncValue();
+      let { settingsData } = useLoaderData();
+      console.log(settingsData);
+      if (settingsData.status === "error") {
+            settingsData = { payload: { settings: defaultSettings } };
+      }
+      console.log(loaderData);
 
-      const [timer, setTimer] = useState(15);
+      const [timer, setTimer] = useState(settingsData.payload.settings.timer);
+
       const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
+
       const restartButtonRef = useRef();
-      const [theme, setTheme] = useState("green-theme");
+
+      const [theme, setTheme] = useState(settingsData.payload.settings.theme);
 
       const typingSound = new Howl({
             src: [typingSoundPath],
@@ -32,115 +43,54 @@ export const HomePage = () => {
                   restartButtonRef.current.focus();
             }
       };
-      return (
-            <Suspense
-                  fallback={
-                        <div
-                              className={styles["page"]}
-                              onKeyDown={pageKeyDownHandler}
-                              tabIndex={0}
-                        >
-                              <ColorRing
-                                    visible={true}
-                                    height="80"
-                                    width="80"
-                                    ariaLabel="blocks-loading"
-                                    wrapperStyle={{}}
-                                    wrapperClass="blocks-wrapper"
-                                    colors={[
-                                          "#e15b64",
-                                          "#f47e60",
-                                          "#f8b26a",
-                                          "#abbd81",
-                                          "#849b87",
-                                    ]}
-                              />
-                        </div>
-                  }
-            >
-                  <Await resolve={loaderData}>
-                        {(loaderData) => {
-                              return (
-                                    <div
-                                          className={
-                                                styles["page"] +
-                                                " " +
-                                                styles[
-                                                      `home-page-${loaderData.settings.theme}`
-                                                ]
-                                          }
-                                          onKeyDown={pageKeyDownHandler}
-                                          tabIndex={0}
-                                    >
-                                          <ToastContainer
-                                                position="top-right"
-                                                autoClose={5000}
-                                                hideProgressBar={false}
-                                                newestOnTop={false}
-                                                closeOnClick
-                                                rtl={false}
-                                                pauseOnFocusLoss
-                                                draggable
-                                                pauseOnHover
-                                                theme="light"
-                                          />
-                                          {/* Same as */}
-                                          <ToastContainer />
-                                          <NavBar></NavBar>
-                                          <main className={styles["main"]}>
-                                                <section
-                                                      className={
-                                                            styles[
-                                                                  "typing-section"
-                                                            ]
-                                                      }
-                                                >
-                                                      <TypingArea
-                                                            ref={
-                                                                  restartButtonRef
-                                                            }
-                                                            timer={timer}
-                                                            typingSound={
-                                                                  typingSound
-                                                            }
-                                                            theme={
-                                                                  loaderData
-                                                                        .settings
-                                                                        .theme
-                                                            }
-                                                            data={
-                                                                  loaderData.words
-                                                            }
-                                                      ></TypingArea>
-                                                </section>
-                                                <QuickSettings
-                                                      setTimer={setTimer}
-                                                      setTypingSoundPath={
-                                                            setTypingSoundPath
-                                                      }
-                                                      settings={
-                                                            loaderData.settings
-                                                      }
-                                                      setTheme={setTheme}
-                                                ></QuickSettings>
-                                                <footer></footer>
-                                          </main>
-                                    </div>
-                              );
-                        }}
-                  </Await>
-            </Suspense>
-      );
-};
 
-const loader = async () => {
-      const response = await fetch("http://localhost:8080");
-      const data = await response.json();
-      return data;
-};
-
-export const homePageLoader = async () => {
-      return defer({
-            loaderData: loader(),
-      });
+      if (loaderData.status === "error") {
+            return (
+                  <div
+                        className={
+                              styles["page"] +
+                              " " +
+                              styles[`home-page-green-theme`]
+                        }
+                        onKeyDown={pageKeyDownHandler}
+                        tabIndex={0}
+                  >
+                        {loaderData.message}
+                  </div>
+            );
+      } else {
+            return (
+                  <div
+                        className={
+                              styles["page"] +
+                              " " +
+                              styles[`home-page-${theme}`]
+                        }
+                        onKeyDown={pageKeyDownHandler}
+                        tabIndex={0}
+                  >
+                        <ToastContainer />
+                        <NavBar></NavBar>
+                        <main className={styles["main"]}>
+                              <section className={styles["typing-section"]}>
+                                    <TypingArea
+                                          ref={restartButtonRef}
+                                          timer={timer}
+                                          typingSound={typingSound}
+                                          theme={theme}
+                                          data={loaderData.words}
+                                    ></TypingArea>
+                              </section>
+                              <QuickSettings
+                                    setTimer={setTimer}
+                                    setTypingSoundPath={setTypingSoundPath}
+                                    settings={settingsData.payload.settings}
+                                    setTheme={setTheme}
+                                    theme={theme}
+                              ></QuickSettings>
+                              <footer></footer>
+                        </main>
+                  </div>
+            );
+      }
 };

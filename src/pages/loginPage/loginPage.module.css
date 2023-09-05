@@ -42,20 +42,23 @@ heading {
 }
 
 .user-details-input {
-      border: 2px solid black;
-      background-color: gray;
+      background-color: #1a866b;
       color: white;
       width: 70%;
+      border-radius: 20px;
 }
 ::placeholder {
       color: white;
 }
 .login-button {
-      border: 2px solid rgba(0, 255, 0, 1);
-      background-color: rgba(0, 255, 0, 0.5);
+      background-color: #1a866b;
       padding-left: 10px;
       padding-right: 10px;
       cursor: pointer;
+      color: white;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius: 20px;
 }
 .login-button:hover {
       box-shadow: 0 0 10px rgba(0, 255, 0, 1);

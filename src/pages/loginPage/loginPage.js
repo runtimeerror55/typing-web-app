@@ -4,64 +4,32 @@ import { NavBar } from "../../components/navBar/navBar";
 import { useContext, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { authContext } from "../../context/auth";
+import { toastOptions } from "../../utilities/utilities";
 export const LoginPage = () => {
-      const { setToken, setUser } = useContext(authContext);
+      const { login } = useContext(authContext);
+
       const navigate = useNavigate();
+
       const loginFetcher = useFetcher();
+
       const logingFetcherStatus =
             loginFetcher.state === "idle" && loginFetcher.data;
-      console.log(loginFetcher.state, loginFetcher.data);
+
       useEffect(() => {
             if (logingFetcherStatus) {
                   const data = loginFetcher.data;
                   if (data.status === "success") {
-                        toast.success(data.message, {
-                              position: "bottom-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
-                        console.log(data);
-                        setToken(data.payload.token);
-                        setUser(data.payload.user);
-                        localStorage.setItem(
-                              "token",
-                              JSON.stringify(data.payload.token)
-                        );
+                        toast.success(data.message, toastOptions);
+                        login(data);
                         navigate("/");
                   } else {
-                        toast.error(data.message, {
-                              position: "bottom-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
+                        toast.error(data.message, toastOptions);
                   }
             }
       }, [loginFetcher]);
+
       return (
             <div className={styles["page"]}>
-                  <ToastContainer
-                        position="top-right"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme="light"
-                  />
-                  {/* Same as */}
                   <ToastContainer />
                   <NavBar></NavBar>
                   <main className={styles["main"]}>

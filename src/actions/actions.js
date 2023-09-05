@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import { getToken } from "../utilities/authentication";
+import { getToken } from "../utilities/utilities.js";
 
 export const postTestStats = async (charactersStats) => {
       try {
@@ -34,6 +34,7 @@ export const updateSettings = async ({ request }) => {
             const response = await fetch("http://localhost:8080/settings", {
                   headers: {
                         "Content-Type": "application/json",
+                        authorization: "Bearer " + getToken(),
                   },
                   method: "PUT",
                   body: JSON.stringify(body),

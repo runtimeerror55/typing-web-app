@@ -1,30 +1,29 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { HomePage, homePageLoader } from "./pages/homePage/homePage";
-import { StatsPage, statsPageLoader } from "./pages/statsPage/statsPage";
+import { AwaitHomePage } from "./pages/homePage/awaitHomePage";
+import { AwaitStatsPage } from "./pages/statsPage/awaitStatsPage";
 import {
       updateSettings,
       registerAction,
       loginAction,
       logoutAction,
 } from "./actions/actions";
+import { statsPageLoader, homePageLoader } from "./loaders/loaders";
 import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
-import { ErrorPage } from "./pages/errorPage/errorPage";
 
 const router = createBrowserRouter([
       {
             path: "/",
-            element: <HomePage></HomePage>,
+            element: <AwaitHomePage></AwaitHomePage>,
             loader: homePageLoader,
             shouldRevalidate: ({ currentUrl }) => {
-                  console.log(currentUrl);
-                  return currentUrl === "http://localhost:3000/logout";
+                  return false;
             },
       },
       {
             path: "/stats",
-            element: <StatsPage></StatsPage>,
+            element: <AwaitStatsPage></AwaitStatsPage>,
             loader: statsPageLoader,
       },
       {
@@ -41,10 +40,6 @@ const router = createBrowserRouter([
             path: "/login",
             element: <LoginPage></LoginPage>,
             action: loginAction,
-      },
-      {
-            path: "logout",
-            action: logoutAction,
       },
 ]);
 

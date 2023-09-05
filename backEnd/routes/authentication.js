@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../models/userModel");
+const settingsModel = require("../models/settingsModel");
 
 router.route("/login").post(async (request, response) => {
       try {
@@ -23,6 +24,17 @@ router.route("/login").post(async (request, response) => {
                                     expiresIn: 60 * 60,
                               }
                         );
+                        const userSettings = await settingsModel.findOne({
+                              user: user._id,
+                        });
+                        if (!userSettings) {
+                              const newUserSettings = new settingsModel({
+                                    user: user._id,
+                              });
+                              await newUserSettings.save();
+                        }
+                        const decodedToken = jwt.verify(token, "secret");
+                        console.log(decodedToken);
 
                         response.status(200).json({
                               status: "success",
@@ -32,6 +44,7 @@ router.route("/login").post(async (request, response) => {
                                     user: {
                                           name: user.name,
                                     },
+                                    expiresAt: decodedToken.exp,
                               },
                         });
                   } else {
@@ -42,7 +55,9 @@ router.route("/login").post(async (request, response) => {
                   }
             }
       } catch (error) {
-            response.status(500).json({ message: error.message });
+            response
+                  .status(500)
+                  .json({ status: "error", message: error.message });
       }
 });
 
@@ -102,7 +117,9 @@ router.route("/register")
                         },
                   });
             } catch (error) {
-                  response.status(500).json({ message: error.message });
+                  response
+                        .status(500)
+                        .json({ status: "error", message: error.message });
             }
       });
 

@@ -2,12 +2,14 @@ import { Form, useFetcher, useSubmit } from "react-router-dom";
 import styles from "./quickSettings.module.css";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { ToastOptions } from "react-toastify";
 
 export const QuickSettings = ({
       setTimer,
       setTypingSoundPath,
       settings,
       setTheme,
+      theme,
 }) => {
       const submit = useSubmit();
       const updateSettingsFetcher = useFetcher();
@@ -16,19 +18,14 @@ export const QuickSettings = ({
             updateSettingsFetcher.data;
 
       useEffect(() => {
+            console.log(
+                  updateSettingsFetcher.state,
+                  updateSettingsFetcher.data
+            );
             if (updateSettingsFetcherStatus) {
                   const data = updateSettingsFetcher.data;
+
                   if (data.status === "success") {
-                        toast.success(data.message, {
-                              position: "top-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
                   } else {
                         toast.error(data.message, {
                               position: "top-right",
@@ -45,6 +42,7 @@ export const QuickSettings = ({
       }, [updateSettingsFetcher]);
 
       const settingsChangeHandler = (event) => {
+            console.log("helo");
             updateSettingsFetcher.submit(event.currentTarget);
       };
       return (
@@ -58,9 +56,7 @@ export const QuickSettings = ({
                               className={
                                     styles["filtering-section"] +
                                     " " +
-                                    styles[
-                                          `filtering-section-${settings.theme}`
-                                    ]
+                                    styles[`filtering-section-${theme}`]
                               }
                         >
                               <select
@@ -83,9 +79,10 @@ export const QuickSettings = ({
                               <select
                                     name="theme"
                                     onChange={(event) => {
+                                          console.log(event.target.value);
                                           setTheme(event.target.value);
                                     }}
-                                    defaultValue={settings.theme}
+                                    defaultValue={theme}
                               >
                                     <option value="" disabled>
                                           THEME
