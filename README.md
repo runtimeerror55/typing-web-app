@@ -1,3 +1,38 @@
+# ecommerce
+
+## Tech stack
+
+- Html
+- css
+- javascript
+- react
+- express
+- mongodb
+
+## Pages
+
+1. Landing page
+2. stats page
+3. login page
+4. register page
+
+## functionalities
+
+1. typing test
+2. reloading new paragraph any time (during the test, before the test , after the test)
+3. restarting the test any time (during the test, before the test , after the test)
+4. calculating wpm,accuracy of the test
+5. save all the stats of that particular test
+6. calculating all time stats ( avg wpm, avg accuracy, each letter avg accuracy) and showing them in stats page
+7. calculating stats for last 10 tests (avg wpm ,avg accuracy)and showing them in stats page
+8. showing timer during the test
+9. sounds while typing
+10. change different themes, timers , sounds in the settings and save them
+11. loading state for all the functionalities
+12. error handling for all the functionalities (frontend and backEnd)
+13. notifications for all the functionalities(success and error)
+14. authentication
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

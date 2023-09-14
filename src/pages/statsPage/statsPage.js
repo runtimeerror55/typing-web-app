@@ -5,7 +5,7 @@ import styles from "./statsPage.module.css";
 
 export const StatsPage = () => {
       const loaderData = useAsyncValue();
-      console.log(loaderData);
+      const { settingsData } = useLoaderData();
 
       if (loaderData.status === "error") {
             return (
@@ -26,7 +26,7 @@ export const StatsPage = () => {
                               className={
                                     styles["page"] +
                                     " " +
-                                    styles[loaderData.settings.theme]
+                                    styles[settingsData.payload.settings.theme]
                               }
                         >
                               <NavBar></NavBar>
@@ -42,7 +42,8 @@ export const StatsPage = () => {
                                                       styles["all-time-stat"] +
                                                       " " +
                                                       styles[
-                                                            loaderData.settings
+                                                            settingsData.payload
+                                                                  .settings
                                                                   .theme
                                                       ]
                                                 }
@@ -59,7 +60,8 @@ export const StatsPage = () => {
                                                       styles["all-time-stat"] +
                                                       " " +
                                                       styles[
-                                                            loaderData.settings
+                                                            settingsData.payload
+                                                                  .settings
                                                                   .theme
                                                       ]
                                                 }
@@ -76,7 +78,8 @@ export const StatsPage = () => {
                                                       styles["all-time-stat"] +
                                                       " " +
                                                       styles[
-                                                            loaderData.settings
+                                                            settingsData.payload
+                                                                  .settings
                                                                   .theme
                                                       ]
                                                 }
@@ -99,7 +102,8 @@ export const StatsPage = () => {
                                           <CharactersBartGraph
                                                 loaderData={loaderData}
                                                 theme={
-                                                      loaderData.settings.theme
+                                                      settingsData.payload
+                                                            .settings.theme
                                                 }
                                           ></CharactersBartGraph>
                                     </section>
@@ -115,7 +119,8 @@ export const StatsPage = () => {
                                                       ] +
                                                       " " +
                                                       styles[
-                                                            loaderData.settings
+                                                            settingsData.payload
+                                                                  .settings
                                                                   .theme
                                                       ]
                                                 }

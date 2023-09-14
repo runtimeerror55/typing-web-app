@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { createContext, useState } from "react";
+import { isExpired, decodeToken } from "react-jwt";
 
 export const authContext = createContext(null);
 
@@ -10,6 +12,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem("token");
             setToken(null);
             setUser(null);
+            window.location.reload();
       };
 
       const login = (data) => {
@@ -21,6 +24,23 @@ export const AuthProvider = ({ children }) => {
             }, data.payload.expiresAt * 1000 - Date.now());
       };
       console.log(token, user);
+
+      useEffect(() => {
+            if (token) {
+                  const isMyTokenExpired = isExpired(token);
+                  const user = decodeToken(token);
+
+                  if (isMyTokenExpired) {
+                        console.log(user);
+                        logout();
+                  } else {
+                        console.log(user.exp * 1000 - Date.now());
+                        setTimeout(() => {
+                              logout();
+                        }, user.exp * 1000 - Date.now());
+                  }
+            }
+      }, []);
       return (
             <authContext.Provider
                   value={{

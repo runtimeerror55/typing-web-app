@@ -21,7 +21,7 @@ router.route("/login").post(async (request, response) => {
                               { _id: user._id, name: user.name },
                               "secret",
                               {
-                                    expiresIn: 60 * 60,
+                                    expiresIn: 60 * 30,
                               }
                         );
                         const userSettings = await settingsModel.findOne({

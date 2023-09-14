@@ -1,12 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AwaitHomePage } from "./pages/homePage/awaitHomePage";
 import { AwaitStatsPage } from "./pages/statsPage/awaitStatsPage";
-import {
-      updateSettings,
-      registerAction,
-      loginAction,
-      logoutAction,
-} from "./actions/actions";
+import { updateSettings, registerAction, loginAction } from "./actions/actions";
 import { statsPageLoader, homePageLoader } from "./loaders/loaders";
 import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";

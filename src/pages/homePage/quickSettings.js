@@ -2,7 +2,7 @@ import { Form, useFetcher, useSubmit } from "react-router-dom";
 import styles from "./quickSettings.module.css";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { ToastOptions } from "react-toastify";
+import { toastOptions } from "../../utilities/utilities";
 
 export const QuickSettings = ({
       setTimer,
@@ -27,16 +27,7 @@ export const QuickSettings = ({
 
                   if (data.status === "success") {
                   } else {
-                        toast.error(data.message, {
-                              position: "top-right",
-                              autoClose: 5000,
-                              hideProgressBar: false,
-                              closeOnClick: true,
-                              pauseOnHover: true,
-                              draggable: true,
-                              progress: undefined,
-                              theme: "colored",
-                        });
+                        toast.error(data.message, toastOptions);
                   }
             }
       }, [updateSettingsFetcher]);

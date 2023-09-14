@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
 import { ColorRing } from "react-loader-spinner";
-import { toastOptions } from "../../utilities/utilities";
+import { colorRingOptions, toastOptions } from "../../utilities/utilities";
 
 const initialTypingState = {
       paragraphCurrentIndex: -1,
@@ -272,9 +272,9 @@ export const TypingArea = forwardRef((props, ref) => {
       useEffect(() => {
             if (loadNextParagraphFetcherStatus) {
                   const data = loadNextParagraphFetcher.data;
+                  setShowParagraphLoader(false);
                   if (data.loaderData.status === "success") {
                         setWords(data.loaderData.words);
-                        setShowParagraphLoader(false);
                         typingParagraphRef.current.focus();
                         toast.success(data.loaderData.message, toastOptions);
                   } else {
@@ -358,21 +358,7 @@ export const TypingArea = forwardRef((props, ref) => {
                   >
                         {showParagraphLoader ? (
                               <div className={styles["paragraph-loader"]}>
-                                    <ColorRing
-                                          visible={true}
-                                          height="80"
-                                          width="80"
-                                          ariaLabel="blocks-loading"
-                                          wrapperStyle={{}}
-                                          wrapperClass="blocks-wrapper"
-                                          colors={[
-                                                "#e15b64",
-                                                "#f47e60",
-                                                "#f8b26a",
-                                                "#abbd81",
-                                                "#849b87",
-                                          ]}
-                                    />
+                                    <ColorRing {...colorRingOptions} />
                               </div>
                         ) : (
                               paragraph
