@@ -1,3 +1,4 @@
+import styles from "../pages/homePage/typingParagraph.module.css";
 export const getToken = () => {
       return JSON.parse(localStorage.getItem("token"));
 };
@@ -20,4 +21,117 @@ export const colorRingOptions = {
       ariaLabel: "blocks-loading",
       wrapperClass: "blocks-wrapper",
       colors: ["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"],
+};
+
+export const updateCharactersStats = (action, testStats, currentCharacter) => {
+      if (action.type === "right hit") {
+            if (testStats["charactersStats"][currentCharacter] === undefined) {
+                  testStats["charactersStats"][currentCharacter] = {
+                        totalNumberOfRightHits: 1,
+                        totalNumberOfWrongHits: 0,
+                  };
+            } else {
+                  testStats["charactersStats"][currentCharacter]
+                        .totalNumberOfRightHits++;
+            }
+            testStats["totalNumberOfRightHits"]++;
+      } else {
+            if (testStats["charactersStats"][currentCharacter] === undefined) {
+                  testStats["charactersStats"][currentCharacter] = {
+                        totalNumberOfRightHits: 0,
+                        totalNumberOfWrongHits: 1,
+                  };
+            } else {
+                  testStats["charactersStats"][currentCharacter]
+                        .totalNumberOfWrongHits++;
+            }
+            testStats["totalNumberOfWrongHits"]++;
+      }
+};
+
+export const updateWpmAndAccuracy = (timerState, testStats) => {
+      testStats.wpm =
+            Math.floor(
+                  (testStats.totalNumberOfRightHits / 5) *
+                        (60 / timerState.elapsedTime)
+            ) || 0;
+      testStats.accuracy =
+            Math.floor(
+                  (testStats.totalNumberOfRightHits /
+                        (testStats.totalNumberOfRightHits +
+                              testStats.totalNumberOfWrongHits)) *
+                        100
+            ) || 0;
+};
+
+export const createtypingParagraphJsx = (words, typingState, wordRef) => {
+      const paragraph = [];
+      let index = -1;
+      for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            const temporary = [];
+            for (let j = 0; j < word.length; j++) {
+                  let className = "";
+                  index++;
+                  if (index === typingState.paragraphCurrentIndex) {
+                        className = styles[typingState.currentLetterClass];
+                  } else if (index < typingState.paragraphCurrentIndex) {
+                        className = styles["active-right"];
+                  }
+                  if (index === typingState.paragraphNextIndex) {
+                        if (className === "") {
+                              className = styles["active-next-character"];
+                        } else {
+                              className +=
+                                    " " + styles["active-next-character"];
+                        }
+                  }
+                  if (word[j] === " ") {
+                        temporary.push(
+                              <span
+                                    className={
+                                          styles["letter"] + " " + className
+                                    }
+                              >
+                                    &nbsp;
+                              </span>
+                        );
+                  } else {
+                        temporary.push(
+                              <span
+                                    //
+                                    className={
+                                          styles["letter"] + " " + className
+                                    }
+                              >
+                                    {word[j]}
+                              </span>
+                        );
+                  }
+            }
+            if (
+                  typingState.paragraphNextIndex <= index &&
+                  typingState.paragraphNextIndex > index - word.length
+            ) {
+                  paragraph.push(
+                        <div ref={wordRef} className={styles["word"]}>
+                              {temporary}
+                        </div>
+                  );
+            } else {
+                  paragraph.push(
+                        <div className={styles["word"]}>{temporary}</div>
+                  );
+            }
+      }
+
+      return paragraph;
+};
+
+export const initialTypingState = {
+      paragraphCurrentIndex: -1,
+      paragraphNextIndex: 0,
+      currentLetterClass: "typing-letter",
+      started: false,
+      finished: false,
 };

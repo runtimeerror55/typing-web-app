@@ -17,119 +17,125 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
 import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions, toastOptions } from "../../utilities/utilities";
+import {
+      updateCharactersStats,
+      updateWpmAndAccuracy,
+      createtypingParagraphJsx,
+      initialTypingState,
+} from "../../utilities/utilities";
 
-const initialTypingState = {
-      paragraphCurrentIndex: -1,
-      paragraphNextIndex: 0,
-      currentLetterClass: "typing-letter",
-      started: false,
-      finished: false,
-};
+// const initialTypingState = {
+//       paragraphCurrentIndex: -1,
+//       paragraphNextIndex: 0,
+//       currentLetterClass: "typing-letter",
+//       started: false,
+//       finished: false,
+// };
 
-const updateCharactersStats = (action, testStats, currentCharacter) => {
-      if (action.type === "right hit") {
-            if (testStats["charactersStats"][currentCharacter] === undefined) {
-                  testStats["charactersStats"][currentCharacter] = {
-                        totalNumberOfRightHits: 1,
-                        totalNumberOfWrongHits: 0,
-                  };
-            } else {
-                  testStats["charactersStats"][currentCharacter]
-                        .totalNumberOfRightHits++;
-            }
-            testStats["totalNumberOfRightHits"]++;
-      } else {
-            if (testStats["charactersStats"][currentCharacter] === undefined) {
-                  testStats["charactersStats"][currentCharacter] = {
-                        totalNumberOfRightHits: 0,
-                        totalNumberOfWrongHits: 1,
-                  };
-            } else {
-                  testStats["charactersStats"][currentCharacter]
-                        .totalNumberOfWrongHits++;
-            }
-            testStats["totalNumberOfWrongHits"]++;
-      }
-};
+// const updateCharactersStats = (action, testStats, currentCharacter) => {
+//       if (action.type === "right hit") {
+//             if (testStats["charactersStats"][currentCharacter] === undefined) {
+//                   testStats["charactersStats"][currentCharacter] = {
+//                         totalNumberOfRightHits: 1,
+//                         totalNumberOfWrongHits: 0,
+//                   };
+//             } else {
+//                   testStats["charactersStats"][currentCharacter]
+//                         .totalNumberOfRightHits++;
+//             }
+//             testStats["totalNumberOfRightHits"]++;
+//       } else {
+//             if (testStats["charactersStats"][currentCharacter] === undefined) {
+//                   testStats["charactersStats"][currentCharacter] = {
+//                         totalNumberOfRightHits: 0,
+//                         totalNumberOfWrongHits: 1,
+//                   };
+//             } else {
+//                   testStats["charactersStats"][currentCharacter]
+//                         .totalNumberOfWrongHits++;
+//             }
+//             testStats["totalNumberOfWrongHits"]++;
+//       }
+// };
 
-const updateWpmAndAccuracy = (timerState, testStats) => {
-      testStats.wpm =
-            Math.floor(
-                  (testStats.totalNumberOfRightHits / 5) *
-                        (60 / timerState.elapsedTime)
-            ) || 0;
-      testStats.accuracy =
-            Math.floor(
-                  (testStats.totalNumberOfRightHits /
-                        (testStats.totalNumberOfRightHits +
-                              testStats.totalNumberOfWrongHits)) *
-                        100
-            ) || 0;
-};
+// const updateWpmAndAccuracy = (timerState, testStats) => {
+//       testStats.wpm =
+//             Math.floor(
+//                   (testStats.totalNumberOfRightHits / 5) *
+//                         (60 / timerState.elapsedTime)
+//             ) || 0;
+//       testStats.accuracy =
+//             Math.floor(
+//                   (testStats.totalNumberOfRightHits /
+//                         (testStats.totalNumberOfRightHits +
+//                               testStats.totalNumberOfWrongHits)) *
+//                         100
+//             ) || 0;
+// };
 
-const createtypingParagraphJsx = (words, typingState, wordRef) => {
-      const paragraph = [];
-      let index = -1;
-      for (let i = 0; i < words.length; i++) {
-            const word = words[i];
-            const temporary = [];
-            for (let j = 0; j < word.length; j++) {
-                  let className = "";
-                  index++;
-                  if (index === typingState.paragraphCurrentIndex) {
-                        className = styles[typingState.currentLetterClass];
-                  } else if (index < typingState.paragraphCurrentIndex) {
-                        className = styles["active-right"];
-                  }
-                  if (index === typingState.paragraphNextIndex) {
-                        if (className === "") {
-                              className = styles["active-next-character"];
-                        } else {
-                              className +=
-                                    " " + styles["active-next-character"];
-                        }
-                  }
-                  if (word[j] === " ") {
-                        temporary.push(
-                              <span
-                                    className={
-                                          styles["letter"] + " " + className
-                                    }
-                              >
-                                    &nbsp;
-                              </span>
-                        );
-                  } else {
-                        temporary.push(
-                              <span
-                                    //
-                                    className={
-                                          styles["letter"] + " " + className
-                                    }
-                              >
-                                    {word[j]}
-                              </span>
-                        );
-                  }
-            }
-            if (
-                  typingState.paragraphNextIndex <= index &&
-                  typingState.paragraphNextIndex > index - word.length
-            ) {
-                  paragraph.push(
-                        <div ref={wordRef} className={styles["word"]}>
-                              {temporary}
-                        </div>
-                  );
-            } else {
-                  paragraph.push(
-                        <div className={styles["word"]}>{temporary}</div>
-                  );
-            }
-      }
+// const createtypingParagraphJsx = (words, typingState, wordRef) => {
+//       const paragraph = [];
+//       let index = -1;
+//       for (let i = 0; i < words.length; i++) {
+//             const word = words[i];
+//             const temporary = [];
+//             for (let j = 0; j < word.length; j++) {
+//                   let className = "";
+//                   index++;
+//                   if (index === typingState.paragraphCurrentIndex) {
+//                         className = styles[typingState.currentLetterClass];
+//                   } else if (index < typingState.paragraphCurrentIndex) {
+//                         className = styles["active-right"];
+//                   }
+//                   if (index === typingState.paragraphNextIndex) {
+//                         if (className === "") {
+//                               className = styles["active-next-character"];
+//                         } else {
+//                               className +=
+//                                     " " + styles["active-next-character"];
+//                         }
+//                   }
+//                   if (word[j] === " ") {
+//                         temporary.push(
+//                               <span
+//                                     className={
+//                                           styles["letter"] + " " + className
+//                                     }
+//                               >
+//                                     &nbsp;
+//                               </span>
+//                         );
+//                   } else {
+//                         temporary.push(
+//                               <span
+//                                     //
+//                                     className={
+//                                           styles["letter"] + " " + className
+//                                     }
+//                               >
+//                                     {word[j]}
+//                               </span>
+//                         );
+//                   }
+//             }
+//             if (
+//                   typingState.paragraphNextIndex <= index &&
+//                   typingState.paragraphNextIndex > index - word.length
+//             ) {
+//                   paragraph.push(
+//                         <div ref={wordRef} className={styles["word"]}>
+//                               {temporary}
+//                         </div>
+//                   );
+//             } else {
+//                   paragraph.push(
+//                         <div className={styles["word"]}>{temporary}</div>
+//                   );
+//             }
+//       }
 
-      return paragraph;
-};
+//       return paragraph;
+// };
 
 export const TypingArea = forwardRef((props, ref) => {
       const [words, setWords] = useState(props.data);
@@ -249,6 +255,7 @@ export const TypingArea = forwardRef((props, ref) => {
       useEffect(() => {
             typingParagraphRef.current.focus();
       }, []);
+
       useEffect(() => {
             if (typingState.finished) {
                   const api = async () => {
