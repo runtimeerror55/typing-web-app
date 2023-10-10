@@ -6,6 +6,8 @@ import { statsPageLoader, homePageLoader } from "./loaders/loaders";
 import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
+import { PractisePage } from "./pages/practisePage/practisePage";
+import { SettingsProvider } from "./context/settings";
 
 const router = createBrowserRouter([
       {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
             path: "/stats",
             element: <AwaitStatsPage></AwaitStatsPage>,
             loader: statsPageLoader,
+      },
+      {
+            path: "/practise",
+            element: <PractisePage></PractisePage>,
       },
       {
             path: "/settings",

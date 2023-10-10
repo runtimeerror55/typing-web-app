@@ -1,10 +1,15 @@
 import { useRef, useState, Suspense } from "react";
-import { useAsyncValue, useLoaderData } from "react-router-dom";
+import {
+      useAsyncValue,
+      useLoaderData,
+      useLocation,
+      useSearchParams,
+} from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
 import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
-import flastTwo from "../../assets/sounds/flash-2.mp3";
+import flastTwo from "../../assets/sounds/k.mp3";
 import { Howl } from "howler";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,13 +23,28 @@ const defaultSettings = {
 export const HomePage = () => {
       const loaderData = useAsyncValue();
       let { settingsData } = useLoaderData();
-      console.log(settingsData);
+
       if (settingsData.status === "error") {
             settingsData = { payload: { settings: defaultSettings } };
       }
-      console.log(loaderData);
 
       const [timer, setTimer] = useState(settingsData.payload.settings.timer);
+      const [queryParams] = useSearchParams();
+      const [mode, setMode] = useState("test");
+
+      if (queryParams.get("mode") === "practise") {
+            let words = [];
+
+            let letter = queryParams.get("word");
+            for (let i = 0; i < 100; i++) {
+                  const randomLength = Math.floor(Math.random() * 3) + 1;
+                  //   words.push(queryParams.get("word"));
+
+                  words.push(letter);
+                  words.push(" ");
+            }
+            loaderData.words = words;
+      }
 
       const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
 
@@ -72,6 +92,40 @@ export const HomePage = () => {
                         <ToastContainer />
                         <NavBar></NavBar>
                         <main className={styles["main"]}>
+                              {mode === "practise" ? (
+                                    <section>
+                                          <div className={styles["word"]}>
+                                                <h2
+                                                      className={
+                                                            styles[
+                                                                  "letter-title"
+                                                            ]
+                                                      }
+                                                >
+                                                      {"a"}
+                                                </h2>
+                                                <div
+                                                      className={
+                                                            styles[
+                                                                  "letter-stats"
+                                                            ]
+                                                      }
+                                                >
+                                                      <h3>practise</h3>
+                                                      <span>
+                                                            speed: 75wpm,{" "}
+                                                      </span>
+                                                      <span>accuracy: 85%</span>
+                                                      <h3>test</h3>
+                                                      <span>
+                                                            speed: 60wpm,{" "}
+                                                      </span>
+                                                      <span>accuracy: 80%</span>
+                                                </div>
+                                          </div>
+                                    </section>
+                              ) : null}
+
                               <section className={styles["typing-section"]}>
                                     <TypingArea
                                           ref={restartButtonRef}
@@ -87,6 +141,7 @@ export const HomePage = () => {
                                     settings={settingsData.payload.settings}
                                     setTheme={setTheme}
                                     theme={theme}
+                                    setMode={setMode}
                               ></QuickSettings>
                               <footer></footer>
                         </main>

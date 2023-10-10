@@ -10,6 +10,7 @@ export const QuickSettings = ({
       settings,
       setTheme,
       theme,
+      setMode,
 }) => {
       const submit = useSubmit();
       const updateSettingsFetcher = useFetcher();
@@ -18,10 +19,6 @@ export const QuickSettings = ({
             updateSettingsFetcher.data;
 
       useEffect(() => {
-            console.log(
-                  updateSettingsFetcher.state,
-                  updateSettingsFetcher.data
-            );
             if (updateSettingsFetcherStatus) {
                   const data = updateSettingsFetcher.data;
 
@@ -41,7 +38,7 @@ export const QuickSettings = ({
                   <updateSettingsFetcher.Form
                         method="POST"
                         action="/settings"
-                        onChange={settingsChangeHandler}
+                        // onChange={settingsChangeHandler}
                   >
                         <section
                               className={
@@ -104,10 +101,21 @@ export const QuickSettings = ({
                                     <option value="c.mp3">c</option>
                                     <option value="d.mp3">d</option>
                                     <option value="e.mp3">e</option>
-                                    <option value="k.mp3">f</option>
+                                    <option value="k.mp3">k</option>
                                     <option value="confettiEdited.mp3">
                                           confettiEdited
                                     </option>
+                              </select>
+                              <select
+                                    name="mode"
+                                    onChange={(event) => {
+                                          setMode(event.target.value);
+                                    }}
+                                    defaultValue="test"
+                              >
+                                    <option disabled>MODE</option>
+                                    <option value="test">test</option>
+                                    <option value="practise">practise</option>
                               </select>
                         </section>
                   </updateSettingsFetcher.Form>

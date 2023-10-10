@@ -33,7 +33,7 @@ const options = {
       },
 };
 
-export const CharactersBartGraph = ({ loaderData, theme }) => {
+export const WordsBarGraph = ({ loaderData, theme }) => {
       const themes = {
             "green-theme": "#5fdc72",
             "blue-theme": "#5facdc",
@@ -55,14 +55,20 @@ export const CharactersBartGraph = ({ loaderData, theme }) => {
             ],
       };
 
-      data.labels = Object.keys(loaderData.charactersStats).map((character) => {
-            return character;
+      let array = Object.entries(loaderData.wordsStats);
+      console.log(array);
+      array.sort((a, b) => {
+            console.log(a, b);
+            return Math.floor(b[1].wpm) - Math.floor(a[1].wpm);
       });
-      data.datasets[0].data = Object.values(loaderData.charactersStats).map(
-            (character) => {
-                  return Math.floor(character.averageAccuracy);
-            }
-      );
+      console.log(array);
+      data.labels = array.map(([key, value]) => {
+            return key;
+      });
+      data.datasets[0].data = array.map(([key, value]) => {
+            return Math.floor(value.wpm);
+      });
+
       console.log(data);
       return <Bar options={options} data={data} />;
 };

@@ -73,19 +73,29 @@ export const createtypingParagraphJsx = (words, typingState, wordRef) => {
             for (let j = 0; j < word.length; j++) {
                   let className = "";
                   index++;
-                  if (index === typingState.paragraphCurrentIndex) {
-                        className = styles[typingState.currentLetterClass];
-                  } else if (index < typingState.paragraphCurrentIndex) {
+                  if (i < typingState.currentWordIndex) {
                         className = styles["active-right"];
-                  }
-                  if (index === typingState.paragraphNextIndex) {
-                        if (className === "") {
-                              className = styles["active-next-character"];
-                        } else {
-                              className +=
-                                    " " + styles["active-next-character"];
+                  } else if (i === typingState.currentWordIndex) {
+                        if (j < typingState.currentLetterIndex) {
+                              className = styles["active-right"];
+                        } else if (j === typingState.currentLetterIndex) {
+                              if (
+                                    typingState.currentLetterClass ===
+                                    "active-wrong"
+                              ) {
+                                    className = styles["active-wrong"];
+                              }
+                        }
+                        if (j === typingState.currentLetterIndex) {
+                              if (className === "") {
+                                    className = styles["active-next-character"];
+                              } else {
+                                    className +=
+                                          " " + styles["active-next-character"];
+                              }
                         }
                   }
+
                   if (word[j] === " ") {
                         temporary.push(
                               <span
@@ -134,4 +144,6 @@ export const initialTypingState = {
       currentLetterClass: "typing-letter",
       started: false,
       finished: false,
+      currentWordIndex: 0,
+      currentLetterIndex: 0,
 };

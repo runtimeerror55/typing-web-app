@@ -1,6 +1,10 @@
 .test-stats {
-      display: flex;
-      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 100px;
+      z-index: 10000;
 }
 
 .test-stat {
@@ -8,4 +12,34 @@
       font-size: 20px;
       padding: 10px;
       font-style: italic;
+}
+
+.all-time-stats-section {
+      display: flex;
+      justify-content: space-evenly;
+      padding: 10px;
+}
+
+.all-time-stat {
+      width: 150px;
+      height: 150px;
+      color: black;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 50%;
+}
+.all-time-stat.green-theme {
+      background-color: #5fdc72;
+}
+
+.all-time-stat.green-theme {
+      background-color: #5fdc72;
+}
+.all-time-stat.blue-theme {
+      background-color: #5facdc;
+}
+.all-time-stat.violet-theme {
+      background-color: #c280f1;
 }

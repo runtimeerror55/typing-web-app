@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
 import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions, toastOptions } from "../../utilities/utilities";
+
 import {
       updateCharactersStats,
       updateWpmAndAccuracy,
@@ -163,6 +164,7 @@ export const TypingArea = forwardRef((props, ref) => {
                   wpm: 0,
                   accuracy: 0,
                   charactersStats: {},
+                  wordsStats: {},
             };
       }, [timerState.timerId]);
 
@@ -183,8 +185,13 @@ export const TypingArea = forwardRef((props, ref) => {
 
             if (!typingState.finished && event.key !== "Tab") {
                   if (event.key === letters[typingState.paragraphNextIndex]) {
-                        console.log("right hit");
-                        dispatch({ type: "right hit" });
+                        dispatch({
+                              type: "right hit",
+                              payload: {
+                                    words,
+                                    testStats,
+                              },
+                        });
                         updateCharactersStats(
                               { type: "right hit" },
                               testStats,
@@ -294,11 +301,17 @@ export const TypingArea = forwardRef((props, ref) => {
 
       return (
             <>
+                  {typingState.finished ? (
+                        <TestStats
+                              testStats={testStats}
+                              theme={props.theme}
+                        ></TestStats>
+                  ) : null}
                   <div className={styles["test-stats"]}>
                         <div className={styles["test-stat"]}>
                               {timerState.elapsedTime}
                         </div>
-                        {!typingState.finished ? (
+                        {/* {!typingState.finished ? (
                               ""
                         ) : (
                               <div className={styles["test-stat"]}>
@@ -311,7 +324,7 @@ export const TypingArea = forwardRef((props, ref) => {
                               <div className={styles["test-stat"]}>
                                     accuracy: {testStats.accuracy}
                               </div>
-                        )}
+                        )} */}
 
                         <div>
                               <button

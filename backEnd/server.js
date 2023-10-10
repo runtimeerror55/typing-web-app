@@ -38,7 +38,7 @@ app.get("/", async (request, response) => {
 
             let words = [];
             for (let i = 0; i < 100; i++) {
-                  const randomNumber = Math.floor(Math.random() * 980);
+                  const randomNumber = Math.floor(Math.random() * 500);
                   words.push(commonWords.words[randomNumber]);
                   words.push(" ");
             }
@@ -49,10 +49,18 @@ app.get("/", async (request, response) => {
                         message: "fetched successfully",
                         payload: {
                               words,
-                              settings: testsHistory.settings,
+                              settings: {
+                                    theme: "green-theme",
+                                    sound: "confetti.mp3",
+                                    timer: "15",
+                              },
                         },
                         words,
-                        settings: testsHistory.settings,
+                        settings: {
+                              theme: "green-theme",
+                              sound: "confetti.mp3",
+                              timer: "15",
+                        },
                   });
             }, 1000);
       } catch (error) {

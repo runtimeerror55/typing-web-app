@@ -1,6 +1,7 @@
 import { useLoaderData, useAsyncValue } from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
 import { CharactersBartGraph } from "../statsPage/charactersBarGraph";
+import { WordsBarGraph } from "./wordsBarGraph";
 import styles from "./statsPage.module.css";
 
 export const StatsPage = () => {
@@ -106,6 +107,21 @@ export const StatsPage = () => {
                                                             .settings.theme
                                                 }
                                           ></CharactersBartGraph>
+                                    </section>
+                                    <section
+                                          className={
+                                                styles[
+                                                      "characters-bar-graph-section"
+                                                ]
+                                          }
+                                    >
+                                          <WordsBarGraph
+                                                loaderData={loaderData}
+                                                theme={
+                                                      settingsData.payload
+                                                            .settings.theme
+                                                }
+                                          ></WordsBarGraph>
                                     </section>
                                     <section
                                           className={

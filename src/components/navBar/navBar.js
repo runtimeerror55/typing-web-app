@@ -47,10 +47,10 @@ export const NavBar = () => {
                                                 LOGIN
                                           </Link>
                                           <Link
-                                                to="/register"
+                                                to="/practise"
                                                 className={styles["nav-link"]}
                                           >
-                                                REGISTER
+                                                PRACTISE
                                           </Link>
                                     </>
                               )}
