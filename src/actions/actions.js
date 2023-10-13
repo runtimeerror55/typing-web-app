@@ -1,7 +1,9 @@
 import { redirect } from "react-router-dom";
 import { getToken } from "../utilities/utilities.js";
 
-export const postTestStats = async (charactersStats) => {
+export const postTestStats = async ({ request }) => {
+      const formData = await request.json();
+      console.log(formData);
       try {
             const response = await fetch("http://localhost:8080/stats", {
                   headers: {
@@ -9,7 +11,7 @@ export const postTestStats = async (charactersStats) => {
                         authorization: "Bearer " + getToken(),
                   },
                   method: "POST",
-                  body: JSON.stringify(charactersStats),
+                  body: JSON.stringify(formData),
             });
             const data = await response.json();
             return data;

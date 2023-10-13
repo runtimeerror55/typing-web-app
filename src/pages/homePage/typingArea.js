@@ -139,16 +139,94 @@ import {
 // };
 
 export const TypingArea = forwardRef((props, ref) => {
-      const [words, setWords] = useState(props.data);
-      const [showParagraphLoader, setShowParagraphLoader] = useState(false);
+      const [allWords, setAllWords] = useState(props.allWords);
+
+      const [restart, setRestart] = useState({});
       const [timerState, setTimerState] = useState({
             elapsedTime: 0,
             timerId: undefined,
       });
-      const [typingState, dispatch] = useReducer(
-            typingParagraphReducer,
-            initialTypingState
-      );
+
+      const [showParagraphLoader, setShowParagraphLoader] = useState(false);
+      const words = useMemo(() => {
+            let words = [];
+            if (props.mode === "test") {
+                  for (let i = 0; i < 100; i++) {
+                        const randomNumber = Math.floor(Math.random() * 300);
+                        words.push(allWords[randomNumber]);
+                        words.push(" ");
+                  }
+            } else {
+                  if (props.modeOne === "letters") {
+                        if (props.modeTwo === "1") {
+                              const letter = allWords[props.wordIndex];
+                              const randomLetter =
+                                    props.allLetters[
+                                          Math.floor(Math.random() * 25)
+                                    ];
+
+                              for (let i = 0; i < 100; i++) {
+                                    let randomLength =
+                                          Math.floor(Math.random() * 3) + 1;
+
+                                    words.push(letter.repeat(randomLength));
+
+                                    words.push(" ");
+
+                                    randomLength =
+                                          Math.floor(Math.random() * 3) + 1;
+
+                                    words.push(
+                                          randomLetter.repeat(randomLength)
+                                    );
+                                    words.push(" ");
+                              }
+                              console.log(words);
+                        } else {
+                              const letter = allWords[props.wordIndex];
+                              for (let i = 0; i < 100; i++) {
+                                    const randomLength =
+                                          Math.floor(Math.random() * 3) + 1;
+
+                                    words.push(letter.repeat(randomLength));
+                                    words.push(" ");
+                              }
+                        }
+                  } else {
+                        if (props.modeTwo === "1") {
+                              const word = allWords[props.wordIndex];
+                              const randomWord =
+                                    props.allWords[
+                                          Math.floor(Math.random() * 100)
+                                    ];
+
+                              for (let i = 0; i < 100; i++) {
+                                    let randomLength =
+                                          Math.floor(Math.random() * 3) + 1;
+
+                                    for (let i = 0; i < randomLength; i++) {
+                                          words.push(word);
+                                          words.push(" ");
+                                    }
+
+                                    randomLength =
+                                          Math.floor(Math.random() * 3) + 1;
+
+                                    for (let i = 0; i < randomLength; i++) {
+                                          words.push(randomWord);
+                                          words.push(" ");
+                                    }
+                              }
+                        } else {
+                              for (let i = 0; i < 100; i++) {
+                                    words.push(allWords[props.wordIndex]);
+                                    words.push(" ");
+                              }
+                        }
+                  }
+            }
+            return words;
+      }, [restart]);
 
       const letters = useMemo(() => {
             const letters = [];
@@ -157,7 +235,14 @@ export const TypingArea = forwardRef((props, ref) => {
             }
             return letters;
       }, [words]);
+
+      const [typingState, dispatch] = useReducer(
+            typingParagraphReducer,
+            initialTypingState
+      );
+
       const testStats = useMemo(() => {
+            console.log("yes");
             return {
                   totalNumberOfRightHits: 0,
                   totalNumberOfWrongHits: 0,
@@ -166,17 +251,12 @@ export const TypingArea = forwardRef((props, ref) => {
                   charactersStats: {},
                   wordsStats: {},
             };
-      }, [timerState.timerId]);
-
-      const typingParagraphRef = useRef();
-      const wordRef = useRef(null);
-
-      const paragraph = createtypingParagraphJsx(words, typingState, wordRef);
+      }, [restart]);
 
       if (timerState.elapsedTime === props.timer && !typingState.finished) {
             clearInterval(timerState.timerId);
             updateWpmAndAccuracy(timerState, testStats);
-            console.log(testStats);
+
             dispatch({ type: "finished test" });
       }
 
@@ -199,7 +279,13 @@ export const TypingArea = forwardRef((props, ref) => {
                               timerState
                         );
                   } else {
-                        dispatch({ type: "wrong hit" });
+                        dispatch({
+                              type: "wrong hit",
+                              payload: {
+                                    words,
+                                    testStats,
+                              },
+                        });
                         updateCharactersStats(
                               { type: "wrong hit" },
                               testStats,
@@ -224,8 +310,17 @@ export const TypingArea = forwardRef((props, ref) => {
             }
       };
 
+      const typingParagraphRef = useRef();
+      const wordRef = useRef(null);
+
+      const paragraph = createtypingParagraphJsx(words, typingState, wordRef);
+
       const restartHandler = () => {
+            props.setWordIndex((previous) => {
+                  return previous + 1;
+            });
             dispatch({ type: "reset" });
+            setRestart({});
             clearInterval(timerState.timerId);
             setTimerState({
                   elapsedTime: 0,
@@ -263,41 +358,33 @@ export const TypingArea = forwardRef((props, ref) => {
             typingParagraphRef.current.focus();
       }, []);
 
+      const statsFetcher = useFetcher();
+      const statsFetcherStatus =
+            statsFetcher.data && statsFetcher.state === "idle";
+
+      useEffect(() => {
+            if (statsFetcherStatus) {
+                  const data = statsFetcher.data;
+                  if (data.status === "success") {
+                        toast.success(data.message, toastOptions);
+                  } else {
+                        toast.error(data.message, toastOptions);
+                  }
+            }
+      }, [statsFetcher]);
       useEffect(() => {
             if (typingState.finished) {
                   const api = async () => {
-                        const response = await postTestStats(testStats);
-                        if (response.status === "success") {
-                              toast.success(response.message, toastOptions);
-                        } else {
-                              toast.error(response.message, toastOptions);
-                        }
+                        statsFetcher.submit(testStats, {
+                              action: "/stats",
+                              method: "POST",
+                              encType: "application/json",
+                        });
                   };
 
                   api();
             }
       }, [typingState.finished]);
-
-      const loadNextParagraphFetcher = useFetcher({ revalidate: false });
-      const loadNextParagraphFetcherStatus =
-            loadNextParagraphFetcher.state === "idle" &&
-            loadNextParagraphFetcher.data;
-
-      useEffect(() => {
-            if (loadNextParagraphFetcherStatus) {
-                  const data = loadNextParagraphFetcher.data;
-                  setShowParagraphLoader(false);
-                  if (data.loaderData.status === "success") {
-                        setWords(data.loaderData.words);
-                        typingParagraphRef.current.focus();
-                        toast.success(data.loaderData.message, toastOptions);
-                  } else {
-                        toast.error(data.loaderData.message, toastOptions);
-                  }
-            } else if (loadNextParagraphFetcher.state !== "idle") {
-                  setShowParagraphLoader(true);
-            }
-      }, [loadNextParagraphFetcher]);
 
       return (
             <>
@@ -311,7 +398,7 @@ export const TypingArea = forwardRef((props, ref) => {
                         <div className={styles["test-stat"]}>
                               {timerState.elapsedTime}
                         </div>
-                        {/* {!typingState.finished ? (
+                        {!typingState.finished ? (
                               ""
                         ) : (
                               <div className={styles["test-stat"]}>
@@ -324,7 +411,7 @@ export const TypingArea = forwardRef((props, ref) => {
                               <div className={styles["test-stat"]}>
                                     accuracy: {testStats.accuracy}
                               </div>
-                        )} */}
+                        )}
 
                         <div>
                               <button
@@ -342,9 +429,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     <FontAwesomeIcon icon={faRotate} />
                               </button>
 
-                              <loadNextParagraphFetcher.Form
-                                    action="/"
-                                    method="get"
+                              <div
                                     className={
                                           styles["load-next-paragraph-form"]
                                     }
@@ -366,7 +451,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     >
                                           <FontAwesomeIcon icon={faForward} />
                                     </button>
-                              </loadNextParagraphFetcher.Form>
+                              </div>
                         </div>
                   </div>
 

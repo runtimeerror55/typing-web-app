@@ -36,26 +36,19 @@ app.get("/", async (request, response) => {
             const commonWords = await commonWordsModel.findOne({});
             const testsHistory = await testsHistoryModel.findOne({});
 
-            let words = [];
-            for (let i = 0; i < 100; i++) {
-                  const randomNumber = Math.floor(Math.random() * 500);
-                  words.push(commonWords.words[randomNumber]);
-                  words.push(" ");
-            }
+            // let words = [];
+            // for (let i = 0; i < 100; i++) {
+            //       const randomNumber = Math.floor(Math.random() * 500);
+            //       words.push(commonWords.words[randomNumber]);
+            //       words.push(" ");
+            // }
 
             setTimeout(() => {
                   response.status(200).json({
                         status: "success",
                         message: "fetched successfully",
-                        payload: {
-                              words,
-                              settings: {
-                                    theme: "green-theme",
-                                    sound: "confetti.mp3",
-                                    timer: "15",
-                              },
-                        },
-                        words,
+                        payload: commonWords.words,
+                        // words,
                         settings: {
                               theme: "green-theme",
                               sound: "confetti.mp3",

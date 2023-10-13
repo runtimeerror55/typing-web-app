@@ -11,6 +11,15 @@ export const QuickSettings = ({
       setTheme,
       theme,
       setMode,
+      setModeOne,
+      mode,
+      modeOne,
+      modeTwo,
+      setModeTwo,
+      setAllWords,
+      allLetters,
+      allWords,
+      setWordIndex,
 }) => {
       const submit = useSubmit();
       const updateSettingsFetcher = useFetcher();
@@ -30,7 +39,6 @@ export const QuickSettings = ({
       }, [updateSettingsFetcher]);
 
       const settingsChangeHandler = (event) => {
-            console.log("helo");
             updateSettingsFetcher.submit(event.currentTarget);
       };
       return (
@@ -56,6 +64,9 @@ export const QuickSettings = ({
                               >
                                     <option value="" disabled>
                                           TIMER
+                                    </option>
+                                    <option value="5" selected>
+                                          5 seconds
                                     </option>
                                     <option value="15" selected>
                                           15 seconds
@@ -110,6 +121,10 @@ export const QuickSettings = ({
                                     name="mode"
                                     onChange={(event) => {
                                           setMode(event.target.value);
+                                          setAllWords(allWords);
+                                          setModeOne("words");
+                                          setModeTwo(0);
+                                          setWordIndex(0);
                                     }}
                                     defaultValue="test"
                               >
@@ -117,6 +132,67 @@ export const QuickSettings = ({
                                     <option value="test">test</option>
                                     <option value="practise">practise</option>
                               </select>
+                              {mode === "practise" ? (
+                                    <select
+                                          name="mode-one"
+                                          onChange={(event) => {
+                                                setModeOne(event.target.value);
+                                                if (
+                                                      event.target.value ===
+                                                      "words"
+                                                ) {
+                                                      setAllWords(allWords);
+                                                } else {
+                                                      setAllWords(allLetters);
+                                                }
+                                                setWordIndex(0);
+                                                setModeTwo(0);
+                                          }}
+                                          defaultValue="words"
+                                    >
+                                          <option disabled>MODE ONE</option>
+                                          <option value="words">words</option>
+                                          <option value="letters">
+                                                letters
+                                          </option>
+                                    </select>
+                              ) : null}
+
+                              {mode === "practise" && modeOne === "letters" ? (
+                                    <select
+                                          name="mode-two"
+                                          onChange={(event) => {
+                                                setModeTwo(event.target.value);
+                                          }}
+                                          defaultValue="0"
+                                    >
+                                          <option disabled>MODE TWO</option>
+                                          <option value="1">
+                                                include random letter
+                                          </option>
+                                          <option value="0">
+                                                do not include random letter
+                                          </option>
+                                    </select>
+                              ) : null}
+
+                              {mode === "practise" && modeOne === "words" ? (
+                                    <select
+                                          name="mode-two"
+                                          onChange={(event) => {
+                                                setModeTwo(event.target.value);
+                                          }}
+                                          defaultValue="0"
+                                    >
+                                          <option disabled>MODE TWO</option>
+                                          <option value="1">
+                                                include random word
+                                          </option>
+                                          <option value="0">
+                                                do not include random word
+                                          </option>
+                                    </select>
+                              ) : null}
                         </section>
                   </updateSettingsFetcher.Form>
             </>

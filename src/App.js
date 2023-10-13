@@ -8,20 +8,19 @@ import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
 import { PractisePage } from "./pages/practisePage/practisePage";
 import { SettingsProvider } from "./context/settings";
+import { postTestStats } from "./actions/actions";
 
 const router = createBrowserRouter([
       {
             path: "/",
             element: <AwaitHomePage></AwaitHomePage>,
             loader: homePageLoader,
-            shouldRevalidate: ({ currentUrl }) => {
-                  return false;
-            },
       },
       {
             path: "/stats",
             element: <AwaitStatsPage></AwaitStatsPage>,
             loader: statsPageLoader,
+            action: postTestStats,
       },
       {
             path: "/practise",

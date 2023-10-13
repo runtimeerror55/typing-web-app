@@ -21,6 +21,7 @@ select {
       margin-right: 5px;
       margin-top: 3px;
       margin-bottom: 4px;
+      border: 2px solid black;
 }
 
 /* quickSettings background-color : #1e5a27,

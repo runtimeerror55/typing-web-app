@@ -21,7 +21,7 @@ router.route("/login").post(async (request, response) => {
                               { _id: user._id, name: user.name },
                               "secret",
                               {
-                                    expiresIn: 60 * 30,
+                                    expiresIn: 60 * 60 * 5,
                               }
                         );
                         const userSettings = await settingsModel.findOne({
@@ -103,7 +103,7 @@ router.route("/register")
                         { _id: newUser._id, name: newUser.name },
                         "secret",
                         {
-                              expiresIn: 60 * 60,
+                              expiresIn: 60 * 60 * 5,
                         }
                   );
                   response.status(200).json({

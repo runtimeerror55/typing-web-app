@@ -58,10 +58,9 @@ export const WordsBarGraph = ({ loaderData, theme }) => {
       let array = Object.entries(loaderData.wordsStats);
       console.log(array);
       array.sort((a, b) => {
-            console.log(a, b);
             return Math.floor(b[1].wpm) - Math.floor(a[1].wpm);
       });
-      console.log(array);
+
       data.labels = array.map(([key, value]) => {
             return key;
       });

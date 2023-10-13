@@ -15,7 +15,7 @@ export const NavBar = () => {
       return (
             <>
                   <nav className={styles["nav-bar"]}>
-                        <h1 class={styles.logo}>TYPINGO</h1>
+                        <h1 className={styles.logo}>TYPINGO</h1>
 
                         <div>
                               <Link to={"/"} className={styles["nav-link"]}>

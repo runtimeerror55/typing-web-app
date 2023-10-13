@@ -100,7 +100,7 @@ export const TestStats = ({ testStats, theme }) => {
                               accuracy: {testStats.accuracy}
                         </div>
                   )} */}
-                  <div className={styles["all-time-stats-section"]}>
+                  {/* <div className={styles["all-time-stats-section"]}>
                         <div
                               className={
                                     styles["all-time-stat"] +
@@ -121,7 +121,7 @@ export const TestStats = ({ testStats, theme }) => {
                               <h4>Wpm</h4>
                               <h1>{testStats.wpm}</h1>
                         </div>
-                  </div>
+                  </div> */}
                   <Bar options={options} data={data} />
             </div>
       );

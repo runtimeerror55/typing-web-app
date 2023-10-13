@@ -13,7 +13,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { HomePage } from "./homePage";
 
 export const AwaitHomePage = () => {
-      const { loaderData } = useLoaderData();
+      const { wordsLoaderData, statsLoaderData, settingsLoaderData } =
+            useLoaderData();
 
       return (
             <Suspense
@@ -23,7 +24,13 @@ export const AwaitHomePage = () => {
                         </div>
                   }
             >
-                  <Await resolve={loaderData}>
+                  <Await
+                        resolve={Promise.allSettled([
+                              wordsLoaderData,
+                              statsLoaderData,
+                              settingsLoaderData,
+                        ])}
+                  >
                         <HomePage></HomePage>
                   </Await>
             </Suspense>

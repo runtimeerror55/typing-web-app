@@ -9,6 +9,11 @@ export const typingParagraphReducer = (typingState, action) => {
                   let wordsStats = action.payload.testStats.wordsStats;
                   let words = action.payload.words;
                   let nextWord = words[typingState.currentWordIndex + 1];
+
+                  if (typingState.currentWordIndex > 0) {
+                        wordsStats[currentWord].rightHitsCount++;
+                  }
+
                   if (
                         currentWord.length - 1 ===
                         typingState.currentLetterIndex
@@ -20,13 +25,21 @@ export const typingParagraphReducer = (typingState, action) => {
                                           speed: 0,
                                           count: 0,
                                           speeds: [],
+                                          rightHitsCount: 0,
+                                          wrongHitsCount: 0,
                                     };
+                                    // console.log(
+                                    //       wordsStats,
+                                    //       action.payload.testStats
+                                    //             .charactersStats
+                                    // );
                               } else {
                                     wordsStats[nextWord].startedAt =
                                           performance.now();
                               }
                               if (typingState.currentWordIndex > 0) {
                                     if (wordsStats[currentWord] === undefined) {
+                                          console.log("i am inside");
                                           wordsStats[currentWord] = {
                                                 endedAt: performance.now(),
                                                 count: 0,
@@ -34,10 +47,6 @@ export const typingParagraphReducer = (typingState, action) => {
                                                 speeds: [],
                                           };
                                     } else {
-                                          console.log(
-                                                wordsStats,
-                                                wordsStats[currentWord].count
-                                          );
                                           wordsStats[currentWord].endedAt =
                                                 performance.now();
                                           wordsStats[currentWord].count++;
@@ -60,7 +69,6 @@ export const typingParagraphReducer = (typingState, action) => {
                                           );
                                     }
                               }
-                              console.log(action.payload.testStats);
                         }
 
                         currentLetterIndex = 0;
@@ -78,6 +86,10 @@ export const typingParagraphReducer = (typingState, action) => {
                   };
             }
             case "wrong hit": {
+                  //   let currentWord =
+                  //         action.payload.words[typingState.currentWordIndex];
+                  //   let wordsStats = action.payload.testStats.wordsStats;
+                  //   wordsStats[currentWord].wrongHitsCount++;
                   return {
                         ...typingState,
                         paragraphCurrentIndex: typingState.paragraphNextIndex,
