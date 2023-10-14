@@ -22,6 +22,7 @@ const router = createBrowserRouter([
             loader: statsPageLoader,
             action: postTestStats,
       },
+
       {
             path: "/practise",
             element: <PractisePage></PractisePage>,

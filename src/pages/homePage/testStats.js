@@ -70,17 +70,12 @@ export const TestStats = ({ testStats, theme }) => {
       });
       data.datasets[0].data = Object.entries(testStats.wordsStats).map(
             ([key, value]) => {
-                  console.log(
-                        Math.floor(
-                              (key.length / 5) * (60 / (value.speed / 1000))
-                        )
-                  );
                   return Math.floor(
                         (key.length / 5) * (60 / (value.speed / 1000))
                   );
             }
       );
-      console.log(data);
+
       return (
             <div className={styles["test-stats"]}>
                   {/* <div className={styles["test-stat"]}>

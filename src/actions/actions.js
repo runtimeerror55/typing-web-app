@@ -5,7 +5,15 @@ export const postTestStats = async ({ request }) => {
       const formData = await request.json();
       console.log(formData);
       try {
-            const response = await fetch("http://localhost:8080/stats", {
+            const responseone = await fetch("http://localhost:8080/stats", {
+                  headers: {
+                        "Content-Type": "application/json",
+                        authorization: "Bearer " + getToken(),
+                  },
+                  method: "POST",
+                  body: JSON.stringify(formData),
+            });
+            const response = await fetch("http://localhost:8080/userStats", {
                   headers: {
                         "Content-Type": "application/json",
                         authorization: "Bearer " + getToken(),

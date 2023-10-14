@@ -62,6 +62,16 @@ export const updateWpmAndAccuracy = (timerState, testStats) => {
                               testStats.totalNumberOfWrongHits)) *
                         100
             ) || 0;
+
+      for (let [key, value] of Object.entries(testStats.wordsStats)) {
+            if (value.endedAt !== undefined) {
+                  value.wpm = (key.length / 5) * (60 / (value.speed / 1000));
+                  value.accuracy =
+                        (value.rightHitsCount /
+                              (value.rightHitsCount + value.wrongHitsCount)) *
+                        100;
+            }
+      }
 };
 
 export const createtypingParagraphJsx = (words, typingState, wordRef) => {

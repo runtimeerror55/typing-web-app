@@ -61,12 +61,6 @@ export const typingParagraphReducer = (typingState, action) => {
                                                                   currentWord
                                                             ].startedAt)) /
                                                 wordsStats[currentWord].count;
-                                          wordsStats[currentWord].speeds.push(
-                                                wordsStats[currentWord]
-                                                      .endedAt -
-                                                      wordsStats[currentWord]
-                                                            .startedAt
-                                          );
                                     }
                               }
                         }
@@ -86,10 +80,15 @@ export const typingParagraphReducer = (typingState, action) => {
                   };
             }
             case "wrong hit": {
-                  //   let currentWord =
-                  //         action.payload.words[typingState.currentWordIndex];
-                  //   let wordsStats = action.payload.testStats.wordsStats;
-                  //   wordsStats[currentWord].wrongHitsCount++;
+                  let currentWordIndex = typingState.currentWordIndex;
+                  if (currentWordIndex > 0) {
+                        let currentWord =
+                              action.payload.words[
+                                    typingState.currentWordIndex
+                              ];
+                        let wordsStats = action.payload.testStats.wordsStats;
+                        wordsStats[currentWord].wrongHitsCount++;
+                  }
                   return {
                         ...typingState,
                         paragraphCurrentIndex: typingState.paragraphNextIndex,

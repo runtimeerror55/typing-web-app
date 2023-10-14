@@ -152,7 +152,7 @@ export const TypingArea = forwardRef((props, ref) => {
             let words = [];
             if (props.mode === "test") {
                   for (let i = 0; i < 100; i++) {
-                        const randomNumber = Math.floor(Math.random() * 300);
+                        const randomNumber = Math.floor(Math.random() * 5);
                         words.push(allWords[randomNumber]);
                         words.push(" ");
                   }
@@ -244,6 +244,7 @@ export const TypingArea = forwardRef((props, ref) => {
       const testStats = useMemo(() => {
             console.log("yes");
             return {
+                  mode: props.mode,
                   totalNumberOfRightHits: 0,
                   totalNumberOfWrongHits: 0,
                   wpm: 0,
@@ -256,7 +257,7 @@ export const TypingArea = forwardRef((props, ref) => {
       if (timerState.elapsedTime === props.timer && !typingState.finished) {
             clearInterval(timerState.timerId);
             updateWpmAndAccuracy(timerState, testStats);
-
+            console.log(testStats);
             dispatch({ type: "finished test" });
       }
 

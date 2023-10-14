@@ -51,9 +51,12 @@ export const StatsPage = () => {
                                           >
                                                 <h4>Average Accuray</h4>
                                                 <h1>
-                                                      {Math.floor(
+                                                      {
                                                             loaderData.averageAccuracy
-                                                      )}
+                                                      }
+                                                      {/* {Math.floor(
+                                                            loaderData.averageAccuracy
+                                                      )} */}
                                                 </h1>
                                           </div>
                                           <div
@@ -69,9 +72,10 @@ export const StatsPage = () => {
                                           >
                                                 <h4>Average Wpm</h4>
                                                 <h1>
-                                                      {Math.floor(
+                                                      {loaderData.averageWpm}
+                                                      {/* {Math.floor(
                                                             loaderData.averageWpm
-                                                      )}
+                                                      )} */}
                                                 </h1>
                                           </div>
                                           <div

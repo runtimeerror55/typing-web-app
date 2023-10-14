@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const testModel = require("../models/testModel");
 const testsHistoryModel = require("../models/testsHistoryModel");
+const statsModel = require("../models/statsModel");
 const commonWordsModel = require("../models/commonWordsModel");
 const { isLoggedIn } = require("../middleware");
 
@@ -24,7 +25,6 @@ router.route("/stats")
       })
       .post(isLoggedIn, async (request, response) => {
             try {
-                  console.log("saveing the data bro");
                   const testStats = request.body;
 
                   const newTest = new testModel(testStats);
@@ -71,7 +71,7 @@ router.route("/stats")
                         )) {
                               if (value.endedAt !== undefined) {
                                     newTestsHistory.wordsStats[key] = {
-                                          count: value.count,
+                                          count: 1,
                                           wpm:
                                                 (key.length / 5) *
                                                 (60 / (value.speed / 1000)),
@@ -165,7 +165,7 @@ router.route("/stats")
 
                                     if (x[key] === undefined) {
                                           x[key] = {
-                                                count: value.count,
+                                                count: 1,
                                                 wpm: value.speed,
                                                 wrongHitsCount:
                                                       value.wrongHitsCount,
@@ -173,14 +173,13 @@ router.route("/stats")
                                                       value.rightHitsCount,
                                           };
                                     } else {
-                                          console.log(key, x[key], value);
                                           x[key].wpm =
                                                 (x[key].wpm * x[key].count +
                                                       value.speed *
                                                             value.count) /
                                                 (x[key].count + value.count);
 
-                                          x[key].count += value.count;
+                                          x[key].count++;
                                           x[key].wrongHitsCount +=
                                                 value.wrongHitsCount;
                                           x[key].rightHitsCount +=
@@ -200,7 +199,7 @@ router.route("/stats")
                               status: "success",
                               message: "successfully saved to cloud",
                         });
-                  }, 4000);
+                  }, 0);
             } catch (error) {
                   response.status(500).json({
                         status: "error",
@@ -209,4 +208,177 @@ router.route("/stats")
             }
       });
 
+router.route("/userStats").post(isLoggedIn, async (request, response) => {
+      const testStats = request.body;
+
+      const userStats = await statsModel.findOne({
+            user: request.user._id,
+      });
+
+      if (testStats.mode === "test") {
+            console.log("yessdfsd");
+            if (!userStats) {
+                  const newUserStats = new statsModel({
+                        testMode: {
+                              totalNumberOfStartedTests: 1,
+                              totalNumberOfFinishedTests: 1,
+                              averageWpm: testStats.wpm,
+                              averageAccuracy: testStats.accuracy,
+                              totalNumberOfRightHits:
+                                    testStats.totalNumberOfRightHits,
+                              totalNumberOfWrongHits:
+                                    testStats.totalNumberOfWrongHits,
+                              lastTwentyTests: [
+                                    {
+                                          wpm: testStats.wpm,
+                                          accuracy: testStats.accuracy,
+                                    },
+                              ],
+                        },
+
+                        user: request.user._id,
+                  });
+
+                  for (let [key, value] of Object.entries(
+                        testStats.wordsStats
+                  )) {
+                        if (value.endedAt !== undefined) {
+                              newUserStats.testMode.wordsStats[key] = {
+                                    totalNumberOfTestsAppeared: 1,
+                                    averageWpm: value.wpm,
+                                    averageAccuracy: value.accuracy,
+                                    lastTwentyTests: [
+                                          {
+                                                wpm: value.wpm,
+                                                accuracy: value.accuracy,
+                                          },
+                                    ],
+                              };
+                        }
+                  }
+
+                  newUserStats.markModified("testMode.wordsStats");
+                  await newUserStats.save();
+            } else {
+                  let x = userStats.testMode;
+                  x.averageAccuracy =
+                        (x.averageAccuracy * x.totalNumberOfFinishedTests +
+                              testStats.accuracy) /
+                        (x.totalNumberOfFinishedTests + 1);
+
+                  x.averageWpm =
+                        (x.averageWpm * x.totalNumberOfFinishedTests +
+                              testStats.wpm) /
+                        (x.totalNumberOfFinishedTests + 1);
+
+                  x.totalNumberOfRightHits += testStats.totalNumberOfRightHits;
+                  x.totalNumberOfWrongHits += testStats.totalNumberOfWrongHits;
+                  x.totalNumberOfFinishedTests++;
+
+                  if (x.lastTwentyTests.length === 20) {
+                        x.lastTwentyTests.shift();
+                        x.lastTwentyTests.push({
+                              wpm: testStats.wpm,
+                              accuracy: testStats.accuracy,
+                        });
+                  } else {
+                        x.lastTwentyTests.push({
+                              wpm: testStats.wpm,
+                              accuracy: testStats.accuracy,
+                        });
+                  }
+
+                  let y = userStats.testMode.wordsStats;
+                  for (let [key, value] of Object.entries(
+                        testStats.wordsStats
+                  )) {
+                        if (value.endedAt !== undefined) {
+                              if (y[key] === undefined) {
+                                    y[key] = {
+                                          totalNumberOfTestsAppeared: 1,
+                                          averageWpm: value.wpm,
+                                          averageAccuracy: value.accuracy,
+                                          lastTwentyTests: [
+                                                {
+                                                      wpm: value.wpm,
+                                                      accuracy: value.accuracy,
+                                                },
+                                          ],
+                                    };
+                              } else {
+                                    y[key].averageWpm =
+                                          (y[key].averageWpm *
+                                                y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                value.wpm) /
+                                          (y[key].totalNumberOfTestsAppeared +
+                                                1);
+
+                                    y[key].averageAccuracy =
+                                          (y[key].averageAccuracy *
+                                                y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                value.accuracy) /
+                                          (y[key].totalNumberOfTestsAppeared +
+                                                1);
+
+                                    y[key].totalNumberOfTestsAppeared++;
+
+                                    if (y[key].lastTwentyTests.length === 20) {
+                                          y[key].lastTwentyTests.shift();
+                                          y[key].lastTwentyTests.push({
+                                                wpm: value.wpm,
+                                                accuracy: value.accuracy,
+                                          });
+                                    } else {
+                                          y[key].lastTwentyTests.push({
+                                                wpm: value.wpm,
+                                                accuracy: value.accuracy,
+                                          });
+                                    }
+                              }
+                        }
+                  }
+                  userStats.markModified("testMode.wordsStats");
+                  await userStats.save();
+            }
+      } else if (testStats.mode === "practise") {
+            if (!userStats) {
+                  const newUserStats = new statsModel({
+                        practiseMode: {},
+
+                        user: request.user._id,
+                  });
+                  console.log(
+                        newUserStats.testMode.wordsStats,
+                        newUserStats.practiseMode.wordsStats,
+                        "hello"
+                  );
+
+                  for (let [key, value] of Object.entries(
+                        testStats.wordsStats
+                  )) {
+                        if (value.endedAt !== undefined) {
+                              newUserStats.practiseMode.wordsStats[key] = {
+                                    totalNumberOfTestsAppeared: 1,
+                                    averageWpm: value.wpm,
+                                    averageAccuracy: value.accuracy,
+                                    lastTwentyTests: [
+                                          {
+                                                wpm: value.wpm,
+                                                accuracy: value.accuracy,
+                                          },
+                                    ],
+                              };
+                        }
+                  }
+
+                  newUserStats.markModified("testMode.wordsStats");
+                  await newUserStats.save();
+            }
+      }
+      response
+            .status(200)
+            .json({ status: "success", message: "saved succesfully" });
+});
 module.exports.statsRouter = router;
