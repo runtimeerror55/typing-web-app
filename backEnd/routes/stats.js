@@ -357,7 +357,7 @@ router.route("/userStats")
 
                                     y[key].totalNumberOfTestsAppeared++;
 
-                                    if (y[key].lastTwentyTests.length === 20) {
+                                    if (y[key].lastTwentyTests.length === 3) {
                                           y[key].lastTwentyTests.shift();
                                           y[key].lastTwentyTests.push({
                                                 wpm: value.wpm,

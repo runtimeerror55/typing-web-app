@@ -1,12 +1,94 @@
-import { useLoaderData, useAsyncValue } from "react-router-dom";
+import { useLoaderData, useAsyncValue, Link } from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
 import { CharactersBartGraph } from "../statsPage/charactersBarGraph";
 import { WordsBarGraph } from "./wordsBarGraph";
 import styles from "./statsPage.module.css";
+const commonWords = [
+      "as",
+      "i",
+      "his",
+      "that",
+      "he",
+      "was",
+      "for",
+      "on",
+      "are",
+      "with",
+      "they",
+      "be",
+      "at",
+      "one",
+      "have",
+      "this",
+      "from",
+      "by",
+      "hot",
+      "word",
+      "but",
+      "what",
+      "some",
+      "is",
+      "it",
+      "you",
+      "or",
+      "had",
+      "the",
+      "of",
+      "to",
+      "and",
+      "a",
+      "in",
+      "we",
+      "can",
+      "out",
+      "other",
+      "were",
+      "which",
+      "do",
+      "their",
+      "time",
+];
 
+const letters = [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+      "f",
+      "g",
+      "h",
+      "i",
+      "j",
+      "k",
+      "l",
+      "m",
+      "n",
+      "o",
+      "p",
+      "q",
+      "r",
+      "s",
+      "t",
+      "u",
+      "v",
+      "w",
+      "x",
+      "y",
+      "z",
+];
 export const StatsPage = () => {
       const loaderData = useAsyncValue();
-      const { settingsData } = useLoaderData();
+      let { settingsData } = useLoaderData();
+      settingsData = {
+            payload: {
+                  settings: {
+                        theme: "green-theme",
+                        sound: "confettiEdited",
+                        timer: 15,
+                  },
+            },
+      };
 
       if (loaderData.status === "error") {
             return (
@@ -49,33 +131,13 @@ export const StatsPage = () => {
                                                       ]
                                                 }
                                           >
-                                                <h4>Average Accuray</h4>
+                                                <h5>All tests average speed</h5>
                                                 <h1>
-                                                      {
-                                                            loaderData.averageAccuracy
-                                                      }
-                                                      {/* {Math.floor(
-                                                            loaderData.averageAccuracy
-                                                      )} */}
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h4>Average Wpm</h4>
-                                                <h1>
-                                                      {loaderData.averageWpm}
-                                                      {/* {Math.floor(
+                                                      {/* {loaderData.averageWpm} */}
+                                                      {Math.floor(
                                                             loaderData.averageWpm
-                                                      )} */}
+                                                      )}{" "}
+                                                      wpm
                                                 </h1>
                                           </div>
                                           <div
@@ -89,13 +151,169 @@ export const StatsPage = () => {
                                                       ]
                                                 }
                                           >
-                                                <h4>Average Wpm</h4>
+                                                <h5>
+                                                      All tests average accuracy
+                                                </h5>
+                                                <h1>
+                                                      {/* {
+                                                            loaderData.averageAccuracy
+                                                      } */}
+                                                      {Math.floor(
+                                                            loaderData.averageAccuracy
+                                                      )}{" "}
+                                                      %
+                                                </h1>
+                                          </div>
+
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>
+                                                      Last 20 tests average
+                                                      speed
+                                                </h5>
                                                 <h1>
                                                       {Math.floor(
                                                             loaderData.averageWpm
-                                                      )}
+                                                      )}{" "}
+                                                      wpm
                                                 </h1>
                                           </div>
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>
+                                                      Last 20 tests average
+                                                      accuracy
+                                                </h5>
+                                                <h1>
+                                                      {Math.floor(
+                                                            loaderData.averageWpm
+                                                      )}{" "}
+                                                      %
+                                                </h1>
+                                          </div>
+                                    </section>
+
+                                    <section
+                                          className={styles["letters-section"]}
+                                    >
+                                          {letters.map((letter) => {
+                                                return (
+                                                      <Link
+                                                            to={`/?mode=practise&word=${letter}`}
+                                                            className={
+                                                                  styles["word"]
+                                                            }
+                                                      >
+                                                            <h2
+                                                                  className={
+                                                                        styles[
+                                                                              "letter-title"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {letter}
+                                                            </h2>
+                                                            <div
+                                                                  className={
+                                                                        styles[
+                                                                              "letter-stats"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  <h3>
+                                                                        practise
+                                                                  </h3>
+                                                                  <span>
+                                                                        speed:
+                                                                        75wpm,{" "}
+                                                                  </span>
+                                                                  <span>
+                                                                        accuracy:
+                                                                        85%
+                                                                  </span>
+                                                                  <h3>test</h3>
+                                                                  <span>
+                                                                        speed:
+                                                                        60wpm,{" "}
+                                                                  </span>
+                                                                  <span>
+                                                                        accuracy:
+                                                                        80%
+                                                                  </span>
+                                                            </div>
+                                                      </Link>
+                                                );
+                                          })}
+                                    </section>
+                                    <section
+                                          className={styles["words-section"]}
+                                    >
+                                          {commonWords.map((word) => {
+                                                return (
+                                                      <Link
+                                                            to={`/?mode=practise&word=${word}`}
+                                                            className={
+                                                                  styles["word"]
+                                                            }
+                                                      >
+                                                            <h2
+                                                                  className={
+                                                                        styles[
+                                                                              "word-title"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {word}
+                                                            </h2>
+                                                            <div
+                                                                  className={
+                                                                        styles[
+                                                                              "word-stats"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  <h3>
+                                                                        practise
+                                                                  </h3>
+                                                                  <span>
+                                                                        speed:
+                                                                        75wpm,{" "}
+                                                                  </span>
+                                                                  <span>
+                                                                        accuracy:
+                                                                        85%
+                                                                  </span>
+                                                                  <h3>test</h3>
+                                                                  <span>
+                                                                        speed:
+                                                                        60wpm,{" "}
+                                                                  </span>
+                                                                  <span>
+                                                                        accuracy:
+                                                                        80%
+                                                                  </span>
+                                                            </div>
+                                                      </Link>
+                                                );
+                                          })}
                                     </section>
                                     <section
                                           className={

@@ -129,8 +129,10 @@ export const QuickSettings = ({
                                     defaultValue="test"
                               >
                                     <option disabled>MODE</option>
-                                    <option value="test">test</option>
-                                    <option value="practise">practise</option>
+                                    <option value="test">test mode</option>
+                                    <option value="practise">
+                                          practise mode
+                                    </option>
                               </select>
                               {mode === "practise" ? (
                                     <select

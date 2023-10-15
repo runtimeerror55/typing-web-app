@@ -17,7 +17,6 @@
       padding: 10px;
       box-shadow: 5px 3px 3px;
       transition: transform 0.15s linear;
-      width: 300px;
       margin: 5px;
 }
 
@@ -37,6 +36,7 @@
       font-size: 14px;
       font-family: monospace;
       color: #333;
+      display: flex;
 }
 
 .word-green-theme,
@@ -52,4 +52,14 @@
 .word-violet-theme,
 .letter-violet-theme {
       background-color: #c280f1;
+}
+
+table {
+      border-collapse: collapse;
+      margin: 5px;
+}
+th,
+td {
+      border: 2px solid black;
+      padding: 5px;
 }

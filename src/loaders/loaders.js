@@ -3,7 +3,7 @@ import { getToken } from "../utilities/utilities";
 
 const getUserStats = async () => {
       try {
-            const response = await fetch("http://localhost:8080/userStats", {
+            const response = await fetch("http://localhost:8080/UserStats", {
                   headers: {
                         authorization: "Bearer " + getToken(),
                   },
