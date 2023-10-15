@@ -152,7 +152,7 @@ export const TypingArea = forwardRef((props, ref) => {
             let words = [];
             if (props.mode === "test") {
                   for (let i = 0; i < 100; i++) {
-                        const randomNumber = Math.floor(Math.random() * 5);
+                        const randomNumber = Math.floor(Math.random() * 100);
                         words.push(allWords[randomNumber]);
                         words.push(" ");
                   }

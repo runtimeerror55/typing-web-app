@@ -1,7 +1,10 @@
 import styles from "./practiseWord.module.css";
 export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
       console.log(statsData);
-      const wordStats = statsData.wordsStats?.[allWords[wordIndex]];
+      const practiseModeWordStats =
+            statsData.practiseMode?.wordsStats?.[allWords[wordIndex]];
+      const testModeWordStats =
+            statsData.testMode?.wordsStats?.[allWords[wordIndex]];
 
       return (
             <section className={styles["words-stats-section"]}>
@@ -15,24 +18,20 @@ export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
                         </h2>
                         <div className={styles["letter-stats"]}>
                               <h3>practise</h3>
-                              {wordStats ? (
+                              {practiseModeWordStats ? (
                                     <>
                                           <span>
-                                                speed:
+                                                speed:{" "}
                                                 {Math.floor(
-                                                      wordStats.wpm
-                                                )}wpm,{" "}
+                                                      practiseModeWordStats.averageWpm
+                                                )}
+                                                wpm,{" "}
                                           </span>
                                           <span>
-                                                accuracy:
-                                                {wordStats.rightHitsCount
-                                                      ? Math.floor(
-                                                              (wordStats.rightHitsCount /
-                                                                    (wordStats.rightHitsCount +
-                                                                          wordStats.wrongHitsCount)) *
-                                                                    100
-                                                        )
-                                                      : 0}
+                                                accuracy:{" "}
+                                                {Math.floor(
+                                                      practiseModeWordStats.averageAccuracy
+                                                )}
                                                 %
                                           </span>
                                     </>
@@ -41,23 +40,20 @@ export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
                               )}
 
                               <h3>test</h3>
-                              {wordStats ? (
+                              {testModeWordStats ? (
                                     <>
                                           <span>
-                                                speed:
+                                                speed:{" "}
                                                 {Math.floor(
-                                                      wordStats.wpm
-                                                )} wpm,{" "}
+                                                      testModeWordStats.averageWpm
+                                                )}
+                                                wpm,{" "}
                                           </span>
                                           <span>
-                                                {wordStats.rightHitsCount
-                                                      ? Math.floor(
-                                                              (wordStats.rightHitsCount /
-                                                                    (wordStats.rightHitsCount +
-                                                                          wordStats.wrongHitsCount)) *
-                                                                    100
-                                                        )
-                                                      : 0}
+                                                accuracy:{" "}
+                                                {Math.floor(
+                                                      testModeWordStats.averageAccuracy
+                                                )}
                                                 %
                                           </span>
                                     </>

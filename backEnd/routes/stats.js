@@ -208,58 +208,37 @@ router.route("/stats")
             }
       });
 
-router.route("/userStats").post(isLoggedIn, async (request, response) => {
-      const testStats = request.body;
+router.route("/userStats")
+      .get(isLoggedIn, async (request, response) => {
+            const userStats = await statsModel.findOne({
+                  user: request.user._id,
+            });
 
-      const userStats = await statsModel.findOne({
-            user: request.user._id,
-      });
+            if (userStats === null) {
+                  response.status(500).json({
+                        status: "error",
+                        message: "user data does not exist",
+                  });
+            } else {
+                  setTimeout(() => {
+                        response.status(200).json(userStats);
+                  }, 1000);
+            }
+      })
+      .post(isLoggedIn, async (request, response) => {
+            const testStats = request.body;
 
-      if (testStats.mode === "test") {
-            console.log("yessdfsd");
+            let userStats = await statsModel.findOne({
+                  user: request.user._id,
+            });
             if (!userStats) {
-                  const newUserStats = new statsModel({
-                        testMode: {
-                              totalNumberOfStartedTests: 1,
-                              totalNumberOfFinishedTests: 1,
-                              averageWpm: testStats.wpm,
-                              averageAccuracy: testStats.accuracy,
-                              totalNumberOfRightHits:
-                                    testStats.totalNumberOfRightHits,
-                              totalNumberOfWrongHits:
-                                    testStats.totalNumberOfWrongHits,
-                              lastTwentyTests: [
-                                    {
-                                          wpm: testStats.wpm,
-                                          accuracy: testStats.accuracy,
-                                    },
-                              ],
-                        },
-
+                  userStats = new statsModel({
                         user: request.user._id,
                   });
+                  await userStats.save();
+            }
 
-                  for (let [key, value] of Object.entries(
-                        testStats.wordsStats
-                  )) {
-                        if (value.endedAt !== undefined) {
-                              newUserStats.testMode.wordsStats[key] = {
-                                    totalNumberOfTestsAppeared: 1,
-                                    averageWpm: value.wpm,
-                                    averageAccuracy: value.accuracy,
-                                    lastTwentyTests: [
-                                          {
-                                                wpm: value.wpm,
-                                                accuracy: value.accuracy,
-                                          },
-                                    ],
-                              };
-                        }
-                  }
-
-                  newUserStats.markModified("testMode.wordsStats");
-                  await newUserStats.save();
-            } else {
+            if (testStats.mode === "test") {
                   let x = userStats.testMode;
                   x.averageAccuracy =
                         (x.averageAccuracy * x.totalNumberOfFinishedTests +
@@ -341,44 +320,63 @@ router.route("/userStats").post(isLoggedIn, async (request, response) => {
                   }
                   userStats.markModified("testMode.wordsStats");
                   await userStats.save();
-            }
-      } else if (testStats.mode === "practise") {
-            if (!userStats) {
-                  const newUserStats = new statsModel({
-                        practiseMode: {},
-
-                        user: request.user._id,
-                  });
-                  console.log(
-                        newUserStats.testMode.wordsStats,
-                        newUserStats.practiseMode.wordsStats,
-                        "hello"
-                  );
-
+            } else if (testStats.mode === "practise") {
+                  let y = userStats.practiseMode.wordsStats;
                   for (let [key, value] of Object.entries(
                         testStats.wordsStats
                   )) {
                         if (value.endedAt !== undefined) {
-                              newUserStats.practiseMode.wordsStats[key] = {
-                                    totalNumberOfTestsAppeared: 1,
-                                    averageWpm: value.wpm,
-                                    averageAccuracy: value.accuracy,
-                                    lastTwentyTests: [
-                                          {
+                              if (y[key] === undefined) {
+                                    y[key] = {
+                                          totalNumberOfTestsAppeared: 1,
+                                          averageWpm: value.wpm,
+                                          averageAccuracy: value.accuracy,
+                                          lastTwentyTests: [
+                                                {
+                                                      wpm: value.wpm,
+                                                      accuracy: value.accuracy,
+                                                },
+                                          ],
+                                    };
+                              } else {
+                                    y[key].averageWpm =
+                                          (y[key].averageWpm *
+                                                y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                value.wpm) /
+                                          (y[key].totalNumberOfTestsAppeared +
+                                                1);
+
+                                    y[key].averageAccuracy =
+                                          (y[key].averageAccuracy *
+                                                y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                value.accuracy) /
+                                          (y[key].totalNumberOfTestsAppeared +
+                                                1);
+
+                                    y[key].totalNumberOfTestsAppeared++;
+
+                                    if (y[key].lastTwentyTests.length === 20) {
+                                          y[key].lastTwentyTests.shift();
+                                          y[key].lastTwentyTests.push({
                                                 wpm: value.wpm,
                                                 accuracy: value.accuracy,
-                                          },
-                                    ],
-                              };
+                                          });
+                                    } else {
+                                          y[key].lastTwentyTests.push({
+                                                wpm: value.wpm,
+                                                accuracy: value.accuracy,
+                                          });
+                                    }
+                              }
                         }
                   }
-
-                  newUserStats.markModified("testMode.wordsStats");
-                  await newUserStats.save();
+                  userStats.markModified("practiseMode.wordsStats");
+                  await userStats.save();
             }
-      }
-      response
-            .status(200)
-            .json({ status: "success", message: "saved succesfully" });
-});
+            response
+                  .status(200)
+                  .json({ status: "success", message: "saved succesfully" });
+      });
 module.exports.statsRouter = router;
