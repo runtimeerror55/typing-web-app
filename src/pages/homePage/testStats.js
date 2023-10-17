@@ -117,7 +117,7 @@ export const TestStats = ({ testStats, theme }) => {
                               <h1>{testStats.wpm}</h1>
                         </div>
                   </div> */}
-                  <Bar options={options} data={data} />
+                  {/* <Bar options={options} data={data} /> */}
             </div>
       );
 };

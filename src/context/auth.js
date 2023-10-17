@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
                   logout();
             }, data.payload.expiresAt * 1000 - Date.now());
       };
-      console.log(token, user);
 
       useEffect(() => {
             if (token) {

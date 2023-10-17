@@ -3,7 +3,7 @@ import { getToken } from "../utilities/utilities.js";
 
 export const postTestStats = async ({ request }) => {
       const formData = await request.json();
-      console.log(formData);
+
       try {
             const responseone = await fetch("http://localhost:8080/stats", {
                   headers: {
@@ -32,7 +32,6 @@ export const postTestStats = async ({ request }) => {
 };
 export const updateSettings = async ({ request }) => {
       try {
-            console.log(request);
             const formData = await request.formData();
             const body = {
                   settings: {

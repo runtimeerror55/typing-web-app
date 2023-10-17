@@ -3,7 +3,7 @@ import { getToken } from "../utilities/utilities";
 
 const getUserStats = async () => {
       try {
-            const response = await fetch("http://localhost:8080/UserStats", {
+            const response = await fetch("http://localhost:8080/userStats", {
                   headers: {
                         authorization: "Bearer " + getToken(),
                   },
@@ -41,7 +41,6 @@ const getWords = async () => {
 };
 
 export const homePageLoader = async () => {
-      console.log("homepageloader");
       return defer({
             wordsLoaderData: getWords(),
             settingsLoaderData: getUserSettings(),

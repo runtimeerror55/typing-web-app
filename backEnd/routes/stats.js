@@ -221,7 +221,9 @@ router.route("/userStats")
                   });
             } else {
                   setTimeout(() => {
-                        response.status(200).json(userStats);
+                        response
+                              .status(200)
+                              .json({ status: "success", payload: userStats });
                   }, 1000);
             }
       })
@@ -253,6 +255,12 @@ router.route("/userStats")
                   x.totalNumberOfRightHits += testStats.totalNumberOfRightHits;
                   x.totalNumberOfWrongHits += testStats.totalNumberOfWrongHits;
                   x.totalNumberOfFinishedTests++;
+                  if (x.highestWpmOfATest < testStats.wpm) {
+                        x.highestWpmOfATest = testStats.wpm;
+                  }
+                  if (x.highestAccuracyOfATest < testStats.accuracy) {
+                        x.highestAccuracyOfATest = testStats.accuracy;
+                  }
 
                   if (x.lastTwentyTests.length === 20) {
                         x.lastTwentyTests.shift();

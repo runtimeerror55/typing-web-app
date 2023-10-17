@@ -3,6 +3,7 @@ import { NavBar } from "../../components/navBar/navBar";
 import { CharactersBartGraph } from "../statsPage/charactersBarGraph";
 import { WordsBarGraph } from "./wordsBarGraph";
 import styles from "./statsPage.module.css";
+import { PracticeWord } from "../homePage/practiseWord";
 const commonWords = [
       "as",
       "i",
@@ -83,12 +84,74 @@ export const StatsPage = () => {
       settingsData = {
             payload: {
                   settings: {
-                        theme: "green-theme",
+                        theme: "blue-theme",
                         sound: "confettiEdited",
                         timer: 15,
                   },
             },
       };
+
+      const lastTwentyTestsAverages = (wordStats) => {
+            const [wpmSum, accuracySum] = wordStats.lastTwentyTests.reduce(
+                  (total, current) => {
+                        return [
+                              total[0] + current.wpm,
+                              total[1] + current.accuracy,
+                        ];
+                  },
+                  [0, 0]
+            );
+            wordStats.lastTwentyTestsAverageWpm =
+                  wpmSum / wordStats.lastTwentyTests.length;
+            wordStats.lastTwentyTestsAverageAccuracy =
+                  accuracySum / wordStats.lastTwentyTests.length;
+      };
+
+      const highestAverageSpeedOfAWord = () => {
+            loaderData.payload.testMode.highestAverageSpeedOfAWord =
+                  Object.entries(loaderData.payload.testMode.wordsStats).reduce(
+                        (total, current) => {
+                              if (total.speed < current[1].averageWpm) {
+                                    total.speed = current[1].averageWpm;
+                                    total.word = current[0];
+                                    return total;
+                              } else {
+                                    return total;
+                              }
+                        },
+                        {
+                              word: undefined,
+                              speed: -1,
+                        }
+                  );
+      };
+      const highestAverageAcuuracyOfAWord = () => {
+            loaderData.payload.testMode.highestAverageAccuracyOfAWord =
+                  Object.entries(loaderData.payload.testMode.wordsStats).reduce(
+                        (total, current) => {
+                              if (total.accuracy < current[1].averageWpm) {
+                                    total.accuracy = current[1].averageAccuracy;
+                                    total.word = current[0];
+                                    return total;
+                              } else {
+                                    return total;
+                              }
+                        },
+                        {
+                              word: undefined,
+                              accuracy: -1,
+                        }
+                  );
+      };
+      if (loaderData.payload?.testMode) {
+            lastTwentyTestsAverages(loaderData.payload.testMode);
+      }
+      if (loaderData.payload?.testMode) {
+            highestAverageSpeedOfAWord();
+      }
+      if (loaderData.payload?.testMode) {
+            highestAverageAcuuracyOfAWord();
+      }
 
       if (loaderData.status === "error") {
             return (
@@ -135,7 +198,9 @@ export const StatsPage = () => {
                                                 <h1>
                                                       {/* {loaderData.averageWpm} */}
                                                       {Math.floor(
-                                                            loaderData.averageWpm
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .averageWpm
                                                       )}{" "}
                                                       wpm
                                                 </h1>
@@ -159,7 +224,9 @@ export const StatsPage = () => {
                                                             loaderData.averageAccuracy
                                                       } */}
                                                       {Math.floor(
-                                                            loaderData.averageAccuracy
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .averageAccuracy
                                                       )}{" "}
                                                       %
                                                 </h1>
@@ -182,7 +249,9 @@ export const StatsPage = () => {
                                                 </h5>
                                                 <h1>
                                                       {Math.floor(
-                                                            loaderData.averageWpm
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .lastTwentyTestsAverageWpm
                                                       )}{" "}
                                                       wpm
                                                 </h1>
@@ -204,62 +273,141 @@ export const StatsPage = () => {
                                                 </h5>
                                                 <h1>
                                                       {Math.floor(
-                                                            loaderData.averageWpm
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .lastTwentyTestsAverageAccuracy
                                                       )}{" "}
                                                       %
                                                 </h1>
                                           </div>
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>highest speed of a test</h5>
+                                                <h1>
+                                                      {Math.floor(
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestWpmOfATest
+                                                      )}{" "}
+                                                      wpm
+                                                </h1>
+                                          </div>
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>
+                                                      highest accuracy of a test
+                                                </h5>
+                                                <h1>
+                                                      {Math.floor(
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestAccuracyOfATest
+                                                      )}{" "}
+                                                      %
+                                                </h1>
+                                          </div>
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>
+                                                      highest average speed of a
+                                                      word
+                                                </h5>
+                                                <h1>
+                                                      {Math.floor(
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestAverageSpeedOfAWord
+                                                                  .speed
+                                                      )}{" "}
+                                                      wpm(
+                                                      {
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestAverageSpeedOfAWord
+                                                                  .word
+                                                      }
+                                                      )
+                                                </h1>
+                                          </div>
+                                          <div
+                                                className={
+                                                      styles["all-time-stat"] +
+                                                      " " +
+                                                      styles[
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
+                                                      ]
+                                                }
+                                          >
+                                                <h5>
+                                                      highest average speed of a
+                                                      word
+                                                </h5>
+                                                <h1>
+                                                      {Math.floor(
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestAverageAccuracyOfAWord
+                                                                  .accuracy
+                                                      )}{" "}
+                                                      %(
+                                                      {
+                                                            loaderData.payload
+                                                                  .testMode
+                                                                  .highestAverageAccuracyOfAWord
+                                                                  .word
+                                                      }
+                                                      )
+                                                </h1>
+                                          </div>
                                     </section>
 
-                                    <section
+                                    {/* <section
                                           className={styles["letters-section"]}
                                     >
                                           {letters.map((letter) => {
                                                 return (
-                                                      <Link
-                                                            to={`/?mode=practise&word=${letter}`}
-                                                            className={
-                                                                  styles["word"]
+                                                      <PracticeWord
+                                                            allWords={[letter]}
+                                                            wordIndex={0}
+                                                            statsData={
+                                                                  loaderData.payload
                                                             }
-                                                      >
-                                                            <h2
-                                                                  className={
-                                                                        styles[
-                                                                              "letter-title"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {letter}
-                                                            </h2>
-                                                            <div
-                                                                  className={
-                                                                        styles[
-                                                                              "letter-stats"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  <h3>
-                                                                        practise
-                                                                  </h3>
-                                                                  <span>
-                                                                        speed:
-                                                                        75wpm,{" "}
-                                                                  </span>
-                                                                  <span>
-                                                                        accuracy:
-                                                                        85%
-                                                                  </span>
-                                                                  <h3>test</h3>
-                                                                  <span>
-                                                                        speed:
-                                                                        60wpm,{" "}
-                                                                  </span>
-                                                                  <span>
-                                                                        accuracy:
-                                                                        80%
-                                                                  </span>
-                                                            </div>
-                                                      </Link>
+                                                            theme={
+                                                                  settingsData
+                                                                        .payload
+                                                                        .settings
+                                                                        .theme
+                                                            }
+                                                      ></PracticeWord>
                                                 );
                                           })}
                                     </section>
@@ -314,8 +462,8 @@ export const StatsPage = () => {
                                                       </Link>
                                                 );
                                           })}
-                                    </section>
-                                    <section
+                                    </section> */}
+                                    {/* <section
                                           className={
                                                 styles[
                                                       "characters-bar-graph-section"
@@ -394,7 +542,7 @@ export const StatsPage = () => {
                                                       }
                                                 )}
                                           </table>
-                                    </section>
+                                    </section> */}
                               </main>
                         </div>
                   </>

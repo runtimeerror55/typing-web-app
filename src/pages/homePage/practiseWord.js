@@ -1,10 +1,17 @@
 import styles from "./practiseWord.module.css";
-export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
-      console.log(statsData);
+export const PracticeWord = ({
+      allWords,
+      wordIndex,
+      theme,
+      statsData,
+      classOne,
+      serialNumber,
+}) => {
+      console.log("practise word");
       const practiseModeWordStats =
-            statsData.practiseMode?.wordsStats?.[allWords[wordIndex]];
+            statsData.payload?.practiseMode?.wordsStats?.[allWords[wordIndex]];
       const testModeWordStats =
-            statsData.testMode?.wordsStats?.[allWords[wordIndex]];
+            statsData.payload?.testMode?.wordsStats?.[allWords[wordIndex]];
 
       const lastTwentyTestsAverages = (wordStats) => {
             const [wpmSum, accuracySum] = wordStats.lastTwentyTests.reduce(
@@ -29,149 +36,151 @@ export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
       }
 
       return (
-            <section className={styles["words-stats-section"]}>
+            <div className={styles["word"] + " " + styles["word-" + theme]}>
+                  <h3 className={styles["serial-number"]}>{serialNumber}</h3>
+                  <h2 className={styles["word-title"]}>
+                        {allWords[wordIndex]}
+                  </h2>
                   <div
                         className={
-                              styles["word"] + " " + styles["word-" + theme]
+                              classOne
+                                    ? styles["word-stats"] + " " + classOne
+                                    : styles["word-stats"]
                         }
                   >
-                        <h2 className={styles["letter-title"]}>
-                              {allWords[wordIndex]}
-                        </h2>
-                        <div className={styles["letter-stats"]}>
-                              <table>
-                                    <tr>
-                                          <th colspan="3">Practise mode</th>
-                                    </tr>
-                                    <tr>
-                                          <th></th>
-                                          <th>all tests</th>
-                                          <th>last 20 tests</th>
-                                    </tr>
-                                    <tr>
-                                          <th>speed</th>
-                                          <td>
-                                                {practiseModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  practiseModeWordStats.averageWpm
-                                                            )}{" "}
-                                                            wpm
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                          <td>
-                                                {practiseModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  practiseModeWordStats.lastTwentyTestsAverageWpm
-                                                            )}{" "}
-                                                            wpm
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                    </tr>
-                                    <tr>
-                                          <th>accuracy</th>
-                                          <td>
-                                                {" "}
-                                                {practiseModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  practiseModeWordStats.averageAccuracy
-                                                            )}{" "}
-                                                            %
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                          <td>
-                                                {practiseModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  practiseModeWordStats.lastTwentyTestsAverageAccuracy
-                                                            )}{" "}
-                                                            %
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                    </tr>
-                              </table>
+                        <table>
+                              <tr>
+                                    <th colspan="3">Practise mode</th>
+                              </tr>
+                              <tr>
+                                    <th></th>
+                                    <th>all tests</th>
+                                    <th>last 20 tests</th>
+                              </tr>
+                              <tr>
+                                    <th>speed</th>
+                                    <td>
+                                          {practiseModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            practiseModeWordStats.averageWpm
+                                                      )}{" "}
+                                                      wpm
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                                    <td>
+                                          {practiseModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            practiseModeWordStats.lastTwentyTestsAverageWpm
+                                                      )}{" "}
+                                                      wpm
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <th>accuracy</th>
+                                    <td>
+                                          {" "}
+                                          {practiseModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            practiseModeWordStats.averageAccuracy
+                                                      )}{" "}
+                                                      %
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                                    <td>
+                                          {practiseModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            practiseModeWordStats.lastTwentyTestsAverageAccuracy
+                                                      )}{" "}
+                                                      %
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                              </tr>
+                        </table>
 
-                              <table>
-                                    <tr>
-                                          <th colspan="3">Test mode</th>
-                                    </tr>
-                                    <tr>
-                                          <th></th>
-                                          <th>all tests</th>
-                                          <th>last 20 tests</th>
-                                    </tr>
-                                    <tr>
-                                          <th>speed</th>
-                                          <td>
-                                                {testModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  testModeWordStats.averageWpm
-                                                            )}{" "}
-                                                            wpm
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                          <td>
-                                                {testModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  testModeWordStats.lastTwentyTestsAverageWpm
-                                                            )}{" "}
-                                                            wpm
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                    </tr>
-                                    <tr>
-                                          <th>accuracy</th>
-                                          <td>
-                                                {" "}
-                                                {testModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  testModeWordStats.averageAccuracy
-                                                            )}{" "}
-                                                            %
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                          <td>
-                                                {testModeWordStats ? (
-                                                      <>
-                                                            {Math.floor(
-                                                                  testModeWordStats.lastTwentyTestsAverageAccuracy
-                                                            )}{" "}
-                                                            %
-                                                      </>
-                                                ) : (
-                                                      "not attempted"
-                                                )}
-                                          </td>
-                                    </tr>
-                              </table>
+                        <table>
+                              <tr>
+                                    <th colspan="3">Test mode</th>
+                              </tr>
+                              <tr>
+                                    <th></th>
+                                    <th>all tests</th>
+                                    <th>last 20 tests</th>
+                              </tr>
+                              <tr>
+                                    <th>speed</th>
+                                    <td>
+                                          {testModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            testModeWordStats.averageWpm
+                                                      )}{" "}
+                                                      wpm
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                                    <td>
+                                          {testModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            testModeWordStats.lastTwentyTestsAverageWpm
+                                                      )}{" "}
+                                                      wpm
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                              </tr>
+                              <tr>
+                                    <th>accuracy</th>
+                                    <td>
+                                          {" "}
+                                          {testModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            testModeWordStats.averageAccuracy
+                                                      )}{" "}
+                                                      %
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                                    <td>
+                                          {testModeWordStats ? (
+                                                <>
+                                                      {Math.floor(
+                                                            testModeWordStats.lastTwentyTestsAverageAccuracy
+                                                      )}{" "}
+                                                      %
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                              </tr>
+                        </table>
 
-                              {/* {practiseModeWordStats ? (
+                        {/* {practiseModeWordStats ? (
                                     <>
                                           <div>
                                                 all tests speed:{" "}
@@ -241,8 +250,7 @@ export const PracticeWord = ({ allWords, wordIndex, theme, statsData }) => {
                               ) : (
                                     "not attempted"
                               )} */}
-                        </div>
                   </div>
-            </section>
+            </div>
       );
 };

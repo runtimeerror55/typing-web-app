@@ -1,6 +1,6 @@
 import { Form, useFetcher, useSubmit } from "react-router-dom";
 import styles from "./quickSettings.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { toastOptions } from "../../utilities/utilities";
 
@@ -14,12 +14,13 @@ export const QuickSettings = ({
       setModeOne,
       mode,
       modeOne,
-      modeTwo,
       setModeTwo,
       setAllWords,
       allLetters,
       allWords,
       setWordIndex,
+      statsData,
+      setModeThree,
 }) => {
       const submit = useSubmit();
       const updateSettingsFetcher = useFetcher();
@@ -41,6 +42,27 @@ export const QuickSettings = ({
       const settingsChangeHandler = (event) => {
             updateSettingsFetcher.submit(event.currentTarget);
       };
+      const [speedDistribution, setSpeedDistribution] = useState({});
+
+      useEffect(() => {
+            const testMode = statsData.payload?.testMode;
+            const speedDistribution = {};
+            if (testMode) {
+                  Object.values(testMode.wordsStats).forEach((value) => {
+                        for (let i = 30; i < 300; i += 10) {
+                              if (value.averageWpm < i) {
+                                    if (speedDistribution[i] === undefined) {
+                                          speedDistribution[i] = 1;
+                                    } else {
+                                          speedDistribution[i]++;
+                                    }
+                              }
+                        }
+                  });
+            }
+            setSpeedDistribution(speedDistribution);
+      }, []);
+
       return (
             <>
                   <updateSettingsFetcher.Form
@@ -78,7 +100,6 @@ export const QuickSettings = ({
                               <select
                                     name="theme"
                                     onChange={(event) => {
-                                          console.log(event.target.value);
                                           setTheme(event.target.value);
                                     }}
                                     defaultValue={theme}
@@ -96,7 +117,7 @@ export const QuickSettings = ({
                                           const soundFile = await import(
                                                 `../../assets/sounds/${event.target.value}`
                                           );
-                                          console.log(soundFile);
+
                                           setTypingSoundPath(soundFile.default);
                                     }}
                                     defaultValue={settings.sound}
@@ -193,6 +214,27 @@ export const QuickSettings = ({
                                           <option value="0">
                                                 do not include random word
                                           </option>
+                                    </select>
+                              ) : null}
+                              {mode === "practise" && modeOne === "words" ? (
+                                    <select
+                                          onChange={(event) => {
+                                                setModeThree(
+                                                      event.target.value
+                                                );
+                                                setWordIndex(0);
+                                          }}
+                                    >
+                                          {Object.entries(
+                                                speedDistribution
+                                          ).map(([key, value]) => {
+                                                return (
+                                                      <option value={key}>
+                                                            less than {key} wpm
+                                                            ({value})
+                                                      </option>
+                                                );
+                                          })}
                                     </select>
                               ) : null}
                         </section>

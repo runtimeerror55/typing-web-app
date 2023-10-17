@@ -1,4 +1,4 @@
-import { useRef, useState, Suspense, useMemo } from "react";
+import { useRef, useState, Suspense, useMemo, useEffect } from "react";
 import {
       useAsyncValue,
       useLoaderData,
@@ -1068,6 +1068,7 @@ export const HomePage = () => {
       const [mode, setMode] = useState("test");
       const [modeOne, setModeOne] = useState("words");
       const [modeTwo, setModeTwo] = useState("0");
+      const [modeThree, setModeThree] = useState(500);
       const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
       const [theme, setTheme] = useState(settingsData.payload.settings.theme);
 
@@ -1083,6 +1084,19 @@ export const HomePage = () => {
                   restartButtonRef.current.focus();
             }
       };
+
+      useEffect(() => {
+            const newWords = [];
+            if (statsData.status === "success" && statsData.payload.testMode)
+                  Object.entries(statsData.payload.testMode.wordsStats).forEach(
+                        ([key, value]) => {
+                              if (value.averageWpm < +modeThree) {
+                                    newWords.push(key);
+                              }
+                        }
+                  );
+            setAllWords(newWords);
+      }, [modeThree]);
 
       if (loaderData.status === "error") {
             return (
@@ -1113,12 +1127,21 @@ export const HomePage = () => {
                         <NavBar></NavBar>
                         <main className={styles["main"]}>
                               {mode === "practise" ? (
-                                    <PracticeWord
-                                          theme={theme}
-                                          statsData={statsData}
-                                          wordIndex={wordIndex}
-                                          allWords={allWords}
-                                    ></PracticeWord>
+                                    <section>
+                                          <PracticeWord
+                                                key={
+                                                      mode +
+                                                      modeOne +
+                                                      modeTwo +
+                                                      modeThree
+                                                }
+                                                theme={theme}
+                                                statsData={statsData}
+                                                wordIndex={wordIndex}
+                                                allWords={allWords}
+                                                serialNumber={wordIndex + 1}
+                                          ></PracticeWord>
+                                    </section>
                               ) : null}
 
                               <section className={styles["typing-section"]}>
@@ -1131,10 +1154,17 @@ export const HomePage = () => {
                                           mode={mode}
                                           setWordIndex={setWordIndex}
                                           wordIndex={wordIndex}
-                                          key={mode + modeOne + modeTwo}
+                                          key={
+                                                mode +
+                                                modeOne +
+                                                modeTwo +
+                                                modeThree
+                                          }
                                           modeOne={modeOne}
                                           modeTwo={modeTwo}
                                           allLetters={allLetters}
+                                          statsData={statsData}
+                                          modeThree={modeThree}
                                     ></TypingArea>
                               </section>
                               <QuickSettings
@@ -1153,6 +1183,8 @@ export const HomePage = () => {
                                     allLetters={allLetters}
                                     allWords={commonWords}
                                     setWordIndex={setWordIndex}
+                                    statsData={statsData}
+                                    setModeThree={setModeThree}
                               ></QuickSettings>
                               {/* <aside className={styles["practise-words"]}>
                                     {allWords.map((word, wordIndex) => {

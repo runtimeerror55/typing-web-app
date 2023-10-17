@@ -1045,6 +1045,14 @@ const statsSchema = mongoose.Schema({
                   },
             ],
             wordsStats: { type: mongoose.Schema.Types.Mixed, default: {} },
+            highestWpmOfATest: {
+                  type: Number,
+                  default: -1,
+            },
+            highestAccuracyOfATest: {
+                  type: Number,
+                  default: -1,
+            },
       },
       practiseMode: {
             wordsStats: { type: mongoose.Schema.Types.Mixed, default: {} },

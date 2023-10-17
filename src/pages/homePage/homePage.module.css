@@ -18,6 +18,7 @@
       align-items: center;
       flex-direction: column;
       position: relative;
+      width: 100%;
 }
 
 .typing-section {
@@ -47,18 +48,4 @@
 
 .home-page-violet-theme {
       background-color: #5d1a86;
-}
-.word-green-theme,
-.letter-green-theme {
-      background-color: #5fdc72;
-}
-
-.word-blue-theme,
-.letter-blue-theme {
-      background-color: #5facdc;
-}
-
-.word-violet-theme,
-.letter-violet-theme {
-      background-color: #c280f1;
 }
