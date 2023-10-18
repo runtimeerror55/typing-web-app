@@ -7,7 +7,6 @@ export const PracticeWord = ({
       classOne,
       serialNumber,
 }) => {
-      console.log("practise word");
       const practiseModeWordStats =
             statsData.payload?.practiseMode?.wordsStats?.[allWords[wordIndex]];
       const testModeWordStats =

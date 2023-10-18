@@ -1077,13 +1077,40 @@ export const HomePage = () => {
       });
 
       const restartButtonRef = useRef();
+      //   const pageKeyDownHandler = (event) => {
+      //         event.preventDefault();
+      //         event.stopPropagation();
+      //         if (event.key === "Tab") {
+      //               restartButtonRef.current.focus();
+      //         }
+      //   };
       const pageKeyDownHandler = (event) => {
             event.preventDefault();
             event.stopPropagation();
             if (event.key === "Tab") {
-                  restartButtonRef.current.focus();
+                  if (
+                        focusableElements.index ===
+                        focusableElements.elements.length - 1
+                  ) {
+                        focusableElements.index = 0;
+                  } else {
+                        focusableElements.index++;
+                  }
+
+                  focusableElements.elements[focusableElements.index].focus();
+            } else if (event.key === "Enter") {
+                  focusableElements.index = -1;
             }
       };
+
+      const focusableElements = useMemo(() => {
+            return { elements: null, index: -1 };
+      }, [mode, modeOne, modeTwo, modeThree]);
+
+      useEffect(() => {
+            focusableElements.elements =
+                  document.querySelectorAll("[tabindex='0']");
+      }, [mode, modeOne, modeTwo, modeThree]);
 
       useEffect(() => {
             const newWords = [];
@@ -1107,7 +1134,7 @@ export const HomePage = () => {
                               styles[`home-page-green-theme`]
                         }
                         onKeyDown={pageKeyDownHandler}
-                        tabIndex={0}
+                        tabIndex={-1}
                   >
                         {loaderData.message}
                   </div>
@@ -1121,7 +1148,7 @@ export const HomePage = () => {
                               styles[`home-page-${theme}`]
                         }
                         onKeyDown={pageKeyDownHandler}
-                        tabIndex={0}
+                        tabIndex={-1}
                   >
                         <ToastContainer />
                         <NavBar></NavBar>

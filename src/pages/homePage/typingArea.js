@@ -14,7 +14,11 @@ import { typingParagraphReducer } from "../../reducers/typingParagraphReducer";
 import { postTestStats } from "../../actions/actions";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRotate, faForward } from "@fortawesome/free-solid-svg-icons";
+import {
+      faRotate,
+      faForward,
+      faBackward,
+} from "@fortawesome/free-solid-svg-icons";
 import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions, toastOptions } from "../../utilities/utilities";
 import { WordsQueue } from "./wordsQueue";
@@ -58,7 +62,6 @@ const commonWords = [
       "of",
       "to",
       "and",
-      "a",
       "in",
       "we",
       "can",
@@ -1222,6 +1225,24 @@ export const TypingArea = forwardRef((props, ref) => {
             });
       };
 
+      const goBackButtonClickHandler = () => {
+            if (props.wordIndex === 0) {
+                  return;
+            } else {
+                  props.setWordIndex((previous) => {
+                        return previous - 1;
+                  });
+            }
+
+            dispatch({ type: "reset" });
+            setRestart({});
+            clearInterval(timerState.timerId);
+            setTimerState({
+                  elapsedTime: 0,
+                  timerId: undefined,
+            });
+      };
+
       const focusHandler = (event) => {
             event.target.style.border = "3px solid black";
       };
@@ -1230,7 +1251,14 @@ export const TypingArea = forwardRef((props, ref) => {
             if (event.key === "Enter") {
                   event.target.click();
                   typingParagraphRef.current.focus();
-                  ref.current.blur();
+                  event.target.blur();
+            }
+      };
+      const goBackButtonKeyDownHandler = (event) => {
+            if (event.key === "Enter") {
+                  event.target.click();
+                  typingParagraphRef.current.focus();
+                  event.target.blur();
             }
       };
 
@@ -1318,6 +1346,43 @@ export const TypingArea = forwardRef((props, ref) => {
                         )}
 
                         <div>
+                              {props.mode === "practise" ? (
+                                    <div
+                                          className={
+                                                styles[
+                                                      "load-next-paragraph-form"
+                                                ]
+                                          }
+                                    >
+                                          <button
+                                                tabIndex={0}
+                                                type="submit"
+                                                ref={ref}
+                                                className={
+                                                      styles[
+                                                            "load-next-paragraph-button"
+                                                      ] +
+                                                      " " +
+                                                      styles[
+                                                            `icon-${props.theme}`
+                                                      ]
+                                                }
+                                                onFocus={focusHandler}
+                                                onBlur={restartOnBlurHandler}
+                                                onKeyDown={
+                                                      goBackButtonKeyDownHandler
+                                                }
+                                                onClick={
+                                                      goBackButtonClickHandler
+                                                }
+                                          >
+                                                <FontAwesomeIcon
+                                                      icon={faBackward}
+                                                />
+                                          </button>
+                                    </div>
+                              ) : null}
+
                               <button
                                     ref={ref}
                                     className={
@@ -1325,10 +1390,10 @@ export const TypingArea = forwardRef((props, ref) => {
                                           " " +
                                           styles[`icon-${props.theme}`]
                                     }
-                                    onClick={restartHandler}
-                                    onFocus={focusHandler}
-                                    onKeyDown={restartKeyDownHandler}
-                                    onBlur={restartOnBlurHandler}
+                                    // onClick={restartHandler}
+                                    // onFocus={focusHandler}
+                                    // onKeyDown={restartKeyDownHandler}
+                                    // onBlur={restartOnBlurHandler}
                               >
                                     <FontAwesomeIcon icon={faRotate} />
                               </button>
@@ -1339,6 +1404,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     }
                               >
                                     <button
+                                          tabIndex={0}
                                           type="submit"
                                           ref={ref}
                                           className={
@@ -1363,7 +1429,7 @@ export const TypingArea = forwardRef((props, ref) => {
                         className={styles["typing-paragraph"]}
                         onKeyDown={keyDownHandler}
                         ref={typingParagraphRef}
-                        tabIndex={0}
+                        tabIndex={-1}
                   >
                         {showParagraphLoader ? (
                               <div className={styles["paragraph-loader"]}>
