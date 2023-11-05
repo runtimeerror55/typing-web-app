@@ -2,7 +2,13 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AwaitHomePage } from "./pages/homePage/awaitHomePage";
 import { AwaitStatsPage } from "./pages/statsPage/awaitStatsPage";
 import { updateSettings, registerAction, loginAction } from "./actions/actions";
-import { statsPageLoader, homePageLoader } from "./loaders/loaders";
+import {
+      statsPageLoader,
+      homePageLoader,
+      getWords,
+      getUserPreviousSessionSettings,
+      getUserStats,
+} from "./loaders/loaders";
 import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
@@ -15,12 +21,18 @@ const router = createBrowserRouter([
             path: "/",
             element: <AwaitHomePage></AwaitHomePage>,
             loader: homePageLoader,
+            shouldRevalidate: ({ formAction }) => {
+                  return true;
+            },
+      },
+      {
+            path: "/statsPage",
+            element: <AwaitStatsPage></AwaitStatsPage>,
+            loader: statsPageLoader,
       },
       {
             path: "/stats",
-            element: <AwaitStatsPage></AwaitStatsPage>,
-            loader: statsPageLoader,
-            action: postTestStats,
+            loader: getUserStats,
       },
 
       {
@@ -29,8 +41,11 @@ const router = createBrowserRouter([
       },
       {
             path: "/settings",
-
             action: updateSettings,
+      },
+      {
+            path: "/previousSessionSettings",
+            loader: getUserPreviousSessionSettings,
       },
       {
             path: "/register",
@@ -41,6 +56,10 @@ const router = createBrowserRouter([
             path: "/login",
             element: <LoginPage></LoginPage>,
             action: loginAction,
+      },
+      {
+            path: "/words",
+            loader: getWords,
       },
 ]);
 

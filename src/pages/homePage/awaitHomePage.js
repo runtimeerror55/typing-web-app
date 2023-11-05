@@ -4,7 +4,7 @@ import { NavBar } from "../../components/navBar/navBar";
 import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
-import flastTwo from "../../assets/sounds/flash-2.mp3";
+
 import { Howl } from "howler";
 import { ColorRing } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";

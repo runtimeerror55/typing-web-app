@@ -22,8 +22,17 @@ select {
       margin-top: 3px;
       margin-bottom: 4px;
       border: 2px solid black;
+      cursor: pointer;
+      transition: transform linear 0.1s;
+      max-width: 150px;
+}
+select:hover {
+      border: 2px solid white;
 }
 
+option {
+      margin: 5px;
+}
 /* quickSettings background-color : #1e5a27,
    quickSettings color: white;
    font awesome icons bg:  #1e5a27,

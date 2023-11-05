@@ -1,10 +1,6 @@
 # to do
 
-- generating words with least frequently typed to highest
-- go back button in practise mode to view previous word or letter
-- language, filter besed on words range , schema change
-- deciding where to show the settings
-- showing more stats in stats page
+- key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly
 - showing how many words are typed alteast once in test mode
 - showing how many words and letters have been practised atleast once
 

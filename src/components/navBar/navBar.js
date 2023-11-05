@@ -3,8 +3,7 @@ import styles from "./navBar.module.css";
 import { useContext } from "react";
 import { authContext } from "../../context/auth";
 export const NavBar = () => {
-      const { token, user, setToken, setUser, logout } =
-            useContext(authContext);
+      const { token, logout } = useContext(authContext);
 
       const navigate = useNavigate();
 
@@ -15,7 +14,7 @@ export const NavBar = () => {
       return (
             <>
                   <nav className={styles["nav-bar"]}>
-                        <h1 className={styles.logo}>TYPINGO</h1>
+                        <h1 className={styles.logo}>MINITYPE</h1>
 
                         <div>
                               <Link to={"/"} className={styles["nav-link"]}>
@@ -27,7 +26,7 @@ export const NavBar = () => {
                                           " " +
                                           styles["nav-link"]
                                     }
-                                    to={"/stats"}
+                                    to={"/statsPage"}
                               >
                                     STATS
                               </Link>

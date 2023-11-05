@@ -1,13 +1,28 @@
 import { defer } from "react-router-dom";
 import { getToken } from "../utilities/utilities";
-
-const getUserStats = async () => {
+let backEndUrl = "http://localhost:8080/";
+export const getUserStats = async ({ request }) => {
       try {
-            const response = await fetch("http://localhost:8080/userStats", {
-                  headers: {
-                        authorization: "Bearer " + getToken(),
+            let url = new URL(request.url);
+            let queryString = Array.from(url.searchParams).reduce(
+                  (finalString, [key, value]) => {
+                        if (finalString === "?") {
+                              return finalString + key + "=" + value;
+                        } else {
+                              return finalString + "&" + key + "=" + value;
+                        }
                   },
-            });
+                  "?"
+            );
+            console.log(queryString);
+            const response = await fetch(
+                  `${backEndUrl}userStats${queryString}`,
+                  {
+                        headers: {
+                              authorization: "Bearer " + getToken(),
+                        },
+                  }
+            );
             const data = await response.json();
 
             return data;
@@ -30,9 +45,16 @@ const getUserSettings = async () => {
       }
 };
 
-const getWords = async () => {
+export const getUserPreviousSessionSettings = async () => {
       try {
-            const response = await fetch("http://localhost:8080");
+            const response = await fetch(
+                  "http://localhost:8080/previousSessionSettings",
+                  {
+                        headers: {
+                              authorization: "Bearer " + getToken(),
+                        },
+                  }
+            );
             const data = await response.json();
             return data;
       } catch (error) {
@@ -40,17 +62,48 @@ const getWords = async () => {
       }
 };
 
-export const homePageLoader = async () => {
+export const getWords = async ({ request }) => {
+      try {
+            let url = new URL(request.url);
+            let queryString = Array.from(url.searchParams).reduce(
+                  (finalString, [key, value]) => {
+                        if (finalString === "?") {
+                              return finalString + key + "=" + value;
+                        } else {
+                              return finalString + "&" + key + "=" + value;
+                        }
+                  },
+                  "?"
+            );
+
+            const response = await fetch(`${backEndUrl}words${queryString}`);
+            const data = await response.json();
+            return data;
+      } catch (error) {
+            return { status: "error", message: error.message };
+      }
+};
+
+export const homePageLoader = async ({ request }) => {
+      //   getWords({ request });
+      //   getUserSettings();
+      //   getUserStats({ request });
       return defer({
-            wordsLoaderData: getWords(),
-            settingsLoaderData: getUserSettings(),
-            statsLoaderData: getUserStats(),
+            wordsLoaderData: new Promise((resolve, reject) => {
+                  resolve({});
+            }),
+            settingsLoaderData: new Promise((resolve, reject) => {
+                  resolve({});
+            }),
+            statsLoaderData: new Promise((resolve, reject) => {
+                  resolve({});
+            }),
       });
 };
 
-export const statsPageLoader = async () => {
+export const statsPageLoader = async ({ request }) => {
       return defer({
-            loaderData: getUserStats(),
+            loaderData: getUserStats({ request }),
             settingsData: await getUserSettings(),
       });
 };

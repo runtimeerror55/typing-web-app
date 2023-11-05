@@ -1,74 +1,65 @@
 import styles from "./loginPage.module.css";
-import { useNavigate, useFetcher } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
-import { useContext, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { useContext } from "react";
+import { ToastContainer } from "react-toastify";
 import { authContext } from "../../context/auth";
-import { toastOptions } from "../../utilities/utilities";
+import { ButtonWithActionAndLoader } from "../../components/buttons/buttonWithActionAndLoader";
 export const LoginPage = () => {
       const { login } = useContext(authContext);
 
       const navigate = useNavigate();
 
-      const loginFetcher = useFetcher();
-
-      const logingFetcherStatus =
-            loginFetcher.state === "idle" && loginFetcher.data;
-
-      useEffect(() => {
-            if (logingFetcherStatus) {
-                  const data = loginFetcher.data;
-                  if (data.status === "success") {
-                        toast.success(data.message, toastOptions);
-                        login(data);
-                        navigate("/");
-                  } else {
-                        toast.error(data.message, toastOptions);
-                  }
-            }
-      }, [loginFetcher]);
+      const callBack = (data) => {
+            login(data);
+            navigate("/");
+      };
 
       return (
             <div className={styles["page"]}>
-                  <ToastContainer />
                   <NavBar></NavBar>
+                  <ToastContainer></ToastContainer>
                   <main className={styles["main"]}>
-                        <loginFetcher.Form
-                              action="/login"
-                              method="post"
-                              className={styles["login-form"]}
-                        >
-                              <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    placeholder="email"
-                                    required
-                                    className={styles["user-details-input"]}
-                              ></input>
-                              <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    placeholder="name"
-                                    required
-                                    className={styles["user-details-input"]}
-                              ></input>
-                              <input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    placeholder="password"
-                                    required
-                                    className={styles["user-details-input"]}
-                              ></input>
-                              <button
-                                    type="submit"
-                                    className={styles["login-button"]}
+                        <section className={styles["login-form-section"]}>
+                              <ButtonWithActionAndLoader
+                                    buttonText="Login"
+                                    buttonClass={styles["login-button"]}
+                                    loaderHeight="25"
+                                    loaderWidth="100"
+                                    action="/login?type=login+user"
+                                    method="POST"
+                                    formClass={styles["login-form"]}
+                                    callBack={callBack}
+                                    loaderColor="black"
                               >
-                                    login
-                              </button>
-                        </loginFetcher.Form>
+                                    <input
+                                          type="text"
+                                          id="name"
+                                          name="name"
+                                          placeholder="name"
+                                          required
+                                          className={
+                                                styles["user-details-input"]
+                                          }
+                                    ></input>
+                                    <input
+                                          type="password"
+                                          id="password"
+                                          name="password"
+                                          placeholder="password"
+                                          required
+                                          className={
+                                                styles["user-details-input"]
+                                          }
+                                    ></input>
+                              </ButtonWithActionAndLoader>
+                              <Link
+                                    to="/register"
+                                    className={styles["register-button"]}
+                              >
+                                    sign up
+                              </Link>
+                        </section>
                   </main>
             </div>
       );

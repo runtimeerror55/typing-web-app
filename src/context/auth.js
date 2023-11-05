@@ -6,8 +6,14 @@ export const authContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
       const [token, setToken] = useState(localStorage.getItem("token"));
-      const [user, setUser] = useState(null);
+      const [user, setUser] = useState(() => {
+            if (token) {
+                  return decodeToken(token);
+            }
+            return null;
+      });
 
+      console.log(user);
       const logout = () => {
             localStorage.removeItem("token");
             setToken(null);
@@ -30,10 +36,8 @@ export const AuthProvider = ({ children }) => {
                   const user = decodeToken(token);
 
                   if (isMyTokenExpired) {
-                        console.log(user);
                         logout();
                   } else {
-                        console.log(user.exp * 1000 - Date.now());
                         setTimeout(() => {
                               logout();
                         }, user.exp * 1000 - Date.now());

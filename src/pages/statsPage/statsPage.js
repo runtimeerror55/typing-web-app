@@ -1,9 +1,18 @@
-import { useLoaderData, useAsyncValue, Link } from "react-router-dom";
+import {
+      useLoaderData,
+      useAsyncValue,
+      Link,
+      useFetcher,
+} from "react-router-dom";
+import { useState } from "react";
 import { NavBar } from "../../components/navBar/navBar";
 import { CharactersBartGraph } from "../statsPage/charactersBarGraph";
 import { WordsBarGraph } from "./wordsBarGraph";
 import styles from "./statsPage.module.css";
 import { PracticeWord } from "../homePage/practiseWord";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { toastOptions } from "../../utilities/utilities";
 const commonWords = [
       "as",
       "i",
@@ -79,17 +88,19 @@ const letters = [
       "z",
 ];
 export const StatsPage = () => {
-      const loaderData = useAsyncValue();
+      const [loaderData, setLoaderData] = useState(useAsyncValue());
       let { settingsData } = useLoaderData();
-      settingsData = {
-            payload: {
-                  settings: {
-                        theme: "blue-theme",
-                        sound: "confettiEdited",
-                        timer: 15,
+      if (settingsData.status === "error") {
+            settingsData = {
+                  payload: {
+                        settings: {
+                              theme: "blue-theme",
+                              sound: "confettiEdited",
+                              timer: 15,
+                        },
                   },
-            },
-      };
+            };
+      }
 
       const lastTwentyTestsAverages = (wordStats) => {
             const [wpmSum, accuracySum] = wordStats.lastTwentyTests.reduce(
@@ -153,31 +164,378 @@ export const StatsPage = () => {
             highestAverageAcuuracyOfAWord();
       }
 
-      if (loaderData.status === "error") {
-            return (
+      const languageStatsFetcher = useFetcher();
+      const languageStatsFetcherStatus =
+            languageStatsFetcher.data && languageStatsFetcher.state === "idle";
+      const languageFilterHandler = (event) => {
+            const value = JSON.parse(event.target.value);
+            languageStatsFetcher.submit(value, {
+                  method: "GET",
+                  action: "/stats",
+            });
+      };
+
+      useEffect(() => {
+            if (languageStatsFetcherStatus) {
+                  const data = languageStatsFetcher.data;
+                  if (data.status === "success") {
+                        setLoaderData(data);
+                        toast.success("fetched successfully", toastOptions);
+                  } else {
+                        toast.error(data.message, toastOptions);
+                  }
+            }
+      }, [languageStatsFetcher]);
+
+      //   if (loaderData.status === "error") {
+      //         return (
+      //               <div
+      //                     className={
+      //                           styles["page"] +
+      //                           " " +
+      //                           styles[`home-page-green-theme`]
+      //                     }
+      //               >
+      //                     {loaderData.message}
+      //               </div>
+      //         );
+      //   } else {
+      return (
+            <>
                   <div
                         className={
                               styles["page"] +
                               " " +
-                              styles[`home-page-green-theme`]
+                              styles[settingsData.payload.settings.theme]
                         }
                   >
-                        {loaderData.message}
-                  </div>
-            );
-      } else {
-            return (
-                  <>
-                        <div
-                              className={
-                                    styles["page"] +
-                                    " " +
-                                    styles[settingsData.payload.settings.theme]
-                              }
-                        >
-                              <NavBar></NavBar>
-
-                              <main className={styles["main"]}>
+                        <NavBar></NavBar>
+                        <ToastContainer></ToastContainer>
+                        <main className={styles["main"]}>
+                              <section>
+                                    <table
+                                          className={
+                                                styles[
+                                                      "language-overall-stats-table"
+                                                ]
+                                          }
+                                    >
+                                          <tr>
+                                                <th
+                                                      colspan="7"
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      english
+                                                </th>
+                                          </tr>
+                                          <tr>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      sub-type
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      all tests average speed
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      all tests average accuracy
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      last 20 tests average
+                                                      speed
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      last 20 tests average
+                                                      accuracy
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      highest speed in a test
+                                                </th>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      highest accuracy in a test
+                                                </th>
+                                          </tr>
+                                          <tr>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      1- 100
+                                                </th>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                          </tr>
+                                          <tr>
+                                                <th
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-head"
+                                                            ]
+                                                      }
+                                                >
+                                                      101-200
+                                                </th>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                                <td
+                                                      className={
+                                                            styles[
+                                                                  "language-overall-stats-table-data"
+                                                            ]
+                                                      }
+                                                ></td>
+                                          </tr>
+                                    </table>
+                              </section>
+                              <section
+                                    className={
+                                          styles["language-filter-section"]
+                                    }
+                              >
+                                    <select onChange={languageFilterHandler}>
+                                          <option disabled>
+                                                languages and ranges
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 99,
+                                                      optionIndex: 0,
+                                                })}
+                                          >
+                                                english (1-100)
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 100,
+                                                      endIndex: 199,
+                                                      optionIndex: 1,
+                                                })}
+                                          >
+                                                english (101-200)
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 200,
+                                                      endIndex: 299,
+                                                      optionIndex: 2,
+                                                })}
+                                          >
+                                                english (201-300)
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 299,
+                                                      optionIndex: 3,
+                                                })}
+                                          >
+                                                english (1-300)
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 9,
+                                                      numbers: true,
+                                                      optionIndex: 4,
+                                                })}
+                                          >
+                                                english (1-9 words + all
+                                                numbers(1-30))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      numbers: true,
+                                                      optionIndex: 5,
+                                                })}
+                                          >
+                                                english (all numbers(1-30))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      specialWords: true,
+                                                      optionIndex: 6,
+                                                })}
+                                          >
+                                                english (1-9 words + all special
+                                                words(1-20))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 299,
+                                                      specialWords: true,
+                                                      optionIndex: 7,
+                                                })}
+                                          >
+                                                english (1-300 words + all
+                                                special characters(1-20))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 299,
+                                                      numbers: true,
+                                                      optionIndex: 8,
+                                                })}
+                                          >
+                                                english (1-300 words + all
+                                                numbers(90))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "english",
+                                                      startIndex: 0,
+                                                      endIndex: 299,
+                                                      numbers: true,
+                                                      specialWords: true,
+                                                      optionIndex: 9,
+                                                })}
+                                          >
+                                                english (1-300 words + all
+                                                special characters(90)+all
+                                                numbers(90))
+                                          </option>
+                                          <option
+                                                value={JSON.stringify({
+                                                      language: "javascript",
+                                                      optionIndex: 0,
+                                                })}
+                                          >
+                                                javascript (1-100)
+                                          </option>
+                                    </select>
+                              </section>
+                              {loaderData.status === "success" ? (
                                     <section
                                           className={
                                                 styles["all-time-stats-section"]
@@ -389,8 +747,9 @@ export const StatsPage = () => {
                                                 </h1>
                                           </div>
                                     </section>
+                              ) : null}
 
-                                    {/* <section
+                              {/* <section
                                           className={styles["letters-section"]}
                                     >
                                           {letters.map((letter) => {
@@ -463,7 +822,7 @@ export const StatsPage = () => {
                                                 );
                                           })}
                                     </section> */}
-                                    {/* <section
+                              {/* <section
                                           className={
                                                 styles[
                                                       "characters-bar-graph-section"
@@ -492,60 +851,52 @@ export const StatsPage = () => {
                                                             .settings.theme
                                                 }
                                           ></WordsBarGraph>
-                                    </section>
-                                    <section
+                                    </section> */}
+                              <section
+                                    className={styles["last-ten-tests-section"]}
+                              >
+                                    <table
                                           className={
-                                                styles["last-ten-tests-section"]
+                                                styles["last-ten-tests-table"] +
+                                                " " +
+                                                styles[
+                                                      settingsData.payload
+                                                            .settings.theme
+                                                ]
                                           }
                                     >
-                                          <table
-                                                className={
-                                                      styles[
-                                                            "last-ten-tests-table"
-                                                      ] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <tr>
-                                                      <th>Wpm</th>
-                                                      <th>Accuracy</th>
-                                                      <th>Time</th>
-                                                      <th>Date</th>
-                                                </tr>
-                                                {loaderData.tests.map(
-                                                      (test) => {
-                                                            return (
-                                                                  <tr>
-                                                                        <td>
-                                                                              {
-                                                                                    test.wpm
-                                                                              }
-                                                                        </td>
-                                                                        <td>
-                                                                              {
-                                                                                    test.accuracy
-                                                                              }
-                                                                        </td>
-                                                                        <td>
-                                                                              30s
-                                                                        </td>
-                                                                        <td>
-                                                                              12/9/2023
-                                                                        </td>
-                                                                  </tr>
-                                                            );
-                                                      }
-                                                )}
-                                          </table>
-                                    </section> */}
-                              </main>
-                        </div>
-                  </>
-            );
-      }
+                                          <tr>
+                                                <th>Wpm</th>
+                                                <th>Accuracy</th>
+                                                <th>Time</th>
+                                                <th>Date</th>
+                                          </tr>
+                                          {loaderData.payload.testMode.lastTwentyTests
+                                                .slice(-10)
+                                                .map((test) => {
+                                                      return (
+                                                            <tr>
+                                                                  <td>
+                                                                        {
+                                                                              test.wpm
+                                                                        }
+                                                                  </td>
+                                                                  <td>
+                                                                        {
+                                                                              test.accuracy
+                                                                        }
+                                                                  </td>
+                                                                  <td>30s</td>
+                                                                  <td>
+                                                                        12/9/2023
+                                                                  </td>
+                                                            </tr>
+                                                      );
+                                                })}
+                                    </table>
+                              </section>
+                        </main>
+                  </div>
+            </>
+      );
 };

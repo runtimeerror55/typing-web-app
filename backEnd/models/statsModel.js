@@ -32,7 +32,6 @@ const commonWords = [
       "of",
       "to",
       "and",
-      "a",
       "in",
       "we",
       "can",
@@ -728,7 +727,6 @@ const commonWords = [
       "cat",
       "century",
       "consider",
-      //   "type",
       "law",
       "bit",
       "coast",
@@ -1013,6 +1011,8 @@ commonWords.forEach((element, index) => {
 });
 // console.log(wordsStats);
 const statsSchema = mongoose.Schema({
+      language: String,
+      optionIndex: Number,
       testMode: {
             totalNumberOfStartedTests: {
                   type: Number,
@@ -1066,20 +1066,3 @@ const statsSchema = mongoose.Schema({
 const statsModel = mongoose.model("stats", statsSchema);
 
 module.exports = statsModel;
-
-// const mongoose = require("mongoose");
-
-// const propertyObject = {};
-
-// // Populate the propertyObject with 1000 properties
-// for (let i = 1; i <= 997; i++) {
-//       propertyObject[commonWords[i]] = {
-//             count: String,
-//             wpm: String,
-//             accuracy: String,
-//       };
-// }
-
-// const MySchema = new mongoose.Schema({ words: propertyObject });
-
-// const MyModel = mongoose.model("MyModel", MySchema);

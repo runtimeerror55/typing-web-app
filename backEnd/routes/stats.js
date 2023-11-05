@@ -210,181 +210,218 @@ router.route("/stats")
 
 router.route("/userStats")
       .get(isLoggedIn, async (request, response) => {
-            const userStats = await statsModel.findOne({
-                  user: request.user._id,
-            });
+            try {
+                  const userStats = await statsModel.findOne({
+                        user: request.user._id,
+                        language: request.query.language || "english",
+                        optionIndex: request.query.optionIndex || 0,
+                  });
 
-            if (userStats === null) {
+                  if (userStats === null) {
+                        response.status(500).json({
+                              status: "error",
+                              message: "user data does not exist",
+                        });
+                  } else {
+                        setTimeout(() => {
+                              response.status(200).json({
+                                    status: "success",
+                                    payload: userStats,
+                              });
+                        }, 1000);
+                  }
+            } catch (error) {
                   response.status(500).json({
                         status: "error",
-                        message: "user data does not exist",
+                        message: error.message,
                   });
-            } else {
-                  setTimeout(() => {
-                        response
-                              .status(200)
-                              .json({ status: "success", payload: userStats });
-                  }, 1000);
             }
       })
       .post(isLoggedIn, async (request, response) => {
-            const testStats = request.body;
+            try {
+                  const testStats = request.body;
 
-            let userStats = await statsModel.findOne({
-                  user: request.user._id,
-            });
-            if (!userStats) {
-                  userStats = new statsModel({
+                  let userStats = await statsModel.findOne({
                         user: request.user._id,
+                        language: testStats.languageAndRange.language,
+                        optionIndex: testStats.languageAndRange.optionIndex,
                   });
-                  await userStats.save();
-            }
 
-            if (testStats.mode === "test") {
-                  let x = userStats.testMode;
-                  x.averageAccuracy =
-                        (x.averageAccuracy * x.totalNumberOfFinishedTests +
-                              testStats.accuracy) /
-                        (x.totalNumberOfFinishedTests + 1);
-
-                  x.averageWpm =
-                        (x.averageWpm * x.totalNumberOfFinishedTests +
-                              testStats.wpm) /
-                        (x.totalNumberOfFinishedTests + 1);
-
-                  x.totalNumberOfRightHits += testStats.totalNumberOfRightHits;
-                  x.totalNumberOfWrongHits += testStats.totalNumberOfWrongHits;
-                  x.totalNumberOfFinishedTests++;
-                  if (x.highestWpmOfATest < testStats.wpm) {
-                        x.highestWpmOfATest = testStats.wpm;
-                  }
-                  if (x.highestAccuracyOfATest < testStats.accuracy) {
-                        x.highestAccuracyOfATest = testStats.accuracy;
-                  }
-
-                  if (x.lastTwentyTests.length === 20) {
-                        x.lastTwentyTests.shift();
-                        x.lastTwentyTests.push({
-                              wpm: testStats.wpm,
-                              accuracy: testStats.accuracy,
+                  if (!userStats) {
+                        userStats = new statsModel({
+                              user: request.user._id,
+                              language: testStats.languageAndRange.language,
+                              optionIndex:
+                                    testStats.languageAndRange.optionIndex,
                         });
-                  } else {
-                        x.lastTwentyTests.push({
-                              wpm: testStats.wpm,
-                              accuracy: testStats.accuracy,
-                        });
+                        await userStats.save();
                   }
 
-                  let y = userStats.testMode.wordsStats;
-                  for (let [key, value] of Object.entries(
-                        testStats.wordsStats
-                  )) {
-                        if (value.endedAt !== undefined) {
-                              if (y[key] === undefined) {
-                                    y[key] = {
-                                          totalNumberOfTestsAppeared: 1,
-                                          averageWpm: value.wpm,
-                                          averageAccuracy: value.accuracy,
-                                          lastTwentyTests: [
-                                                {
+                  if (testStats.mode === "test") {
+                        let x = userStats.testMode;
+                        x.averageAccuracy =
+                              (x.averageAccuracy *
+                                    x.totalNumberOfFinishedTests +
+                                    testStats.accuracy) /
+                              (x.totalNumberOfFinishedTests + 1);
+
+                        x.averageWpm =
+                              (x.averageWpm * x.totalNumberOfFinishedTests +
+                                    testStats.wpm) /
+                              (x.totalNumberOfFinishedTests + 1);
+
+                        x.totalNumberOfRightHits +=
+                              testStats.totalNumberOfRightHits;
+                        x.totalNumberOfWrongHits +=
+                              testStats.totalNumberOfWrongHits;
+                        x.totalNumberOfFinishedTests++;
+                        if (x.highestWpmOfATest < testStats.wpm) {
+                              x.highestWpmOfATest = testStats.wpm;
+                        }
+                        if (x.highestAccuracyOfATest < testStats.accuracy) {
+                              x.highestAccuracyOfATest = testStats.accuracy;
+                        }
+
+                        if (x.lastTwentyTests.length === 20) {
+                              x.lastTwentyTests.shift();
+                              x.lastTwentyTests.push({
+                                    wpm: testStats.wpm,
+                                    accuracy: testStats.accuracy,
+                              });
+                        } else {
+                              x.lastTwentyTests.push({
+                                    wpm: testStats.wpm,
+                                    accuracy: testStats.accuracy,
+                              });
+                        }
+
+                        let y = userStats.testMode.wordsStats;
+                        for (let [key, value] of Object.entries(
+                              testStats.wordsStats
+                        )) {
+                              if (value.endedAt !== undefined) {
+                                    if (y[key] === undefined) {
+                                          y[key] = {
+                                                totalNumberOfTestsAppeared: 1,
+                                                averageWpm: value.wpm,
+                                                averageAccuracy: value.accuracy,
+                                                lastTwentyTests: [
+                                                      {
+                                                            wpm: value.wpm,
+                                                            accuracy: value.accuracy,
+                                                      },
+                                                ],
+                                          };
+                                    } else {
+                                          y[key].averageWpm =
+                                                (y[key].averageWpm *
+                                                      y[key]
+                                                            .totalNumberOfTestsAppeared +
+                                                      value.wpm) /
+                                                (y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                      1);
+
+                                          y[key].averageAccuracy =
+                                                (y[key].averageAccuracy *
+                                                      y[key]
+                                                            .totalNumberOfTestsAppeared +
+                                                      value.accuracy) /
+                                                (y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                      1);
+
+                                          y[key].totalNumberOfTestsAppeared++;
+
+                                          if (
+                                                y[key].lastTwentyTests
+                                                      .length === 20
+                                          ) {
+                                                y[key].lastTwentyTests.shift();
+                                                y[key].lastTwentyTests.push({
                                                       wpm: value.wpm,
                                                       accuracy: value.accuracy,
-                                                },
-                                          ],
-                                    };
-                              } else {
-                                    y[key].averageWpm =
-                                          (y[key].averageWpm *
-                                                y[key]
-                                                      .totalNumberOfTestsAppeared +
-                                                value.wpm) /
-                                          (y[key].totalNumberOfTestsAppeared +
-                                                1);
-
-                                    y[key].averageAccuracy =
-                                          (y[key].averageAccuracy *
-                                                y[key]
-                                                      .totalNumberOfTestsAppeared +
-                                                value.accuracy) /
-                                          (y[key].totalNumberOfTestsAppeared +
-                                                1);
-
-                                    y[key].totalNumberOfTestsAppeared++;
-
-                                    if (y[key].lastTwentyTests.length === 20) {
-                                          y[key].lastTwentyTests.shift();
-                                          y[key].lastTwentyTests.push({
-                                                wpm: value.wpm,
-                                                accuracy: value.accuracy,
-                                          });
-                                    } else {
-                                          y[key].lastTwentyTests.push({
-                                                wpm: value.wpm,
-                                                accuracy: value.accuracy,
-                                          });
+                                                });
+                                          } else {
+                                                y[key].lastTwentyTests.push({
+                                                      wpm: value.wpm,
+                                                      accuracy: value.accuracy,
+                                                });
+                                          }
                                     }
                               }
                         }
-                  }
-                  userStats.markModified("testMode.wordsStats");
-                  await userStats.save();
-            } else if (testStats.mode === "practise") {
-                  let y = userStats.practiseMode.wordsStats;
-                  for (let [key, value] of Object.entries(
-                        testStats.wordsStats
-                  )) {
-                        if (value.endedAt !== undefined) {
-                              if (y[key] === undefined) {
-                                    y[key] = {
-                                          totalNumberOfTestsAppeared: 1,
-                                          averageWpm: value.wpm,
-                                          averageAccuracy: value.accuracy,
-                                          lastTwentyTests: [
-                                                {
+                        userStats.markModified("testMode.wordsStats");
+                        await userStats.save();
+                  } else if (testStats.mode === "practise") {
+                        let y = userStats.practiseMode.wordsStats;
+                        for (let [key, value] of Object.entries(
+                              testStats.wordsStats
+                        )) {
+                              if (value.endedAt !== undefined) {
+                                    if (y[key] === undefined) {
+                                          y[key] = {
+                                                totalNumberOfTestsAppeared: 1,
+                                                averageWpm: value.wpm,
+                                                averageAccuracy: value.accuracy,
+                                                lastTwentyTests: [
+                                                      {
+                                                            wpm: value.wpm,
+                                                            accuracy: value.accuracy,
+                                                      },
+                                                ],
+                                          };
+                                    } else {
+                                          y[key].averageWpm =
+                                                (y[key].averageWpm *
+                                                      y[key]
+                                                            .totalNumberOfTestsAppeared +
+                                                      value.wpm) /
+                                                (y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                      1);
+
+                                          y[key].averageAccuracy =
+                                                (y[key].averageAccuracy *
+                                                      y[key]
+                                                            .totalNumberOfTestsAppeared +
+                                                      value.accuracy) /
+                                                (y[key]
+                                                      .totalNumberOfTestsAppeared +
+                                                      1);
+
+                                          y[key].totalNumberOfTestsAppeared++;
+
+                                          if (
+                                                y[key].lastTwentyTests
+                                                      .length === 3
+                                          ) {
+                                                y[key].lastTwentyTests.shift();
+                                                y[key].lastTwentyTests.push({
                                                       wpm: value.wpm,
                                                       accuracy: value.accuracy,
-                                                },
-                                          ],
-                                    };
-                              } else {
-                                    y[key].averageWpm =
-                                          (y[key].averageWpm *
-                                                y[key]
-                                                      .totalNumberOfTestsAppeared +
-                                                value.wpm) /
-                                          (y[key].totalNumberOfTestsAppeared +
-                                                1);
-
-                                    y[key].averageAccuracy =
-                                          (y[key].averageAccuracy *
-                                                y[key]
-                                                      .totalNumberOfTestsAppeared +
-                                                value.accuracy) /
-                                          (y[key].totalNumberOfTestsAppeared +
-                                                1);
-
-                                    y[key].totalNumberOfTestsAppeared++;
-
-                                    if (y[key].lastTwentyTests.length === 3) {
-                                          y[key].lastTwentyTests.shift();
-                                          y[key].lastTwentyTests.push({
-                                                wpm: value.wpm,
-                                                accuracy: value.accuracy,
-                                          });
-                                    } else {
-                                          y[key].lastTwentyTests.push({
-                                                wpm: value.wpm,
-                                                accuracy: value.accuracy,
-                                          });
+                                                });
+                                          } else {
+                                                y[key].lastTwentyTests.push({
+                                                      wpm: value.wpm,
+                                                      accuracy: value.accuracy,
+                                                });
+                                          }
                                     }
                               }
                         }
+                        userStats.markModified("practiseMode.wordsStats");
+                        await userStats.save();
                   }
-                  userStats.markModified("practiseMode.wordsStats");
-                  await userStats.save();
+                  response.status(200).json({
+                        status: "success",
+                        message: "saved succesfully",
+                  });
+            } catch (error) {
+                  response.status(500).json({
+                        status: "error",
+                        message: error.message,
+                  });
             }
-            response
-                  .status(200)
-                  .json({ status: "success", message: "saved succesfully" });
       });
 module.exports.statsRouter = router;

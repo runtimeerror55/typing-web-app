@@ -1,25 +1,15 @@
 import { redirect } from "react-router-dom";
 import { getToken } from "../utilities/utilities.js";
 
-export const postTestStats = async ({ request }) => {
-      const formData = await request.json();
-
+export const postTestStats = async (testStats) => {
       try {
-            const responseone = await fetch("http://localhost:8080/stats", {
-                  headers: {
-                        "Content-Type": "application/json",
-                        authorization: "Bearer " + getToken(),
-                  },
-                  method: "POST",
-                  body: JSON.stringify(formData),
-            });
             const response = await fetch("http://localhost:8080/userStats", {
                   headers: {
                         "Content-Type": "application/json",
                         authorization: "Bearer " + getToken(),
                   },
                   method: "POST",
-                  body: JSON.stringify(formData),
+                  body: JSON.stringify(testStats),
             });
             const data = await response.json();
             return data;
@@ -30,16 +20,11 @@ export const postTestStats = async ({ request }) => {
             };
       }
 };
-export const updateSettings = async ({ request }) => {
+export const updateSettings = async (body) => {
       try {
-            const formData = await request.formData();
-            const body = {
-                  settings: {
-                        timer: formData.get("timer"),
-                        theme: formData.get("theme"),
-                        sound: formData.get("sound"),
-                  },
-            };
+            // const formData = await request.formData();
+            // const body = Object.fromEntries(formData);
+            console.log(typeof body);
             const response = await fetch("http://localhost:8080/settings", {
                   headers: {
                         "Content-Type": "application/json",

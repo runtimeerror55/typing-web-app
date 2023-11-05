@@ -1,0 +1,8 @@
+.button-with-action-and-loader {
+      padding-left: 10px;
+      padding-right: 10px;
+      height: 25px;
+      background-color: green;
+      border-radius: 5px;
+      color: white;
+}

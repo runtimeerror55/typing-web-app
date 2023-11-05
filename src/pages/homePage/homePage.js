@@ -1,1027 +1,34 @@
-import { useRef, useState, Suspense, useMemo, useEffect } from "react";
-import {
-      useAsyncValue,
-      useLoaderData,
-      useLocation,
-      useSearchParams,
-} from "react-router-dom";
+import { useRef, useState, useMemo, useEffect, useContext } from "react";
+import { useAsyncValue, useFetcher } from "react-router-dom";
 import { NavBar } from "../../components/navBar/navBar";
 import { TypingArea } from "./typingArea";
 import { QuickSettings } from "./quickSettings";
 import styles from "./homePage.module.css";
-import flastTwo from "../../assets/sounds/k.mp3";
+import soundA from "../../assets/sounds/a.mp3";
+import soundB from "../../assets/sounds/b.mp3";
 import { Howl } from "howler";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PracticeWord } from "./practiseWord";
+import { wordsMixer } from "../../utilities/utilities";
+import { toastOptions } from "../../utilities/utilities";
+import { authContext } from "../../context/auth";
+import { LanguageStats } from "./languageStats";
+
+const sounds = {
+      soundA,
+      soundB,
+};
 
 const defaultSettings = {
       theme: "green-theme",
-      sound: "confettiEdited",
+      sound: "soundA",
       timer: 15,
+      "language and range": {
+            language: "english",
+            optionIndex: 0,
+      },
 };
-
-const commonWords = [
-      "as",
-      "his",
-      "that",
-      "he",
-      "was",
-      "for",
-      "on",
-      "are",
-      "with",
-      "they",
-      "be",
-      "at",
-      "one",
-      "have",
-      "this",
-      "from",
-      "by",
-      "hot",
-      "word",
-      "but",
-      "what",
-      "some",
-      "is",
-      "it",
-      "you",
-      "or",
-      "had",
-      "the",
-      "of",
-      "to",
-      "and",
-      "a",
-      "in",
-      "we",
-      "can",
-      "out",
-      "other",
-      "were",
-      "which",
-      "do",
-      "their",
-      "time",
-      "if",
-      "will",
-      "how",
-      "said",
-      "an",
-      "each",
-      "tell",
-      "does",
-      "set",
-      "three",
-      "want",
-      "air",
-      "well",
-      "also",
-      "play",
-      "small",
-      "end",
-      "put",
-      "home",
-      "read",
-      "hand",
-      "port",
-      "large",
-      "spell",
-      "add",
-      "even",
-      "land",
-      "here",
-      "must",
-      "big",
-      "high",
-      "such",
-      "follow",
-      "act",
-      "why",
-      "ask",
-      "men",
-      "change",
-      "went",
-      "light",
-      "kind",
-      "off",
-      "need",
-      "house",
-      "picture",
-      "try",
-      "us",
-      "again",
-      "animal",
-      "point",
-      "mother",
-      "world",
-      "near",
-      "build",
-      "self",
-      "earth",
-      "father",
-      "any",
-      "new",
-      "work",
-      "part",
-      "take",
-      "get",
-      "place",
-      "made",
-      "live",
-      "where",
-      "after",
-      "back",
-      "little",
-      "only",
-      "round",
-      "man",
-      "year",
-      "came",
-      "show",
-      "every",
-      "good",
-      "me",
-      "give",
-      "our",
-      "under",
-      "name",
-      "very",
-      "through",
-      "just",
-      "form",
-      "sentence",
-      "great",
-      "think",
-      "say",
-      "help",
-      "low",
-      "line",
-      "differ",
-      "turn",
-      "cause",
-      "much",
-      "mean",
-      "before",
-      "move",
-      "right",
-      "boy",
-      "old",
-      "too",
-      "same",
-      "she",
-      "all",
-      "there",
-      "when",
-      "up",
-      "use",
-      "your",
-      "way",
-      "about",
-      "many",
-      "then",
-      "them",
-      "write",
-      "would",
-      "like",
-      "so",
-      "these",
-      "her",
-      "long",
-      "make",
-      "thing",
-      "see",
-      "him",
-      "two",
-      "has",
-      "look",
-      "more",
-      "day",
-      "could",
-      "go",
-      "come",
-      "did",
-      "number",
-      "sound",
-      "no",
-      "most",
-      "people",
-      "my",
-      "over",
-      "know",
-      "water",
-      "than",
-      "call",
-      "first",
-      "who",
-      "may",
-      "down",
-      "side",
-      "been",
-      "now",
-      "find",
-      "head",
-      "stand",
-      "own",
-      "page",
-      "should",
-      "country",
-      "found",
-      "answer",
-      "school",
-      "grow",
-      "study",
-      "still",
-      "learn",
-      "plant",
-      "cover",
-      "food",
-      "sun",
-      "four",
-      "between",
-      "state",
-      "keep",
-      "eye",
-      "never",
-      "last",
-      "let",
-      "thought",
-      "city",
-      "tree",
-      "cross",
-      "farm",
-      "hard",
-      "start",
-      "might",
-      "story",
-      "saw",
-      "far",
-      "sea",
-      "draw",
-      "left",
-      "late",
-      "run",
-      "don’t",
-      "while",
-      "press",
-      "close",
-      "night",
-      "real",
-      "life",
-      "few",
-      "north",
-      "book",
-      "carry",
-      "took",
-      "science",
-      "eat",
-      "room",
-      "friend",
-      "began",
-      "idea",
-      "fish",
-      "mountain",
-      "stop",
-      "once",
-      "base",
-      "hear",
-      "horse",
-      "cut",
-      "sure",
-      "watch",
-      "color",
-      "face",
-      "wood",
-      "main",
-      "open",
-      "seem",
-      "together",
-      "next",
-      "white",
-      "children",
-      "begin",
-      "got",
-      "walk",
-      "example",
-      "ease",
-      "paper",
-      "group",
-      "always",
-      "music",
-      "those",
-      "both",
-      "mark",
-      "often",
-      "letter",
-      "until",
-      "mile",
-      "river",
-      "car",
-      "feet",
-      "care",
-      "second",
-      "enough",
-      "plain",
-      "girl",
-      "usual",
-      "young",
-      "ready",
-      "above",
-      "ever",
-      "red",
-      "list",
-      "though",
-      "feel",
-      "talk",
-      "bird",
-      "soon",
-      "body",
-      "dog",
-      "family",
-      "direct",
-      "pose",
-      "leave",
-      "song",
-      "measure",
-      "door",
-      "product",
-      "black",
-      "short",
-      "numeral",
-      "class",
-      "wind",
-      "question",
-      "happen",
-      "complete",
-      "ship",
-      "area",
-      "half",
-      "rock",
-      "order",
-      "fire",
-      "south",
-      "problem",
-      "piece",
-      "told",
-      "knew",
-      "pass",
-      "since",
-      "top",
-      "whole",
-      "king",
-      "street",
-      "inch",
-      "multiply",
-      "nothing",
-      "course",
-      "stay",
-      "wheel",
-      "full",
-      "force",
-      "blue",
-      "object",
-      "decide",
-      "surface",
-      "deep",
-      "moon",
-      "island",
-      "foot",
-      "system",
-      "busy",
-      "test",
-      "record",
-      "boat",
-      "common",
-      "gold",
-      "possible",
-      "plane",
-      "stead",
-      "dry",
-      "wonder",
-      "laugh",
-      "thousand",
-      "ago",
-      "ran",
-      "check",
-      "game",
-      "shape",
-      "equate",
-      "hot",
-      "miss",
-      "brought",
-      "heat",
-      "snow",
-      "tire",
-      "bring",
-      "yes",
-      "distant",
-      "fill",
-      "east",
-      "paint",
-      "language",
-      "among",
-      "unit",
-      "power",
-      "town",
-      "fine",
-      "certain",
-      "fly",
-      "fall",
-      "lead",
-      "cry",
-      "dark",
-      "machine",
-      "note",
-      "wait",
-      "plan",
-      "figure",
-      "star",
-      "box",
-      "noun",
-      "field",
-      "rest",
-      "correct",
-      "able",
-      "pound",
-      "done",
-      "beauty",
-      "drive",
-      "stood",
-      "contain",
-      "front",
-      "teach",
-      "week",
-      "final",
-      "gave",
-      "green",
-      "oh",
-      "quick",
-      "develop",
-      "ocean",
-      "warm",
-      "free",
-      "minute",
-      "strong",
-      "special",
-      "mind",
-      "behind",
-      "clear",
-      "tail",
-      "produce",
-      "fact",
-      "space",
-      "heard",
-      "best",
-      "hour",
-      "better",
-      "true",
-      "during",
-      "hundred",
-      "five",
-      "remember",
-      "step",
-      "early",
-      "hold",
-      "west",
-      "ground",
-      "interest",
-      "reach",
-      "fast",
-      "verb",
-      "sing",
-      "listen",
-      "six",
-      "table",
-      "travel",
-      "less",
-      "morning",
-      "ten",
-      "simple",
-      "several",
-      "vowel",
-      "toward",
-      "war",
-      "lay",
-      "against",
-      "pattern",
-      "slow",
-      "center",
-      "love",
-      "person",
-      "money",
-      "serve",
-      "appear",
-      "road",
-      "map",
-      "rain",
-      "rule",
-      "govern",
-      "pull",
-      "cold",
-      "notice",
-      "voice",
-      "energy",
-      "hunt",
-      "probable",
-      "bed",
-      "brother",
-      "egg",
-      "ride",
-      "cell",
-      "believe",
-      "perhaps",
-      "pick",
-      "sudden",
-      "count",
-      "square",
-      "reason",
-      "length",
-      "represent",
-      "art",
-      "subject",
-      "region",
-      "size",
-      "vary",
-      "settle",
-      "speak",
-      "weight",
-      "general",
-      "ice",
-      "matter",
-      "circle",
-      "pair",
-      "include",
-      "divide",
-      "syllable",
-      "felt",
-      "grand",
-      "ball",
-      "yet",
-      "wave",
-      "drop",
-      "heart",
-      "am",
-      "present",
-      "heavy",
-      "dance",
-      "engine",
-      "position",
-      "arm",
-      "wide",
-      "sail",
-      "material",
-      "fraction",
-      "forest",
-      "sit",
-      "race",
-      "window",
-      "store",
-      "summer",
-      "train",
-      "sleep",
-      "prove",
-      "lone",
-      "leg",
-      "exercise",
-      "wall",
-      "catch",
-      "mount",
-      "wish",
-      "sky",
-      "board",
-      "joy",
-      "winter",
-      "sat",
-      "written",
-      "wild",
-      "instrument",
-      "kept",
-      "glass",
-      "grass",
-      "cow",
-      "job",
-      "edge",
-      "sign",
-      "visit",
-      "past",
-      "soft",
-      "fun",
-      "bright",
-      "gas",
-      "weather",
-      "month",
-      "million",
-      "bear",
-      "finish",
-      "happy",
-      "hope",
-      "flower",
-      "clothe",
-      "strange",
-      "gone",
-      "trade",
-      "melody",
-      "trip",
-      "office",
-      "receive",
-      "row",
-      "mouth",
-      "exact",
-      "symbol",
-      "die",
-      "least",
-      "trouble",
-      "shout",
-      "except",
-      "wrote",
-      "seed",
-      "tone",
-      "join",
-      "suggest",
-      "clean",
-      "break",
-      "lady",
-      "yard",
-      "rise",
-      "bad",
-      "blow",
-      "oil",
-      "blood",
-      "touch",
-      "grew",
-      "cent",
-      "mix",
-      "team",
-      "wire",
-      "cost",
-      "lost",
-      "brown",
-      "wear",
-      "garden",
-      "equal",
-      "sent",
-      "choose",
-      "fell",
-      "fit",
-      "flow",
-      "fair",
-      "bank",
-      "collect",
-      "save",
-      "control",
-      "decimal",
-      "ear",
-      "else",
-      "quite",
-      "broke",
-      "case",
-      "middle",
-      "kill",
-      "son",
-      "lake",
-      "moment",
-      "scale",
-      "loud",
-      "spring",
-      "observe",
-      "child",
-      "straight",
-      "consonant",
-      "nation",
-      "dictionary",
-      "milk",
-      "speed",
-      "method",
-      "organ",
-      "pay",
-      "age",
-      "section",
-      "dress",
-      "cloud",
-      "surprise",
-      "quiet",
-      "stone",
-      "tiny",
-      "climb",
-      "cool",
-      "design",
-      "poor",
-      "lot",
-      "experiment",
-      "bottom",
-      "key",
-      "iron",
-      "single",
-      "stick",
-      "flat",
-      "twenty",
-      "skin",
-      "smile",
-      "crease",
-      "hole",
-      "jump",
-      "baby",
-      "eight",
-      "village",
-      "meet",
-      "root",
-      "buy",
-      "raise",
-      "solve",
-      "metal",
-      "whether",
-      "push",
-      "seven",
-      "paragraph",
-      "third",
-      "shall",
-      "held",
-      "hair",
-      "describe",
-      "cook",
-      "floor",
-      "either",
-      "result",
-      "burn",
-      "hill",
-      "safe",
-      "cat",
-      "century",
-      "consider",
-      "type",
-      "law",
-      "bit",
-      "coast",
-      "copy",
-      "phrase",
-      "silent",
-      "tall",
-      "sand",
-      "soil",
-      "roll",
-      "temperature",
-      "finger",
-      "industry",
-      "value",
-      "fight",
-      "lie",
-      "beat",
-      "excite",
-      "natural",
-      "view",
-      "sense",
-      "capital",
-      "won’t",
-      "chair",
-      "danger",
-      "fruit",
-      "rich",
-      "thick",
-      "soldier",
-      "process",
-      "operate",
-      "practice",
-      "separate",
-      "difficult",
-      "doctor",
-      "please",
-      "protect",
-      "noon",
-      "crop",
-      "modern",
-      "element",
-      "hit",
-      "student",
-      "corner",
-      "party",
-      "supply",
-      "whose",
-      "locate",
-      "ring",
-      "character",
-      "insect",
-      "caught",
-      "period",
-      "indicate",
-      "radio",
-      "spoke",
-      "atom",
-      "human",
-      "history",
-      "effect",
-      "electric",
-      "expect",
-      "bone",
-      "rail",
-      "imagine",
-      "provide",
-      "agree",
-      "thus",
-      "gentle",
-      "woman",
-      "captain",
-      "guess",
-      "necessary",
-      "sharp",
-      "wing",
-      "create",
-      "neighbor",
-      "wash",
-      "bat",
-      "rather",
-      "crowd",
-      "corn",
-      "compare",
-      "poem",
-      "string",
-      "bell",
-      "depend",
-      "meat",
-      "rub",
-      "tube",
-      "famous",
-      "dollar",
-      "stream",
-      "fear",
-      "sight",
-      "thin",
-      "triangle",
-      "planet",
-      "hurry",
-      "chief",
-      "colony",
-      "clock",
-      "mine",
-      "tie",
-      "enter",
-      "major",
-      "fresh",
-      "search",
-      "send",
-      "yellow",
-      "gun",
-      "allow",
-      "print",
-      "dead",
-      "spot",
-      "desert",
-      "suit",
-      "current",
-      "lift",
-      "rose",
-      "arrive",
-      "master",
-      "track",
-      "parent",
-      "shore",
-      "division",
-      "sheet",
-      "substance",
-      "favor",
-      "connect",
-      "post",
-      "spend",
-      "chord",
-      "fat",
-      "glad",
-      "original",
-      "share",
-      "station",
-      "dad",
-      "bread",
-      "charge",
-      "proper",
-      "bar",
-      "offer",
-      "segment",
-      "slave",
-      "duck",
-      "instant",
-      "market",
-      "degree",
-      "populate",
-      "chick",
-      "dear",
-      "enemy",
-      "reply",
-      "drink",
-      "occur",
-      "support",
-      "speech",
-      "nature",
-      "range",
-      "steam",
-      "motion",
-      "path",
-      "liquid",
-      "log",
-      "meant",
-      "quotient",
-      "teeth",
-      "shell",
-      "neck",
-      "oxygen",
-      "sugar",
-      "death",
-      "pretty",
-      "skill",
-      "women",
-      "season",
-      "solution",
-      "magnet",
-      "silver",
-      "thank",
-      "branch",
-      "match",
-      "suffix",
-      "especially",
-      "fig",
-      "afraid",
-      "huge",
-      "sister",
-      "steel",
-      "discuss",
-      "forward",
-      "similar",
-      "guide",
-      "experience",
-      "score",
-      "apple",
-      "bought",
-      "led",
-      "pitch",
-      "coat",
-      "mass",
-      "card",
-      "band",
-      "rope",
-      "slip",
-      "win",
-      "dream",
-      "evening",
-      "condition",
-      "feed",
-      "tool",
-      "total",
-      "basic",
-      "smell",
-      "valley",
-      "nor",
-      "double",
-      "seat",
-      "continue",
-      "block",
-      "chart",
-      "hat",
-      "sell",
-      "success",
-      "company",
-      "subtract",
-      "event",
-      "particular",
-      "deal",
-      "swim",
-      "term",
-      "opposite",
-      "wife",
-      "shoe",
-      "shoulder",
-      "spread",
-      "arrange",
-      "camp",
-      "invent",
-      "cotton",
-      "born",
-      "determine",
-      "quart",
-      "nine",
-      "truck",
-      "noise",
-      "level",
-      "chance",
-      "gather",
-      "shop",
-      "stretch",
-      "throw",
-      "shine",
-      "property",
-      "column",
-      "molecule",
-      "select",
-      "wrong",
-      "gray",
-      "repeat",
-      "require",
-      "broad",
-      "prepare",
-      "salt",
-      "nose",
-      "plural",
-      "anger",
-      "claim",
-      "continent",
-];
 
 const allLetters = [
       "a",
@@ -1053,37 +60,166 @@ const allLetters = [
 ];
 
 export const HomePage = () => {
-      // loaders return values
-      const loaderData = useAsyncValue();
-      const statsData = useAsyncValue()[1].value;
-      let settingsData = useAsyncValue()[2].value;
+      const [showParagraphLoader, setShowParagraphLoader] = useState(false);
+      const wordsData = {
+            status: "success",
+            payload: [
+                  "as",
+                  "wrong",
+                  "his",
+                  "that",
+                  "he",
+                  "was",
+                  "for",
+                  "on",
+                  "are",
+                  "with",
+                  "they",
+                  "be",
+                  "at",
+                  "one",
+                  "have",
+                  "this",
+                  "from",
+                  "by",
+                  "hot",
+                  "word",
+                  "but",
+                  "what",
+                  "some",
+                  "is",
+                  "it",
+                  "you",
+                  "or",
+                  "had",
+                  "the",
+                  "of",
+                  "to",
+                  "and",
+                  "in",
+                  "we",
+                  "can",
+                  "out",
+                  "other",
+                  "were",
+                  "which",
+                  "do",
+                  "their",
+                  "time",
+                  "if",
+                  "will",
+                  "how",
+                  "said",
+                  "an",
+                  "each",
+                  "tell",
+                  "does",
+                  "set",
+                  "three",
+                  "want",
+                  "air",
+                  "well",
+                  "also",
+                  "play",
+                  "small",
+                  "end",
+                  "put",
+                  "home",
+                  "read",
+                  "hand",
+                  "port",
+                  "large",
+                  "spell",
+                  "add",
+                  "even",
+                  "land",
+                  "here",
+                  "must",
+                  "big",
+                  "high",
+                  "such",
+                  "follow",
+                  "act",
+                  "why",
+                  "ask",
+                  "men",
+                  "change",
+                  "went",
+                  "light",
+                  "kind",
+                  "off",
+                  "need",
+                  "house",
+                  "picture",
+                  "try",
+                  "us",
+                  "again",
+                  "animal",
+                  "point",
+                  "mother",
+                  "world",
+                  "near",
+                  "build",
+                  "self",
+                  "earth",
+                  "father",
+                  "any",
+            ],
+      };
+      const [statsData, setStatsData] = useState({
+            payload: {},
+      });
+      let [settingsData, setSettingsData] = useState({
+            payload: defaultSettings,
+      });
 
-      if (settingsData.status === "error") {
-            settingsData = { payload: { settings: defaultSettings } };
-      }
-
-      const [allWords, setAllWords] = useState(commonWords);
+      const { token } = useContext(authContext);
+      const [allWords, setAllWords] = useState(wordsData.payload);
       const [wordIndex, setWordIndex] = useState(0);
-      const [timer, setTimer] = useState(settingsData.payload.settings.timer);
+      const [timer, setTimer] = useState(settingsData.payload.timer);
       const [mode, setMode] = useState("test");
       const [modeOne, setModeOne] = useState("words");
       const [modeTwo, setModeTwo] = useState("0");
       const [modeThree, setModeThree] = useState(500);
-      const [typingSoundPath, setTypingSoundPath] = useState(flastTwo);
-      const [theme, setTheme] = useState(settingsData.payload.settings.theme);
-
-      const typingSound = new Howl({
-            src: [typingSoundPath],
+      const [typingSoundPath, setTypingSoundPath] = useState(
+            settingsData.payload.sound
+      );
+      const typingSound = useMemo(() => {
+            return new Howl({
+                  src: sounds[typingSoundPath],
+            });
+      }, [typingSoundPath]);
+      const [theme, setTheme] = useState(settingsData.payload.theme);
+      const [languageAndRange, setLanguageAndRange] = useState({
+            language: "english",
+            optionIndex: 0,
       });
 
+      const practiseModeAllWords = useMemo(() => {
+            let newWords = [];
+            if (
+                  statsData.status === "success" &&
+                  statsData.payload.testMode &&
+                  mode === "practise"
+            ) {
+                  Object.entries(statsData.payload.testMode.wordsStats).forEach(
+                        ([key, value]) => {
+                              if (
+                                    value.averageWpm < +modeThree &&
+                                    key !== " "
+                              ) {
+                                    newWords.push(key);
+                              }
+                        }
+                  );
+            } else {
+                  newWords = [...allWords];
+            }
+            return newWords;
+      }, [mode, languageAndRange, modeThree]);
+
       const restartButtonRef = useRef();
-      //   const pageKeyDownHandler = (event) => {
-      //         event.preventDefault();
-      //         event.stopPropagation();
-      //         if (event.key === "Tab") {
-      //               restartButtonRef.current.focus();
-      //         }
-      //   };
+
       const pageKeyDownHandler = (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -1105,27 +241,56 @@ export const HomePage = () => {
 
       const focusableElements = useMemo(() => {
             return { elements: null, index: -1 };
-      }, [mode, modeOne, modeTwo, modeThree]);
+      }, [mode, modeOne, modeTwo, modeThree, languageAndRange]);
 
       useEffect(() => {
             focusableElements.elements =
                   document.querySelectorAll("[tabindex='0']");
-      }, [mode, modeOne, modeTwo, modeThree]);
+      }, [mode, modeOne, modeTwo, modeThree, languageAndRange]);
+
+      const wordsFetcher = useFetcher();
+      const wordsFetcherStatus =
+            wordsFetcher.state === "idle" && wordsFetcher.data;
 
       useEffect(() => {
-            const newWords = [];
-            if (statsData.status === "success" && statsData.payload.testMode)
-                  Object.entries(statsData.payload.testMode.wordsStats).forEach(
-                        ([key, value]) => {
-                              if (value.averageWpm < +modeThree) {
-                                    newWords.push(key);
-                              }
-                        }
-                  );
-            setAllWords(newWords);
-      }, [modeThree]);
+            if (wordsFetcherStatus) {
+                  const data = wordsFetcher.data;
 
-      if (loaderData.status === "error") {
+                  if (data.status === "success") {
+                        setAllWords(data.payload.words);
+                        setStatsData({
+                              status: "success",
+                              payload: data.payload.stats,
+                        });
+                        setSettingsData({
+                              status: "success",
+                              payload: data.payload.settings,
+                        });
+                        console.log(data.payload.settings);
+                        setLanguageAndRange(
+                              data.payload.settings["language and range"]
+                        );
+                        setWordIndex(0);
+                  } else {
+                        toast.error(data.message, toastOptions);
+                  }
+            }
+      }, [wordsFetcher]);
+
+      useEffect(() => {
+            if (token) {
+                  wordsFetcher.submit(null, {
+                        method: "GET",
+                        action: "/previousSessionSettings",
+                  });
+            }
+      }, []);
+
+      useEffect(() => {
+            setTimer(settingsData.payload.timer);
+            setTheme(settingsData.payload.theme);
+      }, [settingsData]);
+      if (wordsData.status === "error") {
             return (
                   <div
                         className={
@@ -1136,7 +301,7 @@ export const HomePage = () => {
                         onKeyDown={pageKeyDownHandler}
                         tabIndex={-1}
                   >
-                        {loaderData.message}
+                        {wordsData.message}
                   </div>
             );
       } else {
@@ -1160,14 +325,37 @@ export const HomePage = () => {
                                                       mode +
                                                       modeOne +
                                                       modeTwo +
-                                                      modeThree
+                                                      modeThree +
+                                                      languageAndRange.language +
+                                                      languageAndRange.optionIndex
                                                 }
                                                 theme={theme}
                                                 statsData={statsData}
                                                 wordIndex={wordIndex}
-                                                allWords={allWords}
+                                                allWords={practiseModeAllWords}
                                                 serialNumber={wordIndex + 1}
                                           ></PracticeWord>
+                                    </section>
+                              ) : null}
+
+                              {mode === "test" ? (
+                                    <section
+                                          className={
+                                                styles["language-stats-section"]
+                                          }
+                                    >
+                                          <LanguageStats
+                                                key={
+                                                      mode +
+                                                      modeOne +
+                                                      modeTwo +
+                                                      modeThree +
+                                                      languageAndRange.language +
+                                                      languageAndRange.optionIndex
+                                                }
+                                                theme={theme}
+                                                statsData={statsData}
+                                          ></LanguageStats>
                                     </section>
                               ) : null}
 
@@ -1185,19 +373,29 @@ export const HomePage = () => {
                                                 mode +
                                                 modeOne +
                                                 modeTwo +
-                                                modeThree
+                                                modeThree +
+                                                languageAndRange.language +
+                                                languageAndRange.optionIndex
                                           }
                                           modeOne={modeOne}
                                           modeTwo={modeTwo}
                                           allLetters={allLetters}
                                           statsData={statsData}
                                           modeThree={modeThree}
+                                          languageAndRange={languageAndRange}
+                                          showParagraphLoader={
+                                                showParagraphLoader
+                                          }
+                                          practiseModeAllWords={
+                                                practiseModeAllWords
+                                          }
+                                          setStatsData={setStatsData}
                                     ></TypingArea>
                               </section>
                               <QuickSettings
                                     setTimer={setTimer}
                                     setTypingSoundPath={setTypingSoundPath}
-                                    settings={settingsData.payload.settings}
+                                    settings={settingsData.payload}
                                     setTheme={setTheme}
                                     theme={theme}
                                     setMode={setMode}
@@ -1208,23 +406,28 @@ export const HomePage = () => {
                                     modeTwo={modeTwo}
                                     setModeTwo={setModeTwo}
                                     allLetters={allLetters}
-                                    allWords={commonWords}
+                                    allWords={allWords}
                                     setWordIndex={setWordIndex}
                                     statsData={statsData}
                                     setModeThree={setModeThree}
+                                    setLanguageAndRange={setLanguageAndRange}
+                                    languageAndRange={languageAndRange}
+                                    setShowParagraphLoader={
+                                          setShowParagraphLoader
+                                    }
+                                    setStatsData={setStatsData}
+                                    key={
+                                          mode +
+                                          modeOne +
+                                          modeTwo +
+                                          modeThree +
+                                          languageAndRange.language +
+                                          languageAndRange.optionIndex
+                                    }
+                                    modeThree={modeThree}
+                                    timer={timer}
+                                    typingSoundPath={typingSoundPath}
                               ></QuickSettings>
-                              {/* <aside className={styles["practise-words"]}>
-                                    {allWords.map((word, wordIndex) => {
-                                          return (
-                                                <PracticeWord
-                                                      theme={theme}
-                                                      statsData={statsData}
-                                                      wordIndex={wordIndex}
-                                                      allWords={allWords}
-                                                ></PracticeWord>
-                                          );
-                                    })}
-                              </aside> */}
                         </main>
                   </div>
             );

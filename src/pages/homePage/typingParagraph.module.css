@@ -27,11 +27,13 @@
 .word {
       display: inline-block;
       height: 40px;
+      margin-left: 2px;
+      margin-right: 2px;
 }
 .letter {
       border: 0px solid white;
       transition: border ease-out 0.2s;
-      margin: 2px;
+      margin: 1px;
       display: inline-block;
       height: 36px;
 }

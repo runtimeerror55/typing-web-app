@@ -1,0 +1,53 @@
+.word {
+      background-color: #5fdc72;
+      padding: 10px;
+      box-shadow: 5px 3px 3px;
+      transition: transform 0.15s linear;
+      margin: 5px;
+      position: relative;
+}
+
+.word:hover {
+      transform: scale(0.95);
+      cursor: pointer;
+}
+
+.serial-number {
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      color: black;
+}
+
+.word-title {
+      font-size: 24px;
+      color: black;
+}
+.word-stats {
+      font-size: 14px;
+      font-family: monospace;
+      color: #333;
+      display: flex;
+}
+
+.word-green-theme {
+      background-color: #5fdc72;
+}
+
+.word-blue-theme {
+      background-color: #5facdc;
+}
+
+.word-violet-theme {
+      background-color: #c280f1;
+}
+
+table {
+      border-collapse: collapse;
+      margin: 5px;
+}
+th,
+td {
+      border: 2px solid black;
+      padding: 5px;
+}

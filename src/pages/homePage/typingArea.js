@@ -28,6 +28,8 @@ import {
       updateWpmAndAccuracy,
       createtypingParagraphJsx,
       initialTypingState,
+      wordsMixer,
+      wordsMixerOne,
 } from "../../utilities/utilities";
 
 const commonWords = [
@@ -1040,88 +1042,14 @@ export const TypingArea = forwardRef((props, ref) => {
             timerId: undefined,
       });
 
-      const [showParagraphLoader, setShowParagraphLoader] = useState(false);
+      //   const [showParagraphLoader, setShowParagraphLoader] = useState(false);
       const words = useMemo(() => {
-            let words = [];
-            if (props.mode === "test") {
-                  for (let i = 0; i < 100; i++) {
-                        const randomNumber = Math.floor(Math.random() * 100);
-                        words.push(allWords[randomNumber]);
-                        words.push(" ");
-                  }
-            } else {
-                  if (props.modeOne === "letters") {
-                        if (props.modeTwo === "1") {
-                              const letter = props.allWords[props.wordIndex];
-                              const randomLetter =
-                                    props.allLetters[
-                                          Math.floor(Math.random() * 25)
-                                    ];
-
-                              for (let i = 0; i < 100; i++) {
-                                    let randomLength =
-                                          Math.floor(Math.random() * 3) + 1;
-
-                                    words.push(letter.repeat(randomLength));
-
-                                    words.push(" ");
-
-                                    randomLength =
-                                          Math.floor(Math.random() * 3) + 1;
-
-                                    words.push(
-                                          randomLetter.repeat(randomLength)
-                                    );
-                                    words.push(" ");
-                              }
-                        } else {
-                              const letter = props.allWords[props.wordIndex];
-                              for (let i = 0; i < 100; i++) {
-                                    const randomLength =
-                                          Math.floor(Math.random() * 3) + 1;
-
-                                    words.push(letter.repeat(randomLength));
-                                    words.push(" ");
-                              }
-                        }
-                  } else {
-                        if (props.modeTwo === "1") {
-                              const word = props.allWords[props.wordIndex];
-                              const randomWord =
-                                    commonWords[
-                                          Math.floor(Math.random() * 100)
-                                    ];
-
-                              for (let i = 0; i < 100; i++) {
-                                    let randomLength =
-                                          Math.floor(Math.random() * 2) + 1;
-
-                                    for (let i = 0; i < randomLength; i++) {
-                                          words.push(word);
-                                          words.push(" ");
-                                    }
-
-                                    randomLength =
-                                          Math.floor(Math.random() * 2) + 1;
-
-                                    for (let i = 0; i < randomLength; i++) {
-                                          words.push(randomWord);
-                                          words.push(" ");
-                                    }
-                              }
-                        } else {
-                              for (let i = 0; i < 100; i++) {
-                                    words.push(props.allWords[props.wordIndex]);
-                                    words.push(" ");
-                              }
-                        }
-                  }
-            }
-            return words;
-      }, [restart, props.allWords]);
+            return wordsMixerOne(props);
+      }, [restart]);
 
       const letters = useMemo(() => {
             const letters = [];
+            console.log(words);
             for (let i = 0; i < words.length; i++) {
                   letters.push(...words[i]);
             }
@@ -1135,6 +1063,7 @@ export const TypingArea = forwardRef((props, ref) => {
 
       const testStats = useMemo(() => {
             return {
+                  languageAndRange: props.languageAndRange,
                   mode: props.mode,
                   totalNumberOfRightHits: 0,
                   totalNumberOfWrongHits: 0,
@@ -1146,9 +1075,10 @@ export const TypingArea = forwardRef((props, ref) => {
       }, [restart]);
 
       if (timerState.elapsedTime === props.timer && !typingState.finished) {
+            console.log(testStats);
             clearInterval(timerState.timerId);
             updateWpmAndAccuracy(timerState, testStats);
-            console.log(testStats);
+
             dispatch({ type: "finished test" });
       }
 
@@ -1207,8 +1137,14 @@ export const TypingArea = forwardRef((props, ref) => {
 
       const paragraph = createtypingParagraphJsx(words, typingState, wordRef);
 
-      const restartHandler = () => {
-            if (props.wordIndex === props.allWords.length - 1) {
+      const restartHandler = (event) => {
+            if (
+                  (props.wordIndex === props.allWords.length - 1 &&
+                        props.mode === "test") ||
+                  (props.mode === "practise" &&
+                        props.wordIndex ===
+                              props.practiseModeAllWords.length - 1)
+            ) {
                   props.setWordIndex(0);
             } else {
                   props.setWordIndex((previous) => {
@@ -1223,9 +1159,13 @@ export const TypingArea = forwardRef((props, ref) => {
                   elapsedTime: 0,
                   timerId: undefined,
             });
+            typingParagraphRef.current.focus();
+            event.target.blur();
       };
 
-      const goBackButtonClickHandler = () => {
+      const goBackButtonClickHandler = (event) => {
+            typingParagraphRef.current.focus();
+            event.target.blur();
             if (props.wordIndex === 0) {
                   return;
             } else {
@@ -1250,15 +1190,11 @@ export const TypingArea = forwardRef((props, ref) => {
       const restartKeyDownHandler = (event) => {
             if (event.key === "Enter") {
                   event.target.click();
-                  typingParagraphRef.current.focus();
-                  event.target.blur();
             }
       };
       const goBackButtonKeyDownHandler = (event) => {
             if (event.key === "Enter") {
                   event.target.click();
-                  typingParagraphRef.current.focus();
-                  event.target.blur();
             }
       };
 
@@ -1287,7 +1223,9 @@ export const TypingArea = forwardRef((props, ref) => {
       useEffect(() => {
             if (statsFetcherStatus) {
                   const data = statsFetcher.data;
+                  console.log(data);
                   if (data.status === "success") {
+                        props.setStatsData(data);
                         toast.success(data.message, toastOptions);
                   } else {
                         toast.error(data.message, toastOptions);
@@ -1297,11 +1235,15 @@ export const TypingArea = forwardRef((props, ref) => {
       useEffect(() => {
             if (typingState.finished) {
                   const api = async () => {
-                        statsFetcher.submit(testStats, {
-                              action: "/stats",
-                              method: "POST",
-                              encType: "application/json",
-                        });
+                        const data = await postTestStats(testStats);
+                        if (data.status === "success") {
+                              statsFetcher.submit(props.languageAndRange, {
+                                    action: "/stats",
+                                    method: "GET",
+                              });
+                        } else {
+                              toast.error(data.message, toastOptions);
+                        }
                   };
 
                   api();
@@ -1431,7 +1373,7 @@ export const TypingArea = forwardRef((props, ref) => {
                         ref={typingParagraphRef}
                         tabIndex={-1}
                   >
-                        {showParagraphLoader ? (
+                        {props.showParagraphLoader ? (
                               <div className={styles["paragraph-loader"]}>
                                     <ColorRing {...colorRingOptions} />
                               </div>
@@ -1439,12 +1381,12 @@ export const TypingArea = forwardRef((props, ref) => {
                               paragraph
                         )}
                   </div>
-                  {/* {props.mode === "practise" ? (
+                  {props.mode === "practise" ? (
                         <WordsQueue
-                              words={props.allWords}
+                              words={props.practiseModeAllWords}
                               statsData={props.statsData}
                         ></WordsQueue>
-                  ) : null} */}
+                  ) : null}
             </>
       );
 });

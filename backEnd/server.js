@@ -9,6 +9,7 @@ const { authenticationRouter } = require("./routes/authentication");
 const { statsRouter } = require("./routes/stats");
 const { isLoggedIn } = require("./middleware");
 const { settingsRouter } = require("./routes/settings");
+const { wordsRouter } = require("./routes/words");
 
 app.use(
       cors({
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", authenticationRouter);
 app.use("/", statsRouter);
 app.use("/", settingsRouter);
+app.use("/", wordsRouter);
 
 app.get("/", async (request, response) => {
       try {
