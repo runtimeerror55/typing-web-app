@@ -1,5 +1,11 @@
-import styles from "./practiseWord.module.css";
-export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
+import styles from "./languageStats.module.css";
+export const LanguageStats = ({
+      languageAndRange,
+      theme,
+      statsData,
+      classOne,
+      serialNumber,
+}) => {
       const testMode = statsData?.payload?.testMode;
       console.log(statsData);
       const lastTwentyTestsAverages = (testMode) => {
@@ -25,7 +31,9 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
       return (
             <div className={styles["word"] + " " + styles["word-" + theme]}>
                   <h3 className={styles["serial-number"]}>{serialNumber}</h3>
-                  <h3 className={styles["word-title"]}>english (1-100)</h3>
+                  <h4 className={styles["word-title"]}>
+                        {languageAndRange.fullName}
+                  </h4>
                   <div
                         className={
                               classOne
@@ -38,11 +46,12 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
                                     <th colspan="3">Test mode</th>
                               </tr> */}
                               <tr>
-                                    <th>all tests avg speed</th>
-                                    <th>all tests avg accuracy</th>
-                                    <th>last 20 tests avg speed</th>
-                                    <th>last 20 tests avg accuracy</th>
+                                    <th>all tests averages</th>
+                                    {/* <th>all tests avg accuracy</th> */}
+                                    <th>last 20 tests averages</th>
+                                    {/* <th>last 20 tests avg accuracy</th> */}
                                     <th>highest speed of a test</th>
+                                    <th>total tests</th>
                               </tr>
                               <tr>
                                     {/* <th>speed</th> */}
@@ -52,13 +61,17 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
                                                       {Math.floor(
                                                             testMode.averageWpm
                                                       )}{" "}
-                                                      wpm
+                                                      wpm /{" "}
+                                                      {Math.floor(
+                                                            testMode.averageAccuracy
+                                                      )}{" "}
+                                                      %
                                                 </>
                                           ) : (
                                                 "not attempted"
                                           )}
                                     </td>
-                                    <td>
+                                    {/* <td>
                                           {" "}
                                           {testMode ? (
                                                 <>
@@ -70,20 +83,24 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
                                           ) : (
                                                 "not attempted"
                                           )}
-                                    </td>
+                                    </td> */}
                                     <td>
                                           {testMode ? (
                                                 <>
                                                       {Math.floor(
                                                             testMode.lastTwentyTestsAverageWpm
                                                       )}{" "}
-                                                      wpm
+                                                      wpm /{" "}
+                                                      {Math.floor(
+                                                            testMode.lastTwentyTestsAverageAccuracy
+                                                      )}{" "}
+                                                      %
                                                 </>
                                           ) : (
                                                 "not attempted"
                                           )}
                                     </td>
-                                    <td>
+                                    {/* <td>
                                           {testMode ? (
                                                 <>
                                                       {Math.floor(
@@ -94,7 +111,7 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
                                           ) : (
                                                 "not attempted"
                                           )}
-                                    </td>
+                                    </td> */}
                                     <td>
                                           {testMode ? (
                                                 <>
@@ -102,6 +119,17 @@ export const LanguageStats = ({ theme, statsData, classOne, serialNumber }) => {
                                                             testMode.highestWpmOfATest
                                                       )}{" "}
                                                       wpm
+                                                </>
+                                          ) : (
+                                                "not attempted"
+                                          )}
+                                    </td>
+                                    <td>
+                                          {testMode ? (
+                                                <>
+                                                      {Math.floor(
+                                                            testMode.totalNumberOfFinishedTests
+                                                      )}
                                                 </>
                                           ) : (
                                                 "not attempted"

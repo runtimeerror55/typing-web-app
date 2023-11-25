@@ -7,16 +7,34 @@
       position: relative;
 }
 
-.word:hover {
+/* .word:hover {
       transform: scale(0.95);
       cursor: pointer;
-}
+} */
 
-.serial-number {
+.container {
       position: absolute;
       right: 5px;
       top: 5px;
       color: black;
+      display: flex;
+}
+
+.words-queue-open-button {
+      font-size: 13px;
+      background-color: transparent;
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      border-radius: 20px;
+      border: 2px solid black;
+      cursor: pointer;
+      margin-right: 5px;
+}
+
+.words-queue-open-button:hover {
+      border: 2px solid white;
 }
 
 .word-title {

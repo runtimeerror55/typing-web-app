@@ -184,6 +184,7 @@ export const HomePage = () => {
       const [typingSoundPath, setTypingSoundPath] = useState(
             settingsData.payload.sound
       );
+      const [showWordsQueue, setShowWordsQueue] = useState(false);
       const typingSound = useMemo(() => {
             return new Howl({
                   src: sounds[typingSoundPath],
@@ -193,6 +194,7 @@ export const HomePage = () => {
       const [languageAndRange, setLanguageAndRange] = useState({
             language: "english",
             optionIndex: 0,
+            fullName: "english (1-100)",
       });
 
       const practiseModeAllWords = useMemo(() => {
@@ -334,6 +336,9 @@ export const HomePage = () => {
                                                 wordIndex={wordIndex}
                                                 allWords={practiseModeAllWords}
                                                 serialNumber={wordIndex + 1}
+                                                setShowWordsQueue={
+                                                      setShowWordsQueue
+                                                }
                                           ></PracticeWord>
                                     </section>
                               ) : null}
@@ -355,6 +360,9 @@ export const HomePage = () => {
                                                 }
                                                 theme={theme}
                                                 statsData={statsData}
+                                                languageAndRange={
+                                                      languageAndRange
+                                                }
                                           ></LanguageStats>
                                     </section>
                               ) : null}
@@ -390,6 +398,7 @@ export const HomePage = () => {
                                                 practiseModeAllWords
                                           }
                                           setStatsData={setStatsData}
+                                          showWordsQueue={showWordsQueue}
                                     ></TypingArea>
                               </section>
                               <QuickSettings

@@ -6,6 +6,7 @@ export const PracticeWord = ({
       statsData,
       classOne,
       serialNumber,
+      setShowWordsQueue,
 }) => {
       const practiseModeWordStats =
             statsData.payload?.practiseMode?.wordsStats?.[allWords[wordIndex]];
@@ -34,12 +35,32 @@ export const PracticeWord = ({
             lastTwentyTestsAverages(testModeWordStats);
       }
 
+      const WordsQueueOpenButtonClickHandler = () => {
+            setShowWordsQueue((previous) => {
+                  return !previous;
+            });
+      };
       return (
             <div className={styles["word"] + " " + styles["word-" + theme]}>
-                  <h3 className={styles["serial-number"]}>{serialNumber}</h3>
                   <h2 className={styles["word-title"]}>
                         {allWords[wordIndex]}
                   </h2>
+                  <div className={styles["container"]}>
+                        {setShowWordsQueue ? (
+                              <button
+                                    className={
+                                          styles["words-queue-open-button"]
+                                    }
+                                    onClick={WordsQueueOpenButtonClickHandler}
+                              >
+                                    show queue
+                              </button>
+                        ) : null}
+                        <h3 className={styles["serial-number"]}>
+                              {serialNumber}
+                        </h3>
+                  </div>
+
                   <div
                         className={
                               classOne
@@ -61,7 +82,7 @@ export const PracticeWord = ({
                                     <td>
                                           {practiseModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             practiseModeWordStats.averageWpm
                                                       )}{" "}
                                                       wpm
@@ -73,7 +94,7 @@ export const PracticeWord = ({
                                     <td>
                                           {practiseModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             practiseModeWordStats.lastTwentyTestsAverageWpm
                                                       )}{" "}
                                                       wpm
@@ -89,7 +110,7 @@ export const PracticeWord = ({
                                           {" "}
                                           {practiseModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             practiseModeWordStats.averageAccuracy
                                                       )}{" "}
                                                       %
@@ -101,7 +122,7 @@ export const PracticeWord = ({
                                     <td>
                                           {practiseModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             practiseModeWordStats.lastTwentyTestsAverageAccuracy
                                                       )}{" "}
                                                       %
@@ -127,7 +148,7 @@ export const PracticeWord = ({
                                     <td>
                                           {testModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             testModeWordStats.averageWpm
                                                       )}{" "}
                                                       wpm
@@ -139,7 +160,7 @@ export const PracticeWord = ({
                                     <td>
                                           {testModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             testModeWordStats.lastTwentyTestsAverageWpm
                                                       )}{" "}
                                                       wpm
@@ -155,7 +176,7 @@ export const PracticeWord = ({
                                           {" "}
                                           {testModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             testModeWordStats.averageAccuracy
                                                       )}{" "}
                                                       %
@@ -167,7 +188,7 @@ export const PracticeWord = ({
                                     <td>
                                           {testModeWordStats ? (
                                                 <>
-                                                      {Math.floor(
+                                                      {Math.round(
                                                             testModeWordStats.lastTwentyTestsAverageAccuracy
                                                       )}{" "}
                                                       %

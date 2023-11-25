@@ -250,6 +250,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (1-100)",
                                                 optionIndex: 0,
                                           })}
                                     >
@@ -258,6 +259,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (101-200)",
                                                 optionIndex: 1,
                                           })}
                                     >
@@ -266,6 +268,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (201-300)",
                                                 optionIndex: 2,
                                           })}
                                     >
@@ -274,6 +277,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (1-300)",
                                                 optionIndex: 3,
                                           })}
                                     >
@@ -282,6 +286,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (1-9 words + all numbers(1-30))",
                                                 optionIndex: 4,
                                           })}
                                     >
@@ -291,6 +296,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: "english (all numbers(1-30))",
                                                 optionIndex: 5,
                                           })}
                                     >
@@ -299,6 +305,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
+                                                fullName: " english (1-9 words + all special words(1-20))",
                                                 optionIndex: 6,
                                           })}
                                     >
@@ -308,7 +315,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
-                                                specialWords: true,
+                                                fullName: "english (1-300 words + all special characters(1-20))",
                                                 optionIndex: 7,
                                           })}
                                     >
@@ -318,7 +325,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
-                                                numbers: true,
+                                                fullName: " english (1-300 words + all numbers(30))",
                                                 optionIndex: 8,
                                           })}
                                     >
@@ -328,8 +335,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "english",
-                                                numbers: true,
-                                                specialWords: true,
+                                                fullName: "  english (1-300 words + all special characters(90)+all numbers(90))",
                                                 optionIndex: 9,
                                           })}
                                     >
@@ -339,6 +345,7 @@ export const QuickSettings = ({
                                     <option
                                           value={JSON.stringify({
                                                 language: "javascript",
+                                                fullName: "javascript (1-100)",
                                                 optionIndex: 0,
                                           })}
                                     >

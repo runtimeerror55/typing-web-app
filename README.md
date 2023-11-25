@@ -2,7 +2,11 @@
 
 - key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly
 - showing how many words are typed alteast once in test mode
+- reload same word test in practise mode
 - showing how many words and letters have been practised atleast once
+- logo change to minitype
+- buy domain minitype.in
+- theme change of word queue
 
 # ecommerce
 

@@ -24,18 +24,18 @@ router.route("/settings")
                         });
                   }
             } catch (error) {
-                  response.json({ status: "error", message: error.message });
+                  response
+                        .status(500)
+                        .json({ status: "error", message: error.message });
             }
       })
       .put(isLoggedIn, async (request, response) => {
             try {
-                  console.log(request.body);
                   if (request.body["language and range"]) {
                         request.body["language and range"] = JSON.parse(
                               request.body["language and range"]
                         );
                   }
-                  console.log(request.body);
 
                   await settingsModel.findOneAndUpdate(
                         { user: request.user._id },
@@ -60,7 +60,7 @@ router.route("/previousSessionSettings").get(
                   const settings = await settingsModel.findOne({
                         user: request.user._id,
                   });
-                  console.log(settings);
+
                   if (!settings) {
                         throw new Error("no user settings data");
                   }

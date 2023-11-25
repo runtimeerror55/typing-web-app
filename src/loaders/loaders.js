@@ -85,9 +85,6 @@ export const getWords = async ({ request }) => {
 };
 
 export const homePageLoader = async ({ request }) => {
-      //   getWords({ request });
-      //   getUserSettings();
-      //   getUserStats({ request });
       return defer({
             wordsLoaderData: new Promise((resolve, reject) => {
                   resolve({});

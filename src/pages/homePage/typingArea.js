@@ -1270,7 +1270,8 @@ export const TypingArea = forwardRef((props, ref) => {
                                     {props.mode === "practise"
                                           ? Math.round(
                                                   testStats.wordsStats[
-                                                        props.allWords[
+                                                        props
+                                                              .practiseModeAllWords[
                                                               props.wordIndex
                                                         ]
                                                   ].wpm
@@ -1289,56 +1290,74 @@ export const TypingArea = forwardRef((props, ref) => {
 
                         <div>
                               {props.mode === "practise" ? (
-                                    <div
-                                          className={
-                                                styles[
-                                                      "load-next-paragraph-form"
-                                                ]
-                                          }
-                                    >
-                                          <button
-                                                tabIndex={0}
-                                                type="submit"
-                                                ref={ref}
+                                    <>
+                                          <div
                                                 className={
                                                       styles[
-                                                            "load-next-paragraph-button"
-                                                      ] +
-                                                      " " +
-                                                      styles[
-                                                            `icon-${props.theme}`
+                                                            "load-next-paragraph-form"
                                                       ]
                                                 }
-                                                onFocus={focusHandler}
-                                                onBlur={restartOnBlurHandler}
-                                                onKeyDown={
-                                                      goBackButtonKeyDownHandler
-                                                }
-                                                onClick={
-                                                      goBackButtonClickHandler
+                                          >
+                                                <button
+                                                      tabIndex={0}
+                                                      type="submit"
+                                                      ref={ref}
+                                                      className={
+                                                            styles[
+                                                                  "load-next-paragraph-button"
+                                                            ] +
+                                                            " " +
+                                                            styles[
+                                                                  `icon-${props.theme}`
+                                                            ]
+                                                      }
+                                                      onFocus={focusHandler}
+                                                      onBlur={
+                                                            restartOnBlurHandler
+                                                      }
+                                                      onKeyDown={
+                                                            goBackButtonKeyDownHandler
+                                                      }
+                                                      onClick={
+                                                            goBackButtonClickHandler
+                                                      }
+                                                >
+                                                      <FontAwesomeIcon
+                                                            icon={faBackward}
+                                                      />
+                                                </button>
+                                          </div>
+
+                                          <div
+                                                className={
+                                                      styles[
+                                                            "load-next-paragraph-form"
+                                                      ]
                                                 }
                                           >
-                                                <FontAwesomeIcon
-                                                      icon={faBackward}
-                                                />
-                                          </button>
-                                    </div>
+                                                <button
+                                                      tabIndex={0}
+                                                      className={
+                                                            styles[
+                                                                  "load-next-paragraph-button"
+                                                            ] +
+                                                            " " +
+                                                            styles[
+                                                                  `icon-${props.theme}`
+                                                            ]
+                                                      }
+                                                      // onClick={restartHandler}
+                                                      // onFocus={focusHandler}
+                                                      // onKeyDown={restartKeyDownHandler}
+                                                      // onBlur={restartOnBlurHandler}
+                                                >
+                                                      <FontAwesomeIcon
+                                                            icon={faRotate}
+                                                      />
+                                                </button>
+                                          </div>
+                                    </>
                               ) : null}
-
-                              <button
-                                    ref={ref}
-                                    className={
-                                          styles["load-next-paragraph-button"] +
-                                          " " +
-                                          styles[`icon-${props.theme}`]
-                                    }
-                                    // onClick={restartHandler}
-                                    // onFocus={focusHandler}
-                                    // onKeyDown={restartKeyDownHandler}
-                                    // onBlur={restartOnBlurHandler}
-                              >
-                                    <FontAwesomeIcon icon={faRotate} />
-                              </button>
 
                               <div
                                     className={
@@ -1381,10 +1400,11 @@ export const TypingArea = forwardRef((props, ref) => {
                               paragraph
                         )}
                   </div>
-                  {props.mode === "practise" ? (
+                  {props.mode === "practise" && props.showWordsQueue ? (
                         <WordsQueue
                               words={props.practiseModeAllWords}
                               statsData={props.statsData}
+                              theme={props.theme}
                         ></WordsQueue>
                   ) : null}
             </>

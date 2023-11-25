@@ -24,13 +24,7 @@ export const AwaitHomePage = () => {
                         </div>
                   }
             >
-                  <Await
-                        resolve={Promise.allSettled([
-                              wordsLoaderData,
-                              statsLoaderData,
-                              settingsLoaderData,
-                        ])}
-                  >
+                  <Await resolve={wordsLoaderData}>
                         <HomePage></HomePage>
                   </Await>
             </Suspense>

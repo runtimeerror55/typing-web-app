@@ -28,7 +28,7 @@ export const ButtonWithActionAndLoader = ({
       useEffect(() => {
             if (updatePlayListsFetcherStatus) {
                   const data = updatePlayListsFetcher.data;
-                  console.log(data);
+
                   if (data.status === "success") {
                         toast.success(data.message, toastOptions);
                         if (callBack) {

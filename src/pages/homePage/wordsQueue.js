@@ -1,6 +1,6 @@
 import styles from "./wordsQueue.module.css";
 import { PracticeWord } from "./practiseWord";
-export const WordsQueue = ({ words, statsData }) => {
+export const WordsQueue = ({ words, statsData, theme }) => {
       return (
             <aside className={styles["words-queue"]}>
                   {words.map((word, index) => {
@@ -8,7 +8,7 @@ export const WordsQueue = ({ words, statsData }) => {
                               <PracticeWord
                                     allWords={[word]}
                                     wordIndex={0}
-                                    theme="violet-theme"
+                                    theme={theme}
                                     statsData={statsData}
                                     classOne={styles["word-stats"]}
                                     serialNumber={index + 1}

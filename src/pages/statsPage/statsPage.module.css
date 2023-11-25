@@ -71,6 +71,10 @@
       justify-content: flex-end;
 }
 
+.language-filter {
+      background-color: #c280f1;
+}
+
 .all-time-stats-section {
       display: grid;
       grid-row-gap: 20px;

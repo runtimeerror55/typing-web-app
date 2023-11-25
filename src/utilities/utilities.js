@@ -159,91 +159,33 @@ export const initialTypingState = {
 };
 
 export const wordsMixer = (words, statsData, languageAndRange) => {
-      if (
-            (languageAndRange.language === "english" &&
-                  languageAndRange.optionIndex === 4) ||
-            languageAndRange.optionIndex === 6
-      ) {
-            let wordsSlice;
-            let numbersSlice;
+      let wordsSlice = [];
+      let numbersSlice = [];
+      if (languageAndRange.language === "english") {
             if (languageAndRange.optionIndex === 4) {
                   wordsSlice = words.slice(0, 60);
                   numbersSlice = words.slice(60);
             } else if (languageAndRange.optionIndex === 6) {
                   wordsSlice = words.slice(0, 40);
                   numbersSlice = words.slice(40);
+            } else if (
+                  languageAndRange.optionIndex === 7 ||
+                  languageAndRange.optionIndex === 8 ||
+                  languageAndRange.optionIndex === 9
+            ) {
+                  wordsSlice = words.slice(0, 300);
+                  numbersSlice = words.slice(300);
             } else {
+                  wordsSlice = [...words];
             }
-            shuffle(wordsSlice);
-            shuffle(numbersSlice);
-
-            const newWordsSlice = wordsSlice.map((word) => {
-                  const wordStats =
-                        statsData?.payload?.testMode?.wordsStats[word];
-
-                  if (wordStats) {
-                        return {
-                              word,
-                              count: wordStats.totalNumberOfTestsAppeared,
-                        };
-                  } else {
-                        return {
-                              word,
-                              count: 0,
-                        };
-                  }
-            });
-            const newNumbersSlice = numbersSlice.map((word) => {
-                  const wordStats =
-                        statsData?.payload?.testMode?.wordsStats[word];
-
-                  if (wordStats) {
-                        return {
-                              word,
-                              count: wordStats.totalNumberOfTestsAppeared,
-                        };
-                  } else {
-                        return {
-                              word,
-                              count: 0,
-                        };
-                  }
-            });
-
-            newWordsSlice.sort((a, b) => {
-                  return a.count - b.count;
-            });
-            newNumbersSlice.sort((a, b) => {
-                  return a.count - b.count;
-            });
-
-            const finalWords = [];
-            let i = 0;
-            let j = 0;
-            while (i < newWordsSlice.length || i < newNumbersSlice.length) {
-                  if (i < newWordsSlice.length) {
-                        finalWords.push(newWordsSlice[i].word);
-                        if (i + 1 < newWordsSlice.length) {
-                              finalWords.push(newWordsSlice[i + 1].word);
-                              i++;
-                        }
-                  }
-                  if (j < newNumbersSlice.length) {
-                        finalWords.push(newNumbersSlice[j].word);
-                  }
-
-                  i++;
-                  j++;
-            }
-            console.log(finalWords);
-
-            return finalWords;
+      } else if (languageAndRange.language === "javscript") {
+            wordsSlice = [...words];
       }
 
-      const wordsClone = [...words];
-      shuffle(wordsClone);
+      shuffle(wordsSlice);
+      shuffle(numbersSlice);
 
-      const newWords = wordsClone.map((word) => {
+      const newWordsSlice = wordsSlice.map((word) => {
             const wordStats = statsData?.payload?.testMode?.wordsStats[word];
 
             if (wordStats) {
@@ -258,16 +200,51 @@ export const wordsMixer = (words, statsData, languageAndRange) => {
                   };
             }
       });
-      newWords.sort((a, b) => {
+      const newNumbersSlice = numbersSlice.map((word) => {
+            const wordStats = statsData?.payload?.testMode?.wordsStats[word];
+
+            if (wordStats) {
+                  return {
+                        word,
+                        count: wordStats.totalNumberOfTestsAppeared,
+                  };
+            } else {
+                  return {
+                        word,
+                        count: 0,
+                  };
+            }
+      });
+
+      newWordsSlice.sort((a, b) => {
+            return a.count - b.count;
+      });
+      newNumbersSlice.sort((a, b) => {
             return a.count - b.count;
       });
 
-      const newWordsOne = newWords.map((word) => {
-            return word.word;
-      });
+      const finalWords = [];
+      let i = 0;
+      let j = 0;
+      let stopByLength =
+            numbersSlice.length === 0
+                  ? 1
+                  : wordsSlice.length / numbersSlice.length;
+      while (i < newWordsSlice.length || i < newNumbersSlice.length) {
+            if (i < newWordsSlice.length) {
+                  for (let k = 0; k < stopByLength; k++) {
+                        finalWords.push(newWordsSlice[i].word);
+                        i++;
+                  }
+            }
+            if (j < newNumbersSlice.length) {
+                  finalWords.push(newNumbersSlice[j].word);
+            }
 
-      console.log(newWords, statsData);
-      return newWordsOne;
+            j++;
+      }
+
+      return finalWords;
 };
 
 export const wordsMixerOne = (props) => {
@@ -314,7 +291,8 @@ export const wordsMixerOne = (props) => {
                   }
             } else {
                   if (props.modeTwo === "1") {
-                        const word = props.allWords[props.wordIndex];
+                        const word =
+                              props.practiseModeAllWords[props.wordIndex];
                         const randomWord =
                               props.allWords[
                                     Math.floor(

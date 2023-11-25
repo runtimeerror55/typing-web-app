@@ -18,6 +18,10 @@ const settingsSchema = mongoose.Schema({
                   type: String,
                   default: "english",
             },
+            fullName: {
+                  type: String,
+                  default: "english (1-100)",
+            },
             optionIndex: {
                   type: Number,
                   default: 0,

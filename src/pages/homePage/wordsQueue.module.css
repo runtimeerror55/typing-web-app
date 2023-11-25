@@ -1,12 +1,22 @@
 .words-queue {
       position: absolute;
-      left: 0;
+      right: 0;
       top: 0;
-      background-color: #5d1a86;
+      background-color: transparent;
       max-height: 100%;
       overflow-y: auto;
       padding-left: 2px;
       padding-right: 2px;
+      padding-top: 10px;
+      min-height: 100vh;
+}
+
+.words-queue-green-theme {
+      background-color: #5fdc72;
+}
+
+.words-queue-blud-theme {
+      background-color: #5facdc;
 }
 
 .word-stats {

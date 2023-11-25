@@ -412,7 +412,10 @@ export const StatsPage = () => {
                                           styles["language-filter-section"]
                                     }
                               >
-                                    <select onChange={languageFilterHandler}>
+                                    <select
+                                          className={styles["language-filter"]}
+                                          onChange={languageFilterHandler}
+                                    >
                                           <option disabled>
                                                 languages and ranges
                                           </option>
