@@ -1163,6 +1163,23 @@ export const TypingArea = forwardRef((props, ref) => {
             event.target.blur();
       };
 
+      const reloadWordPractise = (event) => {
+            dispatch({ type: "reset" });
+            setRestart({});
+            clearInterval(timerState.timerId);
+            setTimerState({
+                  elapsedTime: 0,
+                  timerId: undefined,
+            });
+            typingParagraphRef.current.focus();
+            event.target.blur();
+      };
+
+      const reloadWordPractiseKeyDownHandler = (event) => {
+            if (event.key === "Enter") {
+                  event.target.click();
+            }
+      };
       const goBackButtonClickHandler = (event) => {
             typingParagraphRef.current.focus();
             event.target.blur();
@@ -1346,10 +1363,16 @@ export const TypingArea = forwardRef((props, ref) => {
                                                                   `icon-${props.theme}`
                                                             ]
                                                       }
-                                                      // onClick={restartHandler}
-                                                      // onFocus={focusHandler}
-                                                      // onKeyDown={restartKeyDownHandler}
-                                                      // onBlur={restartOnBlurHandler}
+                                                      onClick={
+                                                            reloadWordPractise
+                                                      }
+                                                      onFocus={focusHandler}
+                                                      onKeyDown={
+                                                            reloadWordPractiseKeyDownHandler
+                                                      }
+                                                      onBlur={
+                                                            restartOnBlurHandler
+                                                      }
                                                 >
                                                       <FontAwesomeIcon
                                                             icon={faRotate}
