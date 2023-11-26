@@ -197,6 +197,8 @@ export const HomePage = () => {
             fullName: "english (1-100)",
       });
 
+      const [testStarted, setShowTestStarted] = useState(false);
+
       const practiseModeAllWords = useMemo(() => {
             let newWords = [];
             if (
@@ -363,6 +365,7 @@ export const HomePage = () => {
                                                 languageAndRange={
                                                       languageAndRange
                                                 }
+                                                testStarted={testStarted}
                                           ></LanguageStats>
                                     </section>
                               ) : null}
@@ -399,6 +402,9 @@ export const HomePage = () => {
                                           }
                                           setStatsData={setStatsData}
                                           showWordsQueue={showWordsQueue}
+                                          setShowTestStarted={
+                                                setShowTestStarted
+                                          }
                                     ></TypingArea>
                               </section>
                               <QuickSettings
@@ -436,6 +442,7 @@ export const HomePage = () => {
                                     modeThree={modeThree}
                                     timer={timer}
                                     typingSoundPath={typingSoundPath}
+                                    testStarted={testStarted}
                               ></QuickSettings>
                         </main>
                   </div>

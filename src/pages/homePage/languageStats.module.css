@@ -2,14 +2,10 @@
       background-color: #5fdc72;
       padding: 10px;
       box-shadow: 5px 3px 3px;
-      transition: transform 0.15s linear;
+      transition: opacity 0.25s linear;
       margin: 5px;
       position: relative;
-}
-
-.word:hover {
-      transform: scale(0.95);
-      cursor: pointer;
+      opacity: 1;
 }
 
 .serial-number {

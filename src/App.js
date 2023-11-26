@@ -21,9 +21,6 @@ const router = createBrowserRouter([
             path: "/",
             element: <AwaitHomePage></AwaitHomePage>,
             loader: homePageLoader,
-            shouldRevalidate: ({ formAction }) => {
-                  return true;
-            },
       },
       {
             path: "/statsPage",

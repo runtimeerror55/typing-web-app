@@ -1,12 +1,9 @@
 # to do
 
-- key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly
-- showing how many words are typed alteast once in test mode
-- reload same word test in practise mode
-- showing how many words and letters have been practised atleast once
+- key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly, works when the default words are same language and option index
 - logo change to minitype
 - buy domain minitype.in
-- theme change of word queue
+- after restarting paragraph not scrolling to top when width is 80vw and time is 60s and all words are completely typed, and also key press sounds are still getting registerd even after finishing test
 
 # ecommerce
 

@@ -1,15 +1,21 @@
 import { Link, Form, useNavigate } from "react-router-dom";
 import styles from "./navBar.module.css";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { authContext } from "../../context/auth";
+import { UserInformation } from "./userInformation";
 export const NavBar = () => {
       const { token, logout } = useContext(authContext);
+      const [showUserInfromation, setShowUserInformation] = useState(false);
 
       const navigate = useNavigate();
 
       const logoutHandler = () => {
             logout();
-            navigate("/");
+      };
+      const accountClickHandler = () => {
+            setShowUserInformation((previous) => {
+                  return !previous;
+            });
       };
       return (
             <>
@@ -20,6 +26,7 @@ export const NavBar = () => {
                               <Link to={"/"} className={styles["nav-link"]}>
                                     HOME
                               </Link>
+
                               <Link
                                     className={
                                           styles["cart-link"] +
@@ -30,14 +37,7 @@ export const NavBar = () => {
                               >
                                     STATS
                               </Link>
-                              {token ? (
-                                    <button
-                                          onClick={logoutHandler}
-                                          className={styles["logout-button"]}
-                                    >
-                                          LOGOUT
-                                    </button>
-                              ) : (
+                              {!token ? (
                                     <>
                                           <Link
                                                 to="/login"
@@ -52,8 +52,27 @@ export const NavBar = () => {
                                                 PRACTISE
                                           </Link>
                                     </>
-                              )}
+                              ) : null}
+                              {token ? (
+                                    <button
+                                          onClick={accountClickHandler}
+                                          className={
+                                                styles["logout-button"] +
+                                                " " +
+                                                styles["nav-link"]
+                                          }
+                                    >
+                                          ACCOUNT
+                                    </button>
+                              ) : null}
                         </div>
+                        {showUserInfromation ? (
+                              <UserInformation
+                                    setShowUserInformation={
+                                          setShowUserInformation
+                                    }
+                              ></UserInformation>
+                        ) : null}
                   </nav>
             </>
       );

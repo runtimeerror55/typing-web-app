@@ -1080,6 +1080,7 @@ export const TypingArea = forwardRef((props, ref) => {
             updateWpmAndAccuracy(timerState, testStats);
 
             dispatch({ type: "finished test" });
+            props.setShowTestStarted(false);
       }
 
       const keyDownHandler = (event) => {
@@ -1119,6 +1120,7 @@ export const TypingArea = forwardRef((props, ref) => {
                   if (timerState.timerId === undefined) {
                         const timerId = setInterval(() => {
                               setTimerState((previous) => {
+                                    props.setShowTestStarted(true);
                                     return {
                                           ...previous,
                                           elapsedTime: previous.elapsedTime + 1,
@@ -1135,7 +1137,12 @@ export const TypingArea = forwardRef((props, ref) => {
       const typingParagraphRef = useRef();
       const wordRef = useRef(null);
 
-      const paragraph = createtypingParagraphJsx(words, typingState, wordRef);
+      const paragraph = createtypingParagraphJsx(
+            words,
+            typingState,
+            wordRef,
+            props.theme
+      );
 
       const restartHandler = (event) => {
             if (
@@ -1154,18 +1161,21 @@ export const TypingArea = forwardRef((props, ref) => {
 
             dispatch({ type: "reset" });
             setRestart({});
+            props.setShowTestStarted(false);
             clearInterval(timerState.timerId);
             setTimerState({
                   elapsedTime: 0,
                   timerId: undefined,
             });
             typingParagraphRef.current.focus();
+            typingParagraphRef.current.scrollTo(0, 0);
             event.target.blur();
       };
 
       const reloadWordPractise = (event) => {
             dispatch({ type: "reset" });
             setRestart({});
+            props.setShowTestStarted(false);
             clearInterval(timerState.timerId);
             setTimerState({
                   elapsedTime: 0,
@@ -1193,6 +1203,7 @@ export const TypingArea = forwardRef((props, ref) => {
 
             dispatch({ type: "reset" });
             setRestart({});
+            props.setShowTestStarted(false);
             clearInterval(timerState.timerId);
             setTimerState({
                   elapsedTime: 0,

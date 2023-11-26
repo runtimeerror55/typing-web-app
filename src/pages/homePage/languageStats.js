@@ -5,6 +5,7 @@ export const LanguageStats = ({
       statsData,
       classOne,
       serialNumber,
+      testStarted,
 }) => {
       const testMode = statsData?.payload?.testMode;
       console.log(statsData);
@@ -27,9 +28,13 @@ export const LanguageStats = ({
       if (testMode) {
             lastTwentyTestsAverages(statsData.payload.testMode);
       }
+      console.log(testStarted);
 
       return (
-            <div className={styles["word"] + " " + styles["word-" + theme]}>
+            <div
+                  className={styles["word"] + " " + styles["word-" + theme]}
+                  style={testStarted ? { opacity: 0 } : null}
+            >
                   <h3 className={styles["serial-number"]}>{serialNumber}</h3>
                   <h4 className={styles["word-title"]}>
                         {languageAndRange.fullName}

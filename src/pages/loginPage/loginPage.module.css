@@ -18,6 +18,7 @@ a {
       width: 100vw;
       align-items: center;
       min-height: 100svh;
+      background-color: #1a866b;
 }
 .main {
       display: flex;
@@ -28,7 +29,7 @@ a {
 }
 
 .login-form-section {
-      background-color: #1a866b;
+      background-color: #5fdc72;
       border-radius: 25px;
       display: flex;
       flex-direction: column;
@@ -71,7 +72,7 @@ heading {
 }
 .login-button,
 .register-button {
-      background-color: palegreen;
+      background-color: transparent;
       cursor: pointer;
       color: black;
       padding-left: 20px;
@@ -84,6 +85,7 @@ heading {
       display: flex;
       align-items: center;
       justify-content: center;
+      border: 2px solid black;
 }
 .login-button {
       margin-top: auto;
@@ -91,4 +93,5 @@ heading {
 .login-button:hover,
 .register-button:hover {
       box-shadow: 0 0 10px rgb(242, 250, 242);
+      border: 2px solid white;
 }

@@ -74,7 +74,12 @@ export const updateWpmAndAccuracy = (timerState, testStats) => {
       }
 };
 
-export const createtypingParagraphJsx = (words, typingState, wordRef) => {
+export const createtypingParagraphJsx = (
+      words,
+      typingState,
+      wordRef,
+      theme
+) => {
       const paragraph = [];
       let index = -1;
       for (let i = 0; i < words.length; i++) {
@@ -84,10 +89,10 @@ export const createtypingParagraphJsx = (words, typingState, wordRef) => {
                   let className = "";
                   index++;
                   if (i < typingState.currentWordIndex) {
-                        className = styles["active-right"];
+                        className = styles["active-right-" + theme];
                   } else if (i === typingState.currentWordIndex) {
                         if (j < typingState.currentLetterIndex) {
-                              className = styles["active-right"];
+                              className = styles["active-right-" + theme];
                         } else if (j === typingState.currentLetterIndex) {
                               if (
                                     typingState.currentLetterClass ===

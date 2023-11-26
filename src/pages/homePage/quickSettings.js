@@ -33,6 +33,7 @@ export const QuickSettings = ({
       timer,
       modeTwo,
       typingSoundPath,
+      testStarted,
 }) => {
       const { token } = useContext(authContext);
       const wordsFilterRef = useRef();
@@ -152,6 +153,7 @@ export const QuickSettings = ({
                                     " " +
                                     styles[`filtering-section-${theme}`]
                               }
+                              style={testStarted ? { opacity: 0 } : null}
                         >
                               {/* timer */}
                               <select

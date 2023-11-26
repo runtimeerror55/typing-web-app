@@ -38,8 +38,14 @@
       height: 36px;
 }
 
-.active-right {
-      color: green;
+.active-right-green-theme {
+      color: #5fdc72;
+}
+.active-right-blue-theme {
+      color: #5facdc;
+}
+.active-right-violet-theme {
+      color: #c280f1;
 }
 
 .active-wrong {

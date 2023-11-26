@@ -1,0 +1,35 @@
+.user-information-section {
+      position: absolute;
+      right: 10px;
+      top: 40px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #5fdc72;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+}
+
+.avatar-icon {
+      width: 50px;
+}
+
+.logout-button {
+      font-style: italic;
+      font-weight: bold;
+      font-size: 13px;
+      background-color: transparent;
+      padding-left: 15px;
+      padding-right: 15px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-radius: 20px;
+      color: black;
+      border: 2px solid black;
+      cursor: pointer;
+}
+.logout-button:hover {
+      border: 2px solid white;
+}
