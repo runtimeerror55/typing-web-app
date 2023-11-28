@@ -12,6 +12,18 @@
       flex-direction: column;
 }
 
+.user-information-section-green-theme {
+      background-color: #5fdc72;
+}
+
+.user-information-section-blue-theme {
+      background-color: #5facdc;
+}
+
+.user-information-section-violet-theme {
+      background-color: #c280f1;
+}
+
 .avatar-icon {
       width: 50px;
 }

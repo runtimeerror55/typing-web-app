@@ -3,7 +3,7 @@ import styles from "./navBar.module.css";
 import { useContext, useState } from "react";
 import { authContext } from "../../context/auth";
 import { UserInformation } from "./userInformation";
-export const NavBar = () => {
+export const NavBar = ({ theme }) => {
       const { token, logout } = useContext(authContext);
       const [showUserInfromation, setShowUserInformation] = useState(false);
 
@@ -71,6 +71,7 @@ export const NavBar = () => {
                                     setShowUserInformation={
                                           setShowUserInformation
                                     }
+                                    theme={theme}
                               ></UserInformation>
                         ) : null}
                   </nav>

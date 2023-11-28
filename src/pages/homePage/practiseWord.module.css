@@ -14,7 +14,7 @@
 
 .container {
       position: absolute;
-      right: 5px;
+      right: 10px;
       top: 5px;
       color: black;
       display: flex;
@@ -30,7 +30,7 @@
       border-radius: 20px;
       border: 2px solid black;
       cursor: pointer;
-      margin-right: 5px;
+      margin-right: 15px;
 }
 
 .words-queue-open-button:hover {

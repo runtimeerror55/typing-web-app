@@ -10,7 +10,8 @@
 .logo {
       margin: 10px;
       letter-spacing: 5px;
-      color: cyan;
+      color: white;
+      font-style: italic;
 }
 
 .search-bar {
@@ -24,6 +25,7 @@
       text-decoration: none;
       color: white;
       margin: 10px;
+      font-style: italic;
 }
 
 .cart-link {

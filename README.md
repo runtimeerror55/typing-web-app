@@ -3,7 +3,9 @@
 - key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly, works when the default words are same language and option index
 - logo change to minitype
 - buy domain minitype.in
-- after restarting paragraph not scrolling to top when width is 80vw and time is 60s and all words are completely typed, and also key press sounds are still getting registerd even after finishing test
+- saving when settings change, in practise mode ,word index to be noted
+- authentication , veryfying the user upon landing, you have to verify at the backEnd
+  ,front rend react jwt is not real way of verifying
 
 # ecommerce
 

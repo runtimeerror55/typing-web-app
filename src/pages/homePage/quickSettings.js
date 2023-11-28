@@ -104,7 +104,7 @@ export const QuickSettings = ({
                   setWordsFilterRefPreviousValue(value);
             } else {
                   toast.error("something went wrong", toastOptions);
-                  console.log(wordsFilterRef, wordsFilterRef.current);
+
                   wordsFilterRef.current.value = wordsFilterRefPreviousValue;
             }
 
@@ -135,7 +135,7 @@ export const QuickSettings = ({
             const data = await updateSettings({
                   [event.target.name]: event.target.value,
             });
-            if (data.status === "error") {
+            if (data.status === "error" && token) {
                   toast.error(data.message, toastOptions);
             }
       };

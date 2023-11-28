@@ -31,6 +31,36 @@ export const getUserStats = async ({ request }) => {
       }
 };
 
+export const getUserStatsOne = async ({ request }) => {
+      try {
+            let url = new URL(request.url);
+            let queryString = Array.from(url.searchParams).reduce(
+                  (finalString, [key, value]) => {
+                        if (finalString === "?") {
+                              return finalString + key + "=" + value;
+                        } else {
+                              return finalString + "&" + key + "=" + value;
+                        }
+                  },
+                  "?"
+            );
+            console.log(queryString);
+            const response = await fetch(
+                  `${backEndUrl}userStatsOne${queryString}`,
+                  {
+                        headers: {
+                              authorization: "Bearer " + getToken(),
+                        },
+                  }
+            );
+            const data = await response.json();
+
+            return data;
+      } catch (error) {
+            return { status: "error", message: error.message };
+      }
+};
+
 const getUserSettings = async () => {
       try {
             const response = await fetch("http://localhost:8080/settings", {

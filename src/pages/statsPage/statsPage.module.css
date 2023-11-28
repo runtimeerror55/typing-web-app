@@ -46,19 +46,37 @@
 }
 
 .main {
-      width: 70%;
       flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 }
 
 .language-overall-stats-table {
-      border-collapse: collapse;
+      width: 90%;
       margin: 5px;
       background-color: #5facdc;
+      border-collapse: separate;
+      margin: 5px;
+      border-spacing: 10px;
+}
+
+.language-overall-stats-table-green-theme {
+      background-color: #5fdc72;
+}
+
+.language-overall-stats-table-blue-theme {
+      background-color: #5facdc;
+}
+.language-overall-stats-table-violet-theme {
+      background-color: #c280f1;
 }
 .language-overall-stats-table-head,
 .language-overall-stats-table-data {
-      border: 2px solid black;
       padding: 5px;
+      min-width: 170px;
+      max-width: 170px;
+      height: 80px;
 }
 
 .language-overall-stats-table-head {
@@ -69,6 +87,7 @@
       display: flex;
       margin-right: 10px;
       justify-content: flex-end;
+      width: 70%;
 }
 
 .language-filter {
@@ -81,6 +100,7 @@
       grid-column-gap: 20px;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       margin: 10px;
+      width: 70%;
 }
 
 .all-time-stat {
@@ -116,6 +136,9 @@
       padding: 10px;
 }
 
+.last-ten-tests-section {
+      width: 70%;
+}
 .last-ten-tests-table {
       margin-top: 20px;
       color: black;

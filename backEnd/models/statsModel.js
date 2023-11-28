@@ -1013,6 +1013,7 @@ commonWords.forEach((element, index) => {
 const statsSchema = mongoose.Schema({
       language: String,
       optionIndex: Number,
+      subName: String,
       testMode: {
             totalNumberOfStartedTests: {
                   type: Number,

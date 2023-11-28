@@ -12,83 +12,17 @@ import styles from "./statsPage.module.css";
 import { PracticeWord } from "../homePage/practiseWord";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import { toastOptions } from "../../utilities/utilities";
-const commonWords = [
-      "as",
-      "i",
-      "his",
-      "that",
-      "he",
-      "was",
-      "for",
-      "on",
-      "are",
-      "with",
-      "they",
-      "be",
-      "at",
-      "one",
-      "have",
-      "this",
-      "from",
-      "by",
-      "hot",
-      "word",
-      "but",
-      "what",
-      "some",
-      "is",
-      "it",
-      "you",
-      "or",
-      "had",
-      "the",
-      "of",
-      "to",
-      "and",
-      "a",
-      "in",
-      "we",
-      "can",
-      "out",
-      "other",
-      "were",
-      "which",
-      "do",
-      "their",
-      "time",
-];
+import {
+      toastOptions,
+      lastTwentyTestsAverages,
+      highestAverageSpeedOfAWord,
+      highestAverageAcuuracyOfAWord,
+} from "../../utilities/utilities";
+import { getUserStatsOne } from "../../loaders/loaders";
 
-const letters = [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e",
-      "f",
-      "g",
-      "h",
-      "i",
-      "j",
-      "k",
-      "l",
-      "m",
-      "n",
-      "o",
-      "p",
-      "q",
-      "r",
-      "s",
-      "t",
-      "u",
-      "v",
-      "w",
-      "x",
-      "y",
-      "z",
-];
 export const StatsPage = () => {
       const [loaderData, setLoaderData] = useState(useAsyncValue());
+      const [y, setY] = useState([]);
       let { settingsData } = useLoaderData();
       if (settingsData.status === "error") {
             settingsData = {
@@ -102,67 +36,44 @@ export const StatsPage = () => {
             };
       }
 
-      const lastTwentyTestsAverages = (wordStats) => {
-            const [wpmSum, accuracySum] = wordStats.lastTwentyTests.reduce(
-                  (total, current) => {
-                        return [
-                              total[0] + current.wpm,
-                              total[1] + current.accuracy,
-                        ];
-                  },
-                  [0, 0]
-            );
-            wordStats.lastTwentyTestsAverageWpm =
-                  wpmSum / wordStats.lastTwentyTests.length;
-            wordStats.lastTwentyTestsAverageAccuracy =
-                  accuracySum / wordStats.lastTwentyTests.length;
-      };
+      if (loaderData?.payload?.testMode) {
+            lastTwentyTestsAverages(loaderData.payload);
+            highestAverageSpeedOfAWord(loaderData.payload);
+            highestAverageAcuuracyOfAWord(loaderData.payload);
+      }
 
-      const highestAverageSpeedOfAWord = () => {
-            loaderData.payload.testMode.highestAverageSpeedOfAWord =
-                  Object.entries(loaderData.payload.testMode.wordsStats).reduce(
-                        (total, current) => {
-                              if (total.speed < current[1].averageWpm) {
-                                    total.speed = current[1].averageWpm;
-                                    total.word = current[0];
-                                    return total;
-                              } else {
-                                    return total;
-                              }
-                        },
-                        {
-                              word: undefined,
-                              speed: -1,
-                        }
-                  );
+      const languageStatsFetcherOne = useFetcher();
+      const languageStatsFetcherOneStatus =
+            languageStatsFetcherOne.data &&
+            languageStatsFetcherOne.state === "idle";
+
+      useEffect(() => {
+            if (languageStatsFetcherOneStatus) {
+                  const data = languageStatsFetcherOne.data;
+                  if (data.status === "success") {
+                        console.log(data.payload);
+                        setY(
+                              data.payload.sort((a, b) => {
+                                    return a.optionIndex - b.optionIndex;
+                              })
+                        );
+                        toast.success("fetched successfully", toastOptions);
+                  } else {
+                        toast.error(data.message, toastOptions);
+                  }
+            }
+      }, [languageStatsFetcherOne]);
+
+      const languageFilterHandlerOne = (event) => {
+            // const value = JSON.parse(event.target.value);
+            languageStatsFetcherOne.submit(
+                  { language: "english" },
+                  {
+                        method: "GET",
+                        action: "/statsOne",
+                  }
+            );
       };
-      const highestAverageAcuuracyOfAWord = () => {
-            loaderData.payload.testMode.highestAverageAccuracyOfAWord =
-                  Object.entries(loaderData.payload.testMode.wordsStats).reduce(
-                        (total, current) => {
-                              if (total.accuracy < current[1].averageWpm) {
-                                    total.accuracy = current[1].averageAccuracy;
-                                    total.word = current[0];
-                                    return total;
-                              } else {
-                                    return total;
-                              }
-                        },
-                        {
-                              word: undefined,
-                              accuracy: -1,
-                        }
-                  );
-      };
-      if (loaderData.payload?.testMode) {
-            lastTwentyTestsAverages(loaderData.payload.testMode);
-      }
-      if (loaderData.payload?.testMode) {
-            highestAverageSpeedOfAWord();
-      }
-      if (loaderData.payload?.testMode) {
-            highestAverageAcuuracyOfAWord();
-      }
 
       const languageStatsFetcher = useFetcher();
       const languageStatsFetcherStatus =
@@ -200,6 +111,7 @@ export const StatsPage = () => {
       //               </div>
       //         );
       //   } else {
+      console.log(y);
       return (
             <>
                   <div
@@ -212,11 +124,32 @@ export const StatsPage = () => {
                         <NavBar></NavBar>
                         <ToastContainer></ToastContainer>
                         <main className={styles["main"]}>
+                              <select
+                                    className={styles["language-filter"]}
+                                    onChange={languageFilterHandlerOne}
+                                    value="javascript"
+                              >
+                                    <option disabled>
+                                          languages and ranges
+                                    </option>
+                                    <option value="english">english</option>
+                                    <option value="javascript">
+                                          javascript
+                                    </option>
+                              </select>
+
                               <section>
                                     <table
                                           className={
                                                 styles[
                                                       "language-overall-stats-table"
+                                                ] +
+                                                " " +
+                                                styles[
+                                                      "language-overall-stats-table-" +
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
                                                 ]
                                           }
                                     >
@@ -249,16 +182,7 @@ export const StatsPage = () => {
                                                             ]
                                                       }
                                                 >
-                                                      all tests average speed
-                                                </th>
-                                                <th
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-head"
-                                                            ]
-                                                      }
-                                                >
-                                                      all tests average accuracy
+                                                      all tests average
                                                 </th>
                                                 <th
                                                       className={
@@ -268,17 +192,7 @@ export const StatsPage = () => {
                                                       }
                                                 >
                                                       last 20 tests average
-                                                      speed
-                                                </th>
-                                                <th
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-head"
-                                                            ]
-                                                      }
-                                                >
-                                                      last 20 tests average
-                                                      accuracy
+                                                      speed/accuracy
                                                 </th>
                                                 <th
                                                       className={
@@ -296,118 +210,119 @@ export const StatsPage = () => {
                                                             ]
                                                       }
                                                 >
-                                                      highest accuracy in a test
+                                                      total tests
                                                 </th>
-                                          </tr>
-                                          <tr>
                                                 <th
                                                       className={
                                                             styles[
                                                                   "language-overall-stats-table-head"
                                                             ]
                                                       }
-                                                >
-                                                      1- 100
-                                                </th>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                          </tr>
-                                          <tr>
+                                                ></th>
                                                 <th
                                                       className={
                                                             styles[
                                                                   "language-overall-stats-table-head"
                                                             ]
                                                       }
-                                                >
-                                                      101-200
-                                                </th>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
-                                                <td
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-data"
-                                                            ]
-                                                      }
-                                                ></td>
+                                                ></th>
                                           </tr>
+
+                                          {y.map((subTypeStats) => {
+                                                if (subTypeStats.testMode) {
+                                                      lastTwentyTestsAverages(
+                                                            subTypeStats
+                                                      );
+                                                      highestAverageSpeedOfAWord(
+                                                            subTypeStats
+                                                      );
+                                                      highestAverageAcuuracyOfAWord(
+                                                            subTypeStats
+                                                      );
+                                                }
+                                                return (
+                                                      <tr>
+                                                            <th
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-head"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {subTypeStats.subName
+                                                                        ? subTypeStats.subName
+                                                                        : "-"}
+                                                            </th>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {subTypeStats.testMode
+                                                                        ? `${subTypeStats.testMode.averageWpm} wpm /
+                                                                          ${subTypeStats.testMode.averageAccuracy} %`
+                                                                        : "-"}
+                                                            </td>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {subTypeStats.testMode
+                                                                        ? `${subTypeStats.testMode.lastTwentyTestsAverageWpm} wpm /
+                                                                          ${subTypeStats.testMode.lastTwentyTestsAverageAccuracy} %`
+                                                                        : "-"}
+                                                            </td>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {subTypeStats.testMode
+                                                                        ? `${subTypeStats.testMode.highestWpmOfATest} wpm`
+                                                                        : "-"}
+                                                            </td>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            >
+                                                                  {" "}
+                                                                  {subTypeStats.testMode
+                                                                        ? subTypeStats
+                                                                                .testMode
+                                                                                .totalNumberOfFinishedTests
+                                                                        : "-"}
+                                                            </td>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            ></td>
+                                                            <td
+                                                                  className={
+                                                                        styles[
+                                                                              "language-overall-stats-table-data"
+                                                                        ]
+                                                                  }
+                                                            ></td>
+                                                      </tr>
+                                                );
+                                          })}
                                     </table>
                               </section>
-                              <section
+
+                              {/* <section
                                     className={
                                           styles["language-filter-section"]
                                     }
@@ -537,7 +452,8 @@ export const StatsPage = () => {
                                                 javascript (1-100)
                                           </option>
                                     </select>
-                              </section>
+                              </section> */}
+
                               {loaderData.status === "success" ? (
                                     <section
                                           className={
@@ -826,35 +742,31 @@ export const StatsPage = () => {
                                           })}
                                     </section> */}
                               {/* <section
-                                          className={
-                                                styles[
-                                                      "characters-bar-graph-section"
-                                                ]
+                                    className={
+                                          styles["characters-bar-graph-section"]
+                                    }
+                              >
+                                    <CharactersBartGraph
+                                          loaderData={loaderData}
+                                          theme={
+                                                settingsData.payload.settings
+                                                      .theme
                                           }
-                                    >
-                                          <CharactersBartGraph
-                                                loaderData={loaderData}
-                                                theme={
-                                                      settingsData.payload
-                                                            .settings.theme
-                                                }
-                                          ></CharactersBartGraph>
-                                    </section>
-                                    <section
-                                          className={
-                                                styles[
-                                                      "characters-bar-graph-section"
-                                                ]
+                                    ></CharactersBartGraph>
+                              </section> */}
+                              <section
+                                    className={
+                                          styles["characters-bar-graph-section"]
+                                    }
+                              >
+                                    <WordsBarGraph
+                                          loaderData={loaderData}
+                                          theme={
+                                                settingsData.payload.settings
+                                                      .theme
                                           }
-                                    >
-                                          <WordsBarGraph
-                                                loaderData={loaderData}
-                                                theme={
-                                                      settingsData.payload
-                                                            .settings.theme
-                                                }
-                                          ></WordsBarGraph>
-                                    </section> */}
+                                    ></WordsBarGraph>
+                              </section>
                               <section
                                     className={styles["last-ten-tests-section"]}
                               >

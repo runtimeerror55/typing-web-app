@@ -8,6 +8,7 @@ import {
       getWords,
       getUserPreviousSessionSettings,
       getUserStats,
+      getUserStatsOne,
 } from "./loaders/loaders";
 import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
             path: "/stats",
             loader: getUserStats,
+      },
+      {
+            path: "/statsOne",
+            loader: getUserStatsOne,
       },
 
       {

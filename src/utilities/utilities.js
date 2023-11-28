@@ -349,3 +349,55 @@ export const shuffle = (input) => {
             input[randomIndex] = temp;
       }
 };
+
+export const lastTwentyTestsAverages = (statsData) => {
+      const [wpmSum, accuracySum] = statsData.testMode.lastTwentyTests.reduce(
+            (total, current) => {
+                  return [total[0] + current.wpm, total[1] + current.accuracy];
+            },
+            [0, 0]
+      );
+      statsData.testMode.lastTwentyTestsAverageWpm =
+            wpmSum / statsData.testMode.lastTwentyTests.length;
+      statsData.testMode.lastTwentyTestsAverageAccuracy =
+            accuracySum / statsData.testMode.lastTwentyTests.length;
+};
+
+export const highestAverageSpeedOfAWord = (statsData) => {
+      statsData.testMode.highestAverageSpeedOfAWord = Object.entries(
+            statsData.testMode.wordsStats
+      ).reduce(
+            (total, current) => {
+                  if (total.speed < current[1].averageWpm) {
+                        total.speed = current[1].averageWpm;
+                        total.word = current[0];
+                        return total;
+                  } else {
+                        return total;
+                  }
+            },
+            {
+                  word: undefined,
+                  speed: -1,
+            }
+      );
+};
+export const highestAverageAcuuracyOfAWord = (statsData) => {
+      statsData.testMode.highestAverageAccuracyOfAWord = Object.entries(
+            statsData.testMode.wordsStats
+      ).reduce(
+            (total, current) => {
+                  if (total.accuracy < current[1].averageWpm) {
+                        total.accuracy = current[1].averageAccuracy;
+                        total.word = current[0];
+                        return total;
+                  } else {
+                        return total;
+                  }
+            },
+            {
+                  word: undefined,
+                  accuracy: -1,
+            }
+      );
+};

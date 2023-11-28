@@ -320,7 +320,7 @@ export const HomePage = () => {
                         tabIndex={-1}
                   >
                         <ToastContainer />
-                        <NavBar></NavBar>
+                        <NavBar theme={theme}></NavBar>
                         <main className={styles["main"]}>
                               {mode === "practise" ? (
                                     <section>

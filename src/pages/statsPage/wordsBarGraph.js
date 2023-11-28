@@ -55,17 +55,17 @@ export const WordsBarGraph = ({ loaderData, theme }) => {
             ],
       };
 
-      let array = Object.entries(loaderData.wordsStats);
+      let array = Object.entries(loaderData.payload.testMode.wordsStats);
       console.log(array);
       array.sort((a, b) => {
-            return Math.floor(b[1].wpm) - Math.floor(a[1].wpm);
+            return Math.floor(a[1].averageWpm) - Math.floor(b[1].averageWpm);
       });
 
       data.labels = array.map(([key, value]) => {
             return key;
       });
       data.datasets[0].data = array.map(([key, value]) => {
-            return Math.floor(value.wpm);
+            return Math.floor(value.averageWpm);
       });
 
       console.log(data);

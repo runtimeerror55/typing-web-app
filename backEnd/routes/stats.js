@@ -4,6 +4,7 @@ const testModel = require("../models/testModel");
 const testsHistoryModel = require("../models/testsHistoryModel");
 const statsModel = require("../models/statsModel");
 const commonWordsModel = require("../models/commonWordsModel");
+const wordsModel = require("../models/wordsModel");
 const { isLoggedIn } = require("../middleware");
 
 router.route("/stats")
@@ -248,11 +249,18 @@ router.route("/userStats")
                   });
 
                   if (!userStats) {
+                        const document = await wordsModel.findOne({
+                              language: testStats.languageAndRange.language,
+                        });
+
                         userStats = new statsModel({
                               user: request.user._id,
                               language: testStats.languageAndRange.language,
                               optionIndex:
                                     testStats.languageAndRange.optionIndex,
+                              subName: document.options[
+                                    testStats.languageAndRange.optionIndex
+                              ].name,
                         });
                         await userStats.save();
                   }
@@ -424,4 +432,59 @@ router.route("/userStats")
                   });
             }
       });
+
+router.route("/userStatsOne").get(isLoggedIn, async (request, response) => {
+      try {
+            const userStats = await statsModel.find({
+                  user: request.user._id,
+                  language: request.query.language || "english",
+            });
+
+            const languageInformation = await wordsModel.findOne({
+                  language: request.query.language,
+            });
+
+            if (userStats.length === 0) {
+                  response.status(500).json({
+                        status: "error",
+                        message: "user data does not exist",
+                  });
+            } else {
+                  let newArray = [];
+                  if (languageInformation.options.length > userStats.length) {
+                        for (
+                              let i = 0;
+                              i < languageInformation.options.length;
+                              i++
+                        ) {
+                              let found = false;
+                              for (let j = 0; j < userStats.length; j++) {
+                                    if (i === userStats[j].optionIndex) {
+                                          found = true;
+                                    }
+                              }
+                              if (!found) {
+                                    newArray.push({
+                                          subName: languageInformation.options[
+                                                i
+                                          ].name,
+                                          optionIndex: i,
+                                    });
+                              }
+                        }
+                  }
+
+                  console.log(userStats[0].subName, userStats[0]);
+                  response.status(200).json({
+                        status: "success",
+                        payload: [...userStats, ...newArray],
+                  });
+            }
+      } catch (error) {
+            response.status(500).json({
+                  status: "error",
+                  message: error.message,
+            });
+      }
+});
 module.exports.statsRouter = router;
