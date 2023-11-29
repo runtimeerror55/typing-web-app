@@ -10,6 +10,7 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      z-index: 1000;
 }
 
 .user-information-section-green-theme {
@@ -26,6 +27,7 @@
 
 .avatar-icon {
       width: 50px;
+      margin: 5px;
 }
 
 .logout-button {
@@ -41,6 +43,7 @@
       color: black;
       border: 2px solid black;
       cursor: pointer;
+      margin: 5px;
 }
 .logout-button:hover {
       border: 2px solid white;

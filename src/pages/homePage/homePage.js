@@ -173,7 +173,7 @@ export const HomePage = () => {
             payload: defaultSettings,
       });
 
-      const { token } = useContext(authContext);
+      const { decodedToken } = useContext(authContext);
       const [allWords, setAllWords] = useState(wordsData.payload);
       const [wordIndex, setWordIndex] = useState(0);
       const [timer, setTimer] = useState(settingsData.payload.timer);
@@ -256,11 +256,19 @@ export const HomePage = () => {
       const wordsFetcherStatus =
             wordsFetcher.state === "idle" && wordsFetcher.data;
 
-      useEffect(() => {
-            if (wordsFetcherStatus) {
-                  const data = wordsFetcher.data;
+      const userDetailsFetcher = useFetcher();
+      const userDetailsFetcherStatus =
+            userDetailsFetcher.data && userDetailsFetcher.state === "idle";
 
-                  if (data.status === "success") {
+      useEffect(() => {
+            if (wordsFetcherStatus && userDetailsFetcherStatus) {
+                  const data = wordsFetcher.data;
+                  const userDetails = userDetailsFetcher.data;
+
+                  if (
+                        data.status === "success" &&
+                        userDetails.status === "success"
+                  ) {
                         setAllWords(data.payload.words);
                         setStatsData({
                               status: "success",
@@ -279,14 +287,16 @@ export const HomePage = () => {
                         toast.error(data.message, toastOptions);
                   }
             }
-      }, [wordsFetcher]);
+      }, [wordsFetcher, userDetailsFetcher]);
 
       useEffect(() => {
-            if (token) {
+            if (decodedToken) {
                   wordsFetcher.submit(null, {
                         method: "GET",
                         action: "/previousSessionSettings",
                   });
+
+                  userDetailsFetcher.load("/userDetails");
             }
       }, []);
 

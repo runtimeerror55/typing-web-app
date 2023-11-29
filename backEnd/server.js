@@ -10,6 +10,7 @@ const { statsRouter } = require("./routes/stats");
 const { isLoggedIn } = require("./middleware");
 const { settingsRouter } = require("./routes/settings");
 const { wordsRouter } = require("./routes/words");
+const { userRouter } = require("./routes/user");
 
 app.use(
       cors({
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/", authenticationRouter);
+app.use("/", userRouter);
 app.use("/", statsRouter);
 app.use("/", settingsRouter);
 app.use("/", wordsRouter);

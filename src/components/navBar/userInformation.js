@@ -5,11 +5,13 @@ import styles from "./userInformation.module.css";
 import avatar from "../../assets/images/Avatar_icon_green.svg.png";
 
 export const UserInformation = ({ setShowUserInformation, theme }) => {
-      const { token, logout, user } = useContext(authContext);
+      const { decodedToken, logout } = useContext(authContext);
+      const navigate = useNavigate();
 
       const logoutHandler = () => {
             logout();
             setShowUserInformation(false);
+            window.location = "/";
       };
       return (
             <section
@@ -24,8 +26,8 @@ export const UserInformation = ({ setShowUserInformation, theme }) => {
                         className={styles["avatar-icon"]}
                         alt="profile icon"
                   ></img>
-                  <div>{user ? user.name : ""}</div>
-                  {token ? (
+                  <div>{decodedToken ? decodedToken.email : ""}</div>
+                  {decodedToken ? (
                         <button
                               onClick={logoutHandler}
                               className={styles["logout-button"]}

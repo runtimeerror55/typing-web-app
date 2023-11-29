@@ -35,7 +35,7 @@ export const QuickSettings = ({
       typingSoundPath,
       testStarted,
 }) => {
-      const { token } = useContext(authContext);
+      const { decodedToken } = useContext(authContext);
       const wordsFilterRef = useRef();
       const [wordsFilterRefPreviousValue, setWordsFilterRefPreviousValue] =
             useState(
@@ -135,7 +135,7 @@ export const QuickSettings = ({
             const data = await updateSettings({
                   [event.target.name]: event.target.value,
             });
-            if (data.status === "error" && token) {
+            if (data.status === "error" && decodedToken) {
                   toast.error(data.message, toastOptions);
             }
       };
@@ -424,7 +424,7 @@ export const QuickSettings = ({
                               {mode === "practise" && modeOne === "words" ? (
                                     <select
                                           onChange={(event) => {
-                                                if (!token) {
+                                                if (!decodedToken) {
                                                       toast.error(
                                                             "please login to use this feature",
                                                             toastOptions
@@ -448,7 +448,7 @@ export const QuickSettings = ({
                                           }}
                                           value={modeThree}
                                     >
-                                          {token &&
+                                          {decodedToken &&
                                           statsData.payload?.testMode ? (
                                                 <>
                                                       {Object.entries(

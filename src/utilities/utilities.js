@@ -227,6 +227,7 @@ export const wordsMixer = (words, statsData, languageAndRange) => {
       newNumbersSlice.sort((a, b) => {
             return a.count - b.count;
       });
+      console.log(newWordsSlice);
 
       const finalWords = [];
       let i = 0;

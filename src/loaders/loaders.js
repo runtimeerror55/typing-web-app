@@ -61,6 +61,20 @@ export const getUserStatsOne = async ({ request }) => {
       }
 };
 
+export const getUserDetails = async () => {
+      try {
+            const response = await fetch("http://localhost:8080/userDetails", {
+                  headers: {
+                        authorization: "Bearer " + getToken(),
+                  },
+            });
+            const data = await response.json();
+            return data;
+      } catch (error) {
+            return { status: "error", message: error.message };
+      }
+};
+
 const getUserSettings = async () => {
       try {
             const response = await fetch("http://localhost:8080/settings", {

@@ -1,11 +1,12 @@
 # to do
 
-- key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly, works when the default words are same language and option index
-- logo change to minitype
-- buy domain minitype.in
-- saving when settings change, in practise mode ,word index to be noted
-- authentication , veryfying the user upon landing, you have to verify at the backEnd
-  ,front rend react jwt is not real way of verifying
+1. key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly, works when the default words are same language and option index
+2. buy domain minitype.in
+3. saving when settings change, in practise mode ,word index to be noted
+4. authentication , veryfying the user upon landing, you have to verify at the backEnd
+   ,front rend react jwt is not real way of verifying
+5. click here overlay should be shown when focus shifted to buttons to be decided
+6. javascript words not fetching
 
 # ecommerce
 

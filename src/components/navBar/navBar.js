@@ -4,14 +4,9 @@ import { useContext, useState } from "react";
 import { authContext } from "../../context/auth";
 import { UserInformation } from "./userInformation";
 export const NavBar = ({ theme }) => {
-      const { token, logout } = useContext(authContext);
+      const { decodedToken, logout } = useContext(authContext);
       const [showUserInfromation, setShowUserInformation] = useState(false);
 
-      const navigate = useNavigate();
-
-      const logoutHandler = () => {
-            logout();
-      };
       const accountClickHandler = () => {
             setShowUserInformation((previous) => {
                   return !previous;
@@ -37,7 +32,7 @@ export const NavBar = ({ theme }) => {
                               >
                                     STATS
                               </Link>
-                              {!token ? (
+                              {!decodedToken ? (
                                     <>
                                           <Link
                                                 to="/login"
@@ -53,7 +48,7 @@ export const NavBar = ({ theme }) => {
                                           </Link>
                                     </>
                               ) : null}
-                              {token ? (
+                              {decodedToken ? (
                                     <button
                                           onClick={accountClickHandler}
                                           className={

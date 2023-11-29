@@ -8,7 +8,7 @@ export const LanguageStats = ({
       testStarted,
 }) => {
       const testMode = statsData?.payload?.testMode;
-      console.log(statsData);
+
       const lastTwentyTestsAverages = (testMode) => {
             const [wpmSum, accuracySum] = testMode.lastTwentyTests.reduce(
                   (total, current) => {
@@ -28,7 +28,6 @@ export const LanguageStats = ({
       if (testMode) {
             lastTwentyTestsAverages(statsData.payload.testMode);
       }
-      console.log(testStarted);
 
       return (
             <div

@@ -18,7 +18,11 @@ router.route("/login").post(async (request, response) => {
                   if (match) {
                         console.log("succefully logged in");
                         const token = jwt.sign(
-                              { _id: user._id, name: user.name },
+                              {
+                                    _id: user._id,
+                                    name: user.name,
+                                    email: user.email,
+                              },
                               "secret",
                               {
                                     expiresIn: 60 * 60 * 5,
