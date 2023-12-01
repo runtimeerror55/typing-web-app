@@ -257,10 +257,6 @@ export const TypingArea = forwardRef((props, ref) => {
                   console.log(data);
                   if (data.status === "success") {
                         props.setStatsData(data);
-                        toast.success(
-                              "stats fetched successfully",
-                              toastOptions
-                        );
                   } else {
                         toast.error(data.message, toastOptions);
                   }
@@ -283,6 +279,36 @@ export const TypingArea = forwardRef((props, ref) => {
                   api();
             }
       }, [typingState.finished]);
+
+      const focusableElements = useMemo(() => {
+            return { elements: null, index: -1 };
+      }, []);
+
+      useEffect(() => {
+            focusableElements.elements =
+                  document.querySelectorAll("[tabindex='0']");
+
+            window.addEventListener("keydown", (event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (event.key === "Tab") {
+                        if (
+                              focusableElements.index ===
+                              focusableElements.elements.length - 1
+                        ) {
+                              focusableElements.index = 0;
+                        } else {
+                              focusableElements.index++;
+                        }
+
+                        focusableElements.elements[
+                              focusableElements.index
+                        ].focus();
+                  } else if (event.key === "Enter") {
+                        focusableElements.index = -1;
+                  }
+            });
+      }, []);
 
       return (
             <>
@@ -464,6 +490,8 @@ export const TypingArea = forwardRef((props, ref) => {
                               words={props.practiseModeAllWords}
                               statsData={props.statsData}
                               theme={props.theme}
+                              setWordIndex={props.setWordIndex}
+                              setShowWordsQueue={props.setShowWordsQueue}
                         ></WordsQueue>
                   ) : null}
             </>

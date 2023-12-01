@@ -183,7 +183,7 @@ export const wordsMixer = (words, statsData, languageAndRange) => {
             } else {
                   wordsSlice = [...words];
             }
-      } else if (languageAndRange.language === "javscript") {
+      } else if (languageAndRange.language === "javascript") {
             wordsSlice = [...words];
       }
 

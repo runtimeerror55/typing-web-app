@@ -65,9 +65,9 @@ export const StatsPage = () => {
       }, [languageStatsFetcherOne]);
 
       const languageFilterHandlerOne = (event) => {
-            // const value = JSON.parse(event.target.value);
+            const value = event.target.value;
             languageStatsFetcherOne.submit(
-                  { language: "english" },
+                  { language: value },
                   {
                         method: "GET",
                         action: "/statsOne",
@@ -124,20 +124,6 @@ export const StatsPage = () => {
                         <NavBar></NavBar>
                         <ToastContainer></ToastContainer>
                         <main className={styles["main"]}>
-                              <select
-                                    className={styles["language-filter"]}
-                                    onChange={languageFilterHandlerOne}
-                                    value="javascript"
-                              >
-                                    <option disabled>
-                                          languages and ranges
-                                    </option>
-                                    <option value="english">english</option>
-                                    <option value="javascript">
-                                          javascript
-                                    </option>
-                              </select>
-
                               <section>
                                     <table
                                           className={
@@ -162,7 +148,28 @@ export const StatsPage = () => {
                                                             ]
                                                       }
                                                 >
-                                                      english
+                                                      <select
+                                                            className={
+                                                                  styles[
+                                                                        "language-filter"
+                                                                  ]
+                                                            }
+                                                            onChange={
+                                                                  languageFilterHandlerOne
+                                                            }
+                                                            defaultValue="javascript"
+                                                      >
+                                                            <option disabled>
+                                                                  languages and
+                                                                  ranges
+                                                            </option>
+                                                            <option value="english">
+                                                                  english
+                                                            </option>
+                                                            <option value="javascript">
+                                                                  javascript
+                                                            </option>
+                                                      </select>
                                                 </th>
                                           </tr>
                                           <tr>
@@ -219,13 +226,6 @@ export const StatsPage = () => {
                                                             ]
                                                       }
                                                 ></th>
-                                                <th
-                                                      className={
-                                                            styles[
-                                                                  "language-overall-stats-table-head"
-                                                            ]
-                                                      }
-                                                ></th>
                                           </tr>
 
                                           {y.map((subTypeStats) => {
@@ -261,8 +261,16 @@ export const StatsPage = () => {
                                                                   }
                                                             >
                                                                   {subTypeStats.testMode
-                                                                        ? `${subTypeStats.testMode.averageWpm} wpm /
-                                                                          ${subTypeStats.testMode.averageAccuracy} %`
+                                                                        ? `${Math.round(
+                                                                                subTypeStats
+                                                                                      .testMode
+                                                                                      .averageWpm
+                                                                          )} wpm /
+                                                                          ${Math.round(
+                                                                                subTypeStats
+                                                                                      .testMode
+                                                                                      .averageAccuracy
+                                                                          )} %`
                                                                         : "-"}
                                                             </td>
                                                             <td
@@ -273,8 +281,16 @@ export const StatsPage = () => {
                                                                   }
                                                             >
                                                                   {subTypeStats.testMode
-                                                                        ? `${subTypeStats.testMode.lastTwentyTestsAverageWpm} wpm /
-                                                                          ${subTypeStats.testMode.lastTwentyTestsAverageAccuracy} %`
+                                                                        ? `${Math.round(
+                                                                                subTypeStats
+                                                                                      .testMode
+                                                                                      .lastTwentyTestsAverageWpm
+                                                                          )} wpm /
+                                                                          ${Math.round(
+                                                                                subTypeStats
+                                                                                      .testMode
+                                                                                      .lastTwentyTestsAverageAccuracy
+                                                                          )} %`
                                                                         : "-"}
                                                             </td>
                                                             <td
@@ -302,13 +318,6 @@ export const StatsPage = () => {
                                                                                 .totalNumberOfFinishedTests
                                                                         : "-"}
                                                             </td>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            ></td>
                                                             <td
                                                                   className={
                                                                         styles[
@@ -754,7 +763,7 @@ export const StatsPage = () => {
                                           }
                                     ></CharactersBartGraph>
                               </section> */}
-                              <section
+                              {/* <section
                                     className={
                                           styles["characters-bar-graph-section"]
                                     }
@@ -766,7 +775,7 @@ export const StatsPage = () => {
                                                       .theme
                                           }
                                     ></WordsBarGraph>
-                              </section>
+                              </section> */}
                               <section
                                     className={styles["last-ten-tests-section"]}
                               >

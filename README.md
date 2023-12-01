@@ -1,12 +1,14 @@
 # to do
 
-1. key on typingarea doesnot change when stats are updated with same language and optionIndex and new words are not reflected accordingly, works when the default words are same language and option index
-2. buy domain minitype.in
-3. saving when settings change, in practise mode ,word index to be noted
-4. authentication , veryfying the user upon landing, you have to verify at the backEnd
+1. buy domain minitype.in
+2. saving when settings change, in practise mode ,word index to be noted
+3. authentication , veryfying the user upon landing, you have to verify at the backEnd
    ,front rend react jwt is not real way of verifying
-5. click here overlay should be shown when focus shifted to buttons to be decided
-6. javascript words not fetching
+4. click here overlay should be shown when focus shifted to buttons to be decided
+5. fetching user details from useEffect to be decided
+6. starting word in not counted in test stats so one word is getting always zero frequency
+7. clicking on a word in words queue in practise mode should change wordIndex
+8. showing last 20 test stats in typing page
 
 # ecommerce
 

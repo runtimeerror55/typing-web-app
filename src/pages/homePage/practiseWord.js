@@ -7,6 +7,8 @@ export const PracticeWord = ({
       classOne,
       serialNumber,
       setShowWordsQueue,
+      setWordIndex,
+      index,
 }) => {
       const practiseModeWordStats =
             statsData.payload?.practiseMode?.wordsStats?.[allWords[wordIndex]];
@@ -41,7 +43,18 @@ export const PracticeWord = ({
             });
       };
       return (
-            <div className={styles["word"] + " " + styles["word-" + theme]}>
+            <div
+                  className={styles["word"] + " " + styles["word-" + theme]}
+                  onClick={
+                        setWordIndex
+                              ? () => {
+                                      console.log(index);
+                                      setWordIndex(index);
+                                      setShowWordsQueue(false);
+                                }
+                              : null
+                  }
+            >
                   <h2 className={styles["word-title"]}>
                         {allWords[wordIndex]}
                   </h2>

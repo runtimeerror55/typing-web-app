@@ -2525,18 +2525,26 @@ const x = async () => {
 
       await newWords.save();
 
-      //   const newWordsOne = new wordsModel({
-      //         language: "javascript",
-      //         words: javascript,
-      //         options: [
-      //               {
-      //                     name: "javascript 1-100",
-      //                     wordsSlices: [[0, 99]],
-      //               },
-      //         ],
-      //   });
+      const newWordsOne = new wordsModel({
+            language: "javascript",
+            words: javascript,
+            options: [
+                  {
+                        name: "javascript 1-100",
+                        wordsSlices: [[0, 99]],
+                  },
+                  {
+                        name: "javascript 101-200",
+                        wordsSlices: [[100, 199]],
+                  },
+                  {
+                        name: "javascript 201-300",
+                        wordsSlices: [[200, 299]],
+                  },
+            ],
+      });
 
-      //   await newWordsOne.save();
+      await newWordsOne.save();
 };
 
 x();

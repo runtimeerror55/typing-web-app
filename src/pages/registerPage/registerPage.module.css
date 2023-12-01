@@ -38,6 +38,7 @@
       color: white;
       width: 70%;
       border-radius: 20px;
+      padding-left: 10px;
 }
 ::placeholder {
       color: white;

@@ -56,27 +56,6 @@ export const QuickSettings = ({
             const value = JSON.parse(event.target.value);
 
             setWordsFilterRefCurrentValue(event.target.value);
-            // const data = await getWords({
-            //       request: {
-            //             url: `http://localhost:3000?language=${value.language}&optionIndex=${value.optionIndex}`,
-            //       },
-            // });
-            // if (data.status === "success") {
-            //       setLanguageAndRange(value);
-
-            //       setAllWords(data.payload);
-
-            //       setWordsFilterRefPreviousValue(wordsFilterRefCurrentValue);
-            //       setWordIndex(0);
-            // } else {
-            //       toast.error(data.message, toastOptions);
-            //       wordsFilterRef.current.value = wordsFilterRefPreviousValue;
-            // }
-            // wordsFetcher.submit(value, { method: "GET", action: "/words" });
-            // languageStatsFetcher.submit(value, {
-            //       method: "GET",
-            //       action: "/stats",
-            // });
 
             const responseOne = getWords({
                   request: {

@@ -224,34 +224,6 @@ export const HomePage = () => {
 
       const restartButtonRef = useRef();
 
-      const pageKeyDownHandler = (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (event.key === "Tab") {
-                  if (
-                        focusableElements.index ===
-                        focusableElements.elements.length - 1
-                  ) {
-                        focusableElements.index = 0;
-                  } else {
-                        focusableElements.index++;
-                  }
-
-                  focusableElements.elements[focusableElements.index].focus();
-            } else if (event.key === "Enter") {
-                  focusableElements.index = -1;
-            }
-      };
-
-      const focusableElements = useMemo(() => {
-            return { elements: null, index: -1 };
-      }, [mode, modeOne, modeTwo, modeThree, languageAndRange]);
-
-      useEffect(() => {
-            focusableElements.elements =
-                  document.querySelectorAll("[tabindex='0']");
-      }, [mode, modeOne, modeTwo, modeThree, languageAndRange]);
-
       const wordsFetcher = useFetcher();
       const wordsFetcherStatus =
             wordsFetcher.state === "idle" && wordsFetcher.data;
@@ -304,6 +276,7 @@ export const HomePage = () => {
             setTimer(settingsData.payload.timer);
             setTheme(settingsData.payload.theme);
       }, [settingsData]);
+
       if (wordsData.status === "error") {
             return (
                   <div
@@ -312,7 +285,6 @@ export const HomePage = () => {
                               " " +
                               styles[`home-page-green-theme`]
                         }
-                        onKeyDown={pageKeyDownHandler}
                         tabIndex={-1}
                   >
                         {wordsData.message}
@@ -326,7 +298,6 @@ export const HomePage = () => {
                               " " +
                               styles[`home-page-${theme}`]
                         }
-                        onKeyDown={pageKeyDownHandler}
                         tabIndex={-1}
                   >
                         <ToastContainer />
@@ -396,7 +367,8 @@ export const HomePage = () => {
                                                 modeTwo +
                                                 modeThree +
                                                 languageAndRange.language +
-                                                languageAndRange.optionIndex
+                                                languageAndRange.optionIndex +
+                                                wordIndex
                                           }
                                           modeOne={modeOne}
                                           modeTwo={modeTwo}
@@ -415,6 +387,7 @@ export const HomePage = () => {
                                           setShowTestStarted={
                                                 setShowTestStarted
                                           }
+                                          setShowWordsQueue={setShowWordsQueue}
                                     ></TypingArea>
                               </section>
                               <QuickSettings

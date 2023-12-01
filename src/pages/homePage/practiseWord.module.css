@@ -7,10 +7,10 @@
       position: relative;
 }
 
-/* .word:hover {
-      transform: scale(0.95);
+.word:hover {
+      border: 2px solid white;
       cursor: pointer;
-} */
+}
 
 .container {
       position: absolute;

@@ -58,8 +58,8 @@ heading {
 }
 
 .user-details-input {
-      background-color: white;
-      color: black;
+      background-color: #1a866b;
+      color: white;
       width: 70%;
       border-radius: 20px;
       padding: 2px;
@@ -68,7 +68,7 @@ heading {
       margin: 50px;
 }
 .user-details-input::placeholder {
-      color: black;
+      color: white;
 }
 .login-button,
 .register-button {

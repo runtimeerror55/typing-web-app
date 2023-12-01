@@ -76,11 +76,11 @@
       padding: 5px;
       min-width: 170px;
       max-width: 170px;
-      height: 80px;
+      height: 70px;
 }
 
 .language-overall-stats-table-head {
-      font-size: 14px;
+      font-size: 12px;
 }
 
 .language-filter-section {
@@ -90,9 +90,9 @@
       width: 70%;
 }
 
-.language-filter {
+/* .language-filter {
       background-color: #c280f1;
-}
+} */
 
 .all-time-stats-section {
       display: grid;
