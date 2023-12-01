@@ -255,6 +255,7 @@ export const wordsMixer = (words, statsData, languageAndRange) => {
 
 export const wordsMixerOne = (props) => {
       let words = [];
+      words.push(" ");
       if (props.mode === "test") {
             const mixedWords = wordsMixer(
                   props.allWords,
