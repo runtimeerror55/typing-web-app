@@ -368,7 +368,8 @@ export const HomePage = () => {
                                                 modeThree +
                                                 languageAndRange.language +
                                                 languageAndRange.optionIndex +
-                                                wordIndex
+                                                wordIndex +
+                                                timer
                                           }
                                           modeOne={modeOne}
                                           modeTwo={modeTwo}

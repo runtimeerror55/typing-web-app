@@ -267,6 +267,13 @@ router.route("/userStats")
 
                   if (testStats.mode === "test") {
                         let x = userStats.testMode;
+
+                        if (!x.firstTest) {
+                              x.firstTest = testStats.date;
+                        }
+                        x.lastTest = testStats.date;
+                        x.totalTimeSpentsInTests += testStats.timer;
+
                         x.averageAccuracy =
                               (x.averageAccuracy *
                                     x.totalNumberOfFinishedTests +
@@ -280,12 +287,16 @@ router.route("/userStats")
 
                         x.totalNumberOfRightHits +=
                               testStats.totalNumberOfRightHits;
+
                         x.totalNumberOfWrongHits +=
                               testStats.totalNumberOfWrongHits;
+
                         x.totalNumberOfFinishedTests++;
+
                         if (x.highestWpmOfATest < testStats.wpm) {
                               x.highestWpmOfATest = testStats.wpm;
                         }
+
                         if (x.highestAccuracyOfATest < testStats.accuracy) {
                               x.highestAccuracyOfATest = testStats.accuracy;
                         }
@@ -295,11 +306,15 @@ router.route("/userStats")
                               x.lastTwentyTests.push({
                                     wpm: testStats.wpm,
                                     accuracy: testStats.accuracy,
+                                    date: testStats.date,
+                                    timer: testStats.timer,
                               });
                         } else {
                               x.lastTwentyTests.push({
                                     wpm: testStats.wpm,
                                     accuracy: testStats.accuracy,
+                                    date: testStats.date,
+                                    timer: testStats.timer,
                               });
                         }
 
@@ -363,6 +378,7 @@ router.route("/userStats")
                         await userStats.save();
                   } else if (testStats.mode === "practise") {
                         let y = userStats.practiseMode.wordsStats;
+
                         for (let [key, value] of Object.entries(
                               testStats.wordsStats
                         )) {
@@ -441,7 +457,7 @@ router.route("/userStatsOne").get(isLoggedIn, async (request, response) => {
             });
 
             const languageInformation = await wordsModel.findOne({
-                  language: request.query.language,
+                  language: request.query.language || "english",
             });
 
             if (userStats.length === 0) {

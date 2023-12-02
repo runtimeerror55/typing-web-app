@@ -1009,12 +1009,19 @@ commonWords.forEach((element, index) => {
             };
       }
 });
-// console.log(wordsStats);
+
 const statsSchema = mongoose.Schema({
       language: String,
       optionIndex: Number,
       subName: String,
+
       testMode: {
+            firstTest: String,
+            lastTest: String,
+            totalTimeSpentsInTests: {
+                  type: Number,
+                  default: 0,
+            },
             totalNumberOfStartedTests: {
                   type: Number,
                   default: 0,
@@ -1043,6 +1050,8 @@ const statsSchema = mongoose.Schema({
                   {
                         wpm: Number,
                         accuracy: Number,
+                        date: String,
+                        timer: Number,
                   },
             ],
             wordsStats: { type: mongoose.Schema.Types.Mixed, default: {} },

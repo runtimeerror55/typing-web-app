@@ -65,6 +65,7 @@ export const TypingArea = forwardRef((props, ref) => {
       );
 
       const testStats = useMemo(() => {
+            const newDate = new Date();
             return {
                   languageAndRange: props.languageAndRange,
                   mode: props.mode,
@@ -74,6 +75,8 @@ export const TypingArea = forwardRef((props, ref) => {
                   accuracy: 0,
                   charactersStats: {},
                   wordsStats: {},
+                  date: newDate.toLocaleDateString(),
+                  timer: props.timer,
             };
       }, [restart]);
 
@@ -98,6 +101,7 @@ export const TypingArea = forwardRef((props, ref) => {
                                     testStats,
                               },
                         });
+
                         updateCharactersStats(
                               { type: "right hit" },
                               testStats,

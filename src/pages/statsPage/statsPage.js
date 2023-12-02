@@ -22,7 +22,8 @@ import { getUserStatsOne } from "../../loaders/loaders";
 
 export const StatsPage = () => {
       const [loaderData, setLoaderData] = useState(useAsyncValue());
-      const [y, setY] = useState([]);
+
+      const [y, setY] = useState(useLoaderData().loaderOneData.payload);
       let { settingsData } = useLoaderData();
       if (settingsData.status === "error") {
             settingsData = {
@@ -157,7 +158,7 @@ export const StatsPage = () => {
                                                             onChange={
                                                                   languageFilterHandlerOne
                                                             }
-                                                            defaultValue="javascript"
+                                                            defaultValue="english"
                                                       >
                                                             <option disabled>
                                                                   languages and
@@ -225,7 +226,9 @@ export const StatsPage = () => {
                                                                   "language-overall-stats-table-head"
                                                             ]
                                                       }
-                                                ></th>
+                                                >
+                                                      Total time spent in tests
+                                                </th>
                                           </tr>
 
                                           {y.map((subTypeStats) => {
@@ -311,7 +314,6 @@ export const StatsPage = () => {
                                                                         ]
                                                                   }
                                                             >
-                                                                  {" "}
                                                                   {subTypeStats.testMode
                                                                         ? subTypeStats
                                                                                 .testMode
@@ -324,14 +326,21 @@ export const StatsPage = () => {
                                                                               "language-overall-stats-table-data"
                                                                         ]
                                                                   }
-                                                            ></td>
+                                                            >
+                                                                  {subTypeStats.testMode
+                                                                        ? subTypeStats
+                                                                                .testMode
+                                                                                .totalTimeSpentsInTests +
+                                                                          " s"
+                                                                        : "-"}
+                                                            </td>
                                                       </tr>
                                                 );
                                           })}
                                     </table>
                               </section>
 
-                              {/* <section
+                              <section
                                     className={
                                           styles["language-filter-section"]
                                     }
@@ -461,324 +470,12 @@ export const StatsPage = () => {
                                                 javascript (1-100)
                                           </option>
                                     </select>
-                              </section> */}
+                              </section>
 
-                              {loaderData.status === "success" ? (
-                                    <section
-                                          className={
-                                                styles["all-time-stats-section"]
-                                          }
-                                    >
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>All tests average speed</h5>
-                                                <h1>
-                                                      {/* {loaderData.averageWpm} */}
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .averageWpm
-                                                      )}{" "}
-                                                      wpm
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      All tests average accuracy
-                                                </h5>
-                                                <h1>
-                                                      {/* {
-                                                            loaderData.averageAccuracy
-                                                      } */}
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .averageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </h1>
-                                          </div>
-
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      Last 20 tests average
-                                                      speed
-                                                </h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .lastTwentyTestsAverageWpm
-                                                      )}{" "}
-                                                      wpm
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      Last 20 tests average
-                                                      accuracy
-                                                </h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .lastTwentyTestsAverageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>highest speed of a test</h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestWpmOfATest
-                                                      )}{" "}
-                                                      wpm
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      highest accuracy of a test
-                                                </h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestAccuracyOfATest
-                                                      )}{" "}
-                                                      %
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      highest average speed of a
-                                                      word
-                                                </h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestAverageSpeedOfAWord
-                                                                  .speed
-                                                      )}{" "}
-                                                      wpm(
-                                                      {
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestAverageSpeedOfAWord
-                                                                  .word
-                                                      }
-                                                      )
-                                                </h1>
-                                          </div>
-                                          <div
-                                                className={
-                                                      styles["all-time-stat"] +
-                                                      " " +
-                                                      styles[
-                                                            settingsData.payload
-                                                                  .settings
-                                                                  .theme
-                                                      ]
-                                                }
-                                          >
-                                                <h5>
-                                                      highest average speed of a
-                                                      word
-                                                </h5>
-                                                <h1>
-                                                      {Math.floor(
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestAverageAccuracyOfAWord
-                                                                  .accuracy
-                                                      )}{" "}
-                                                      %(
-                                                      {
-                                                            loaderData.payload
-                                                                  .testMode
-                                                                  .highestAverageAccuracyOfAWord
-                                                                  .word
-                                                      }
-                                                      )
-                                                </h1>
-                                          </div>
-                                    </section>
-                              ) : null}
-
-                              {/* <section
-                                          className={styles["letters-section"]}
-                                    >
-                                          {letters.map((letter) => {
-                                                return (
-                                                      <PracticeWord
-                                                            allWords={[letter]}
-                                                            wordIndex={0}
-                                                            statsData={
-                                                                  loaderData.payload
-                                                            }
-                                                            theme={
-                                                                  settingsData
-                                                                        .payload
-                                                                        .settings
-                                                                        .theme
-                                                            }
-                                                      ></PracticeWord>
-                                                );
-                                          })}
-                                    </section>
-                                    <section
-                                          className={styles["words-section"]}
-                                    >
-                                          {commonWords.map((word) => {
-                                                return (
-                                                      <Link
-                                                            to={`/?mode=practise&word=${word}`}
-                                                            className={
-                                                                  styles["word"]
-                                                            }
-                                                      >
-                                                            <h2
-                                                                  className={
-                                                                        styles[
-                                                                              "word-title"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {word}
-                                                            </h2>
-                                                            <div
-                                                                  className={
-                                                                        styles[
-                                                                              "word-stats"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  <h3>
-                                                                        practise
-                                                                  </h3>
-                                                                  <span>
-                                                                        speed:
-                                                                        75wpm,{" "}
-                                                                  </span>
-                                                                  <span>
-                                                                        accuracy:
-                                                                        85%
-                                                                  </span>
-                                                                  <h3>test</h3>
-                                                                  <span>
-                                                                        speed:
-                                                                        60wpm,{" "}
-                                                                  </span>
-                                                                  <span>
-                                                                        accuracy:
-                                                                        80%
-                                                                  </span>
-                                                            </div>
-                                                      </Link>
-                                                );
-                                          })}
-                                    </section> */}
-                              {/* <section
-                                    className={
-                                          styles["characters-bar-graph-section"]
-                                    }
-                              >
-                                    <CharactersBartGraph
-                                          loaderData={loaderData}
-                                          theme={
-                                                settingsData.payload.settings
-                                                      .theme
-                                          }
-                                    ></CharactersBartGraph>
-                              </section> */}
-                              {/* <section
-                                    className={
-                                          styles["characters-bar-graph-section"]
-                                    }
-                              >
-                                    <WordsBarGraph
-                                          loaderData={loaderData}
-                                          theme={
-                                                settingsData.payload.settings
-                                                      .theme
-                                          }
-                                    ></WordsBarGraph>
-                              </section> */}
                               <section
                                     className={styles["last-ten-tests-section"]}
                               >
+                                    <h2>Last ten tests</h2>
                                     <table
                                           className={
                                                 styles["last-ten-tests-table"] +
@@ -790,10 +487,10 @@ export const StatsPage = () => {
                                           }
                                     >
                                           <tr>
-                                                <th>Wpm</th>
+                                                <th>speed</th>
                                                 <th>Accuracy</th>
                                                 <th>Time</th>
-                                                <th>Date</th>
+                                                <th>Date(mm-dd-yyyy)</th>
                                           </tr>
                                           {loaderData.payload.testMode.lastTwentyTests
                                                 .slice(-10)
@@ -803,16 +500,25 @@ export const StatsPage = () => {
                                                                   <td>
                                                                         {
                                                                               test.wpm
-                                                                        }
+                                                                        }{" "}
+                                                                        wpm
                                                                   </td>
                                                                   <td>
                                                                         {
                                                                               test.accuracy
-                                                                        }
+                                                                        }{" "}
+                                                                        %
                                                                   </td>
-                                                                  <td>30s</td>
                                                                   <td>
-                                                                        12/9/2023
+                                                                        {
+                                                                              test.timer
+                                                                        }{" "}
+                                                                        s
+                                                                  </td>
+                                                                  <td>
+                                                                        {
+                                                                              test.date
+                                                                        }
                                                                   </td>
                                                             </tr>
                                                       );

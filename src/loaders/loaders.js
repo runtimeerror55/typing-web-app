@@ -145,6 +145,7 @@ export const homePageLoader = async ({ request }) => {
 export const statsPageLoader = async ({ request }) => {
       return defer({
             loaderData: getUserStats({ request }),
+            loaderOneData: await getUserStatsOne({ request }),
             settingsData: await getUserSettings(),
       });
 };
