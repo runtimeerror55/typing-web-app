@@ -8,11 +8,25 @@
       opacity: 1;
 }
 
-.serial-number {
+.last-ten-test-open-button {
       position: absolute;
-      right: 5px;
+      right: 15px;
       top: 5px;
       color: black;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 13px;
+      background-color: transparent;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 20px;
+      color: black;
+      border: 2px solid black;
+      cursor: pointer;
+}
+
+.last-ten-test-open-button:hover {
+      border: 2px solid white;
 }
 
 .word-title {

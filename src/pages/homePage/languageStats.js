@@ -6,6 +6,7 @@ export const LanguageStats = ({
       classOne,
       serialNumber,
       testStarted,
+      setShowLastTenTests,
 }) => {
       const testMode = statsData?.payload?.testMode;
 
@@ -34,7 +35,17 @@ export const LanguageStats = ({
                   className={styles["word"] + " " + styles["word-" + theme]}
                   style={testStarted ? { opacity: 0 } : null}
             >
-                  <h3 className={styles["serial-number"]}>{serialNumber}</h3>
+                  <button
+                        className={styles["last-ten-test-open-button"]}
+                        onClick={(event) => {
+                              event.stopPropagation();
+                              setShowLastTenTests((previous) => {
+                                    return !previous;
+                              });
+                        }}
+                  >
+                        last 10 tests
+                  </button>
                   <h4 className={styles["word-title"]}>
                         {languageAndRange.fullName}
                   </h4>

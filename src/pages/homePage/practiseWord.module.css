@@ -2,13 +2,13 @@
       background-color: #5fdc72;
       padding: 10px;
       box-shadow: 5px 3px 3px;
-      transition: transform 0.15s linear;
       margin: 5px;
+      transition: transform linear 0.1s;
       position: relative;
 }
 
 .word:hover {
-      border: 2px solid white;
+      transform: scale(0.95);
       cursor: pointer;
 }
 

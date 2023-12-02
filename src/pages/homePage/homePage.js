@@ -14,6 +14,7 @@ import { wordsMixer } from "../../utilities/utilities";
 import { toastOptions } from "../../utilities/utilities";
 import { authContext } from "../../context/auth";
 import { LanguageStats } from "./languageStats";
+import { LastTenTests } from "./lastTenTests";
 
 const sounds = {
       soundA,
@@ -198,6 +199,7 @@ export const HomePage = () => {
       });
 
       const [testStarted, setShowTestStarted] = useState(false);
+      const [showLastTenTests, setShowLastTenTests] = useState(false);
 
       const practiseModeAllWords = useMemo(() => {
             let newWords = [];
@@ -322,6 +324,7 @@ export const HomePage = () => {
                                                 setShowWordsQueue={
                                                       setShowWordsQueue
                                                 }
+                                                isWordsQueue={true}
                                           ></PracticeWord>
                                     </section>
                               ) : null}
@@ -347,6 +350,9 @@ export const HomePage = () => {
                                                       languageAndRange
                                                 }
                                                 testStarted={testStarted}
+                                                setShowLastTenTests={
+                                                      setShowLastTenTests
+                                                }
                                           ></LanguageStats>
                                     </section>
                               ) : null}
@@ -428,6 +434,12 @@ export const HomePage = () => {
                                     typingSoundPath={typingSoundPath}
                                     testStarted={testStarted}
                               ></QuickSettings>
+                              {showLastTenTests ? (
+                                    <LastTenTests
+                                          statsData={statsData}
+                                          theme={theme}
+                                    ></LastTenTests>
+                              ) : null}
                         </main>
                   </div>
             );

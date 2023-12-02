@@ -1,0 +1,30 @@
+.last-ten-tests-section {
+      background-color: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      padding: 10px;
+      color: white;
+      text-align: center;
+      overflow-y: auto;
+      overflow-x: hidden;
+}
+.last-ten-tests-table {
+      margin-top: 20px;
+      color: black;
+      width: 100%;
+      text-align: center;
+      border: 2px solid black;
+}
+
+.last-ten-tests-table.green-theme {
+      background-color: #5fdc72;
+}
+
+.last-ten-tests-table.blue-theme {
+      background-color: #5facdc;
+}
+.last-ten-tests-table.violet-theme {
+      background-color: #c280f1;
+}

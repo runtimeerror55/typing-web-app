@@ -39,10 +39,15 @@
 }
 
 .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
-      justify-content: center;
       align-items: center;
-      flex-grow: 1;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.7);
 }
 
 .main {
@@ -138,6 +143,8 @@
 
 .last-ten-tests-section {
       width: 70%;
+      color: white;
+      text-align: center;
 }
 .last-ten-tests-table {
       margin-top: 20px;

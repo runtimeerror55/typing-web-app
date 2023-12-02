@@ -59,6 +59,29 @@ export const TypingArea = forwardRef((props, ref) => {
             return letters;
       }, [words]);
 
+      useEffect(() => {
+            if (timerState.timerId !== undefined) {
+                  if (words.length - typingState.currentWordIndex + 1 === 5) {
+                        const newWords = wordsMixerOne(props);
+
+                        for (let j = 1; j < newWords.length; j++) {
+                              words.push(newWords[j]);
+                        }
+
+                        // const newLetters = [];
+
+                        console.log(words);
+                        for (let i = 1; i < newWords.length; i++) {
+                              letters.push(...newWords[i]);
+                        }
+
+                        // for (let i = 0; i < newLetters.length; i++) {
+                        //       letters.push(newLetters[i]);
+                        // }
+                  }
+            }
+      });
+
       const [typingState, dispatch] = useReducer(
             typingParagraphReducer,
             initialTypingState

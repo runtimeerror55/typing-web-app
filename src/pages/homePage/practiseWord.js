@@ -9,6 +9,7 @@ export const PracticeWord = ({
       setShowWordsQueue,
       setWordIndex,
       index,
+      isWordsQueue,
 }) => {
       const practiseModeWordStats =
             statsData.payload?.practiseMode?.wordsStats?.[allWords[wordIndex]];
@@ -59,7 +60,7 @@ export const PracticeWord = ({
                         {allWords[wordIndex]}
                   </h2>
                   <div className={styles["container"]}>
-                        {setShowWordsQueue ? (
+                        {isWordsQueue ? (
                               <button
                                     className={
                                           styles["words-queue-open-button"]

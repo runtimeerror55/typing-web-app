@@ -22,6 +22,7 @@ export const WordsQueue = ({
                                     setWordIndex={setWordIndex}
                                     index={index}
                                     setShowWordsQueue={setShowWordsQueue}
+                                    isWordsQueue={false}
                               ></PracticeWord>
                         );
                   })}

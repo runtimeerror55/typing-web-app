@@ -229,7 +229,7 @@ router.route("/userStats")
                                     status: "success",
                                     payload: userStats,
                               });
-                        }, 1000);
+                        }, 500);
                   }
             } catch (error) {
                   response.status(500).json({
@@ -490,11 +490,12 @@ router.route("/userStatsOne").get(isLoggedIn, async (request, response) => {
                         }
                   }
 
-                  console.log(userStats[0].subName, userStats[0]);
-                  response.status(200).json({
-                        status: "success",
-                        payload: [...userStats, ...newArray],
-                  });
+                  setTimeout(() => {
+                        response.status(200).json({
+                              status: "success",
+                              payload: [...userStats, ...newArray],
+                        });
+                  }, 500);
             }
       } catch (error) {
             response.status(500).json({

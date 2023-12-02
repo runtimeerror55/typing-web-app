@@ -19,9 +19,12 @@ import {
       highestAverageAcuuracyOfAWord,
 } from "../../utilities/utilities";
 import { getUserStatsOne } from "../../loaders/loaders";
+import { ColorRing } from "react-loader-spinner";
+import { colorRingOptions } from "../../utilities/utilities";
 
 export const StatsPage = () => {
       const [loaderData, setLoaderData] = useState(useAsyncValue());
+      const [showLoader, setShowLoader] = useState(false);
 
       const [y, setY] = useState(useLoaderData().loaderOneData.payload);
       let { settingsData } = useLoaderData();
@@ -62,6 +65,9 @@ export const StatsPage = () => {
                   } else {
                         toast.error(data.message, toastOptions);
                   }
+                  setShowLoader(false);
+            } else if (languageStatsFetcherOne.state !== "idle") {
+                  setShowLoader(true);
             }
       }, [languageStatsFetcherOne]);
 
@@ -96,6 +102,9 @@ export const StatsPage = () => {
                   } else {
                         toast.error(data.message, toastOptions);
                   }
+                  setShowLoader(false);
+            } else if (languageStatsFetcher.state !== "idle") {
+                  setShowLoader(true);
             }
       }, [languageStatsFetcher]);
 
@@ -124,7 +133,14 @@ export const StatsPage = () => {
                   >
                         <NavBar></NavBar>
                         <ToastContainer></ToastContainer>
+
                         <main className={styles["main"]}>
+                              {showLoader ? (
+                                    <div className={styles["loader"]}>
+                                          <ColorRing {...colorRingOptions} />
+                                    </div>
+                              ) : null}
+
                               <section>
                                     <table
                                           className={
