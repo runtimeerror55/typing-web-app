@@ -17,13 +17,13 @@ import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions } from "../../utilities/utilities";
 
 export const StatsPage = () => {
-      const [loaderData, setLoaderData] = useState(useAsyncValue()[0].value);
       const [loaderTwoData, setLoaderTwoData] = useState(
             useAsyncValue()[1].value
       );
       const [settingsData] = useState(useAsyncValue()[2].value);
       const [showLoader, setShowLoader] = useState(false);
-      console.log(useAsyncValue());
+      const [lastTenTestsIndex, setLastTenTestsIndex] = useState(0);
+
       const languageStatsFetcherOne = useFetcher();
       const languageStatsFetcherOneStatus =
             languageStatsFetcherOne.data &&
@@ -56,37 +56,12 @@ export const StatsPage = () => {
             );
       };
 
-      const languageStatsFetcher = useFetcher();
-      const languageStatsFetcherStatus =
-            languageStatsFetcher.data && languageStatsFetcher.state === "idle";
       const languageFilterHandler = (event) => {
-            const value = JSON.parse(event.target.value);
-            languageStatsFetcher.submit(value, {
-                  method: "GET",
-                  action: "/stats",
-            });
+            const value = event.target.value;
+            setLastTenTestsIndex(+value);
       };
 
-      useEffect(() => {
-            if (languageStatsFetcherStatus) {
-                  const data = languageStatsFetcher.data;
-                  if (data.status === "success") {
-                        setLoaderData(data);
-                        toast.success("fetched successfully", toastOptions);
-                  } else {
-                        toast.error(data.message, toastOptions);
-                  }
-                  setShowLoader(false);
-            } else if (languageStatsFetcher.state !== "idle") {
-                  setShowLoader(true);
-            }
-      }, [languageStatsFetcher]);
-
-      if (
-            settingsData.status === "error" ||
-            loaderData.status === "error" ||
-            loaderTwoData.status === "error"
-      ) {
+      if (settingsData.status === "error" || loaderTwoData.status === "error") {
             return (
                   <div
                         className={
@@ -101,12 +76,6 @@ export const StatsPage = () => {
             );
       }
 
-      if (loaderData?.payload?.testMode) {
-            lastTwentyTestsAverages(loaderData.payload);
-            highestAverageSpeedOfAWord(loaderData.payload);
-            highestAverageAcuuracyOfAWord(loaderData.payload);
-      }
-      console.log(settingsData.payload.settings.theme);
       return (
             <>
                   <div
@@ -365,123 +334,21 @@ export const StatsPage = () => {
                                           <option disabled>
                                                 languages and ranges
                                           </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 99,
-                                                      optionIndex: 0,
-                                                })}
-                                          >
-                                                english (1-100)
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 100,
-                                                      endIndex: 199,
-                                                      optionIndex: 1,
-                                                })}
-                                          >
-                                                english (101-200)
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 200,
-                                                      endIndex: 299,
-                                                      optionIndex: 2,
-                                                })}
-                                          >
-                                                english (201-300)
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 299,
-                                                      optionIndex: 3,
-                                                })}
-                                          >
-                                                english (1-300)
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 9,
-                                                      numbers: true,
-                                                      optionIndex: 4,
-                                                })}
-                                          >
-                                                english (1-9 words + all
-                                                numbers(1-30))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      numbers: true,
-                                                      optionIndex: 5,
-                                                })}
-                                          >
-                                                english (all numbers(1-30))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      specialWords: true,
-                                                      optionIndex: 6,
-                                                })}
-                                          >
-                                                english (1-9 words + all special
-                                                words(1-20))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 299,
-                                                      specialWords: true,
-                                                      optionIndex: 7,
-                                                })}
-                                          >
-                                                english (1-300 words + all
-                                                special characters(1-20))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 299,
-                                                      numbers: true,
-                                                      optionIndex: 8,
-                                                })}
-                                          >
-                                                english (1-300 words + all
-                                                numbers(90))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "english",
-                                                      startIndex: 0,
-                                                      endIndex: 299,
-                                                      numbers: true,
-                                                      specialWords: true,
-                                                      optionIndex: 9,
-                                                })}
-                                          >
-                                                english (1-300 words + all
-                                                special characters(90)+all
-                                                numbers(90))
-                                          </option>
-                                          <option
-                                                value={JSON.stringify({
-                                                      language: "javascript",
-                                                      optionIndex: 0,
-                                                })}
-                                          >
-                                                javascript (1-100)
-                                          </option>
+                                          {loaderTwoData.payload.map(
+                                                (subType) => {
+                                                      return (
+                                                            <option
+                                                                  value={
+                                                                        subType.optionIndex
+                                                                  }
+                                                            >
+                                                                  {
+                                                                        subType.subName
+                                                                  }
+                                                            </option>
+                                                      );
+                                                }
+                                          )}
                                     </select>
                               </section>
 
@@ -507,37 +374,90 @@ export const StatsPage = () => {
                                                 <th>Time</th>
                                                 <th>Date(mm-dd-yyyy)</th>
                                           </tr>
-                                          {loaderData.payload.testMode.lastTwentyTests
-                                                .slice(-10)
-                                                .map((test) => {
-                                                      return (
-                                                            <tr>
-                                                                  <td>
-                                                                        {
-                                                                              test.wpm
-                                                                        }{" "}
-                                                                        wpm
-                                                                  </td>
-                                                                  <td>
-                                                                        {
-                                                                              test.accuracy
-                                                                        }{" "}
-                                                                        %
-                                                                  </td>
-                                                                  <td>
-                                                                        {
-                                                                              test.timer
-                                                                        }{" "}
-                                                                        s
-                                                                  </td>
-                                                                  <td>
-                                                                        {
-                                                                              test.date
-                                                                        }
-                                                                  </td>
-                                                            </tr>
-                                                      );
-                                                })}
+                                          {(() => {
+                                                let newArray = [];
+                                                console.log(
+                                                      loaderTwoData.payload.sort(
+                                                            (a, b) => {
+                                                                  return (
+                                                                        a.optionIndex -
+                                                                        b.optionIndex
+                                                                  );
+                                                            }
+                                                      )
+                                                );
+                                                for (let i = 19; i >= 0; i--) {
+                                                      console.log(i);
+                                                      if (
+                                                            loaderTwoData.payload.sort(
+                                                                  (a, b) => {
+                                                                        return (
+                                                                              a.optionIndex -
+                                                                              b.optionIndex
+                                                                        );
+                                                                  }
+                                                            )[lastTenTestsIndex]
+                                                                  ?.testMode
+                                                                  ?.lastTwentyTests[
+                                                                  i
+                                                            ]
+                                                      ) {
+                                                            const test =
+                                                                  loaderTwoData
+                                                                        .payload[
+                                                                        lastTenTestsIndex
+                                                                  ].testMode
+                                                                        .lastTwentyTests[
+                                                                        i
+                                                                  ];
+                                                            newArray.push(
+                                                                  <tr>
+                                                                        <td>
+                                                                              {
+                                                                                    test.wpm
+                                                                              }{" "}
+                                                                              wpm
+                                                                        </td>
+                                                                        <td>
+                                                                              {
+                                                                                    test.accuracy
+                                                                              }{" "}
+                                                                              %
+                                                                        </td>
+                                                                        <td>
+                                                                              {
+                                                                                    test.timer
+                                                                              }{" "}
+                                                                              s
+                                                                        </td>
+                                                                        <td>
+                                                                              {
+                                                                                    test.date
+                                                                              }
+                                                                        </td>
+                                                                  </tr>
+                                                            );
+                                                      } else {
+                                                            newArray.push(
+                                                                  <tr>
+                                                                        <td>
+                                                                              -
+                                                                        </td>
+                                                                        <td>
+                                                                              -
+                                                                        </td>
+                                                                        <td>
+                                                                              -
+                                                                        </td>
+                                                                        <td>
+                                                                              -
+                                                                        </td>
+                                                                  </tr>
+                                                            );
+                                                      }
+                                                }
+                                                return newArray;
+                                          })()}
                                     </table>
                               </section>
                         </main>

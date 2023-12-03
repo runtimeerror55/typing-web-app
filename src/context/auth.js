@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }) => {
                         decodedToken,
                         login,
                         logout,
+                        setToken,
                   }}
             >
                   {children}

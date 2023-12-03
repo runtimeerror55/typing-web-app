@@ -1,7 +1,14 @@
 import styles from "./lastTenTests.module.css";
-export const LastTenTests = ({ statsData, theme }) => {
+import { ClosingButton } from "../../components/buttons/closingButton";
+export const LastTenTests = ({ statsData, theme, setShowLastTenTests }) => {
+      const closingButtonClickHandler = () => {
+            setShowLastTenTests(false);
+      };
       return (
             <section className={styles["last-ten-tests-section"]}>
+                  <ClosingButton
+                        clickHandler={closingButtonClickHandler}
+                  ></ClosingButton>
                   <h2>Last ten tests</h2>
                   <table
                         className={

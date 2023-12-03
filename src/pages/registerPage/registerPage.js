@@ -5,7 +5,7 @@ import { useEffect, useContext } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { authContext } from "../../context/auth";
 export const RegisterPage = () => {
-      const { setToken, setUser } = useContext(authContext);
+      const { login } = useContext(authContext);
       const navigate = useNavigate();
       const registerFetcher = useFetcher();
       const registerFetcherStatus =
@@ -25,12 +25,8 @@ export const RegisterPage = () => {
                               theme: "colored",
                         });
                         console.log(data);
-                        setToken(data.payload.token);
-                        setUser(data.payload.user);
-                        localStorage.setItem(
-                              "token",
-                              JSON.stringify(data.payload.token)
-                        );
+
+                        login(data);
                         navigate("/");
                   } else {
                         toast.error(data.message, {

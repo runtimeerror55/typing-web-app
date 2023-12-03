@@ -460,10 +460,10 @@ router.route("/userStatsOne").get(isLoggedIn, async (request, response) => {
                   language: request.query.language || "english",
             });
 
-            if (userStats.length === 0) {
+            if (!languageInformation) {
                   response.status(500).json({
                         status: "error",
-                        message: "user data does not exist",
+                        message: "language does not exist",
                   });
             } else {
                   let newArray = [];
@@ -475,7 +475,7 @@ router.route("/userStatsOne").get(isLoggedIn, async (request, response) => {
                         ) {
                               let found = false;
                               for (let j = 0; j < userStats.length; j++) {
-                                    if (i === userStats[j].optionIndex) {
+                                    if (i === userStats[j]?.optionIndex) {
                                           found = true;
                                     }
                               }

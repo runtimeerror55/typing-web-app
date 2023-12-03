@@ -9,20 +9,32 @@ const statsModel = require("../models/statsModel");
 router.route("/settings")
       .get(isLoggedIn, async (request, response) => {
             try {
-                  const userSettings = await settingsModel.findOne({
+                  let userSettings = await settingsModel.findOne({
                         user: request.user._id,
                   });
-                  if (userSettings) {
-                        response.status(200).json({
-                              status: "success",
-                              payload: { settings: userSettings },
-                        });
-                  } else {
-                        response.status(500).json({
-                              status: "error",
-                              message: "cound not find your settings data",
-                        });
+
+                  if (!userSettings) {
+                        console.log("hello");
+                        userSettings = {
+                              timer: 15,
+
+                              theme: "blue-theme",
+                              sound: "soundA",
+                              "language and range": {
+                                    language: "english",
+                                    fullName: "english (1-100)",
+                                    optionIndex: 0,
+                              },
+                              modeOne: "test",
+                              modetwo: "words",
+                              modeThree: 500,
+                        };
                   }
+
+                  response.status(200).json({
+                        status: "success",
+                        payload: { settings: userSettings },
+                  });
             } catch (error) {
                   response
                         .status(500)
@@ -36,11 +48,21 @@ router.route("/settings")
                               request.body["language and range"]
                         );
                   }
-
-                  await settingsModel.findOneAndUpdate(
-                        { user: request.user._id },
-                        request.body
-                  );
+                  let userSettings = await settingsModel.findOne({
+                        user: request.user._id,
+                  });
+                  if (!userSettings) {
+                        userSettings = new settingsModel({
+                              user: request.user._id,
+                              ...request.body,
+                        });
+                        await userSettings.save();
+                  } else {
+                        for (let [key, value] of Object.entries(request.body)) {
+                              userSettings[key] = value;
+                        }
+                        await userSettings.save();
+                  }
                   response.status(200).json({
                         status: "success",
                         message: "successfully updated settings",
@@ -57,12 +79,25 @@ router.route("/previousSessionSettings").get(
       isLoggedIn,
       async (request, response) => {
             try {
-                  const settings = await settingsModel.findOne({
+                  let settings = await settingsModel.findOne({
                         user: request.user._id,
                   });
 
                   if (!settings) {
-                        throw new Error("no user settings data");
+                        settings = {
+                              timer: 15,
+
+                              theme: "blue-theme",
+                              sound: "soundA",
+                              "language and range": {
+                                    language: "english",
+                                    fullName: "english (1-100)",
+                                    optionIndex: 0,
+                              },
+                              modeOne: "test",
+                              modetwo: "words",
+                              modeThree: 500,
+                        };
                   }
                   const languageDocument = await wordsModel.findOne({
                         language: settings["language and range"].language,

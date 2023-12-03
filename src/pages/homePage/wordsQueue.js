@@ -1,5 +1,6 @@
 import styles from "./wordsQueue.module.css";
 import { PracticeWord } from "./practiseWord";
+import { ClosingButton } from "../../components/buttons/closingButton";
 export const WordsQueue = ({
       words,
       statsData,
@@ -7,8 +8,14 @@ export const WordsQueue = ({
       setWordIndex,
       setShowWordsQueue,
 }) => {
+      const closingButtonClickHandler = () => {
+            setShowWordsQueue(false);
+      };
       return (
             <aside className={styles["words-queue"]}>
+                  <ClosingButton
+                        clickHandler={closingButtonClickHandler}
+                  ></ClosingButton>
                   {words.map((word, index) => {
                         return (
                               <PracticeWord

@@ -1,0 +1,10 @@
+.closing-button {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      color: white;
+      background-color: transparent;
+      cursor: pointer;
+}

@@ -230,19 +230,11 @@ export const HomePage = () => {
       const wordsFetcherStatus =
             wordsFetcher.state === "idle" && wordsFetcher.data;
 
-      const userDetailsFetcher = useFetcher();
-      const userDetailsFetcherStatus =
-            userDetailsFetcher.data && userDetailsFetcher.state === "idle";
-
       useEffect(() => {
-            if (wordsFetcherStatus && userDetailsFetcherStatus) {
+            if (wordsFetcherStatus) {
                   const data = wordsFetcher.data;
-                  const userDetails = userDetailsFetcher.data;
 
-                  if (
-                        data.status === "success" &&
-                        userDetails.status === "success"
-                  ) {
+                  if (data.status === "success") {
                         setAllWords(data.payload.words);
                         setStatsData({
                               status: "success",
@@ -261,7 +253,7 @@ export const HomePage = () => {
                         toast.error(data.message, toastOptions);
                   }
             }
-      }, [wordsFetcher, userDetailsFetcher]);
+      }, [wordsFetcher]);
 
       useEffect(() => {
             if (decodedToken) {
@@ -269,8 +261,6 @@ export const HomePage = () => {
                         method: "GET",
                         action: "/previousSessionSettings",
                   });
-
-                  userDetailsFetcher.load("/userDetails");
             }
       }, []);
 
@@ -438,6 +428,9 @@ export const HomePage = () => {
                                     <LastTenTests
                                           statsData={statsData}
                                           theme={theme}
+                                          setShowLastTenTests={
+                                                setShowLastTenTests
+                                          }
                                     ></LastTenTests>
                               ) : null}
                         </main>

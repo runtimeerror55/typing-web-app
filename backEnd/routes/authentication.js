@@ -28,15 +28,7 @@ router.route("/login").post(async (request, response) => {
                                     expiresIn: 60 * 60 * 5,
                               }
                         );
-                        const userSettings = await settingsModel.findOne({
-                              user: user._id,
-                        });
-                        if (!userSettings) {
-                              const newUserSettings = new settingsModel({
-                                    user: user._id,
-                              });
-                              await newUserSettings.save();
-                        }
+
                         const decodedToken = jwt.verify(token, "secret");
                         console.log(decodedToken);
 
@@ -104,7 +96,11 @@ router.route("/register")
                   });
                   await newUser.save();
                   const token = jwt.sign(
-                        { _id: newUser._id, name: newUser.name },
+                        {
+                              _id: newUser._id,
+                              name: newUser.name,
+                              email: newUser.email,
+                        },
                         "secret",
                         {
                               expiresIn: 60 * 60 * 5,

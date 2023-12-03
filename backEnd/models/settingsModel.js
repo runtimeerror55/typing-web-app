@@ -27,6 +27,18 @@ const settingsSchema = mongoose.Schema({
                   default: 0,
             },
       },
+      modeOne: {
+            type: String,
+            default: "test",
+      },
+      modetwo: {
+            type: String,
+            default: "words",
+      },
+      modeThree: {
+            type: Number,
+            default: 500,
+      },
       user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "users",
