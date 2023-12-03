@@ -28,13 +28,13 @@
 ::-webkit-scrollbar-thumb:hover {
       background: #555;
 }
-.page.green-theme {
+.page-green-theme {
       background-color: #1a866b;
 }
-.page.blue-theme {
+.page-blue-theme {
       background-color: #29779e;
 }
-.page.violet-theme {
+.page-violet-theme {
       background-color: #5d1a86;
 }
 
@@ -154,14 +154,14 @@
       border: 2px solid black;
 }
 
-.last-ten-tests-table.green-theme {
+.last-ten-tests-table-green-theme {
       background-color: #5fdc72;
 }
 
-.last-ten-tests-table.blue-theme {
+.last-ten-tests-table-blue-theme {
       background-color: #5facdc;
 }
-.last-ten-tests-table.violet-theme {
+.last-ten-tests-table-violet-theme {
       background-color: #c280f1;
 }
 

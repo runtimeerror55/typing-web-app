@@ -16,8 +16,6 @@ import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
 import { PractisePage } from "./pages/practisePage/practisePage";
 
-import { postTestStats } from "./actions/actions";
-
 const router = createBrowserRouter([
       {
             path: "/",
@@ -38,10 +36,6 @@ const router = createBrowserRouter([
             loader: getUserStatsOne,
       },
 
-      {
-            path: "/practise",
-            element: <PractisePage></PractisePage>,
-      },
       {
             path: "/settings",
             action: updateSettings,

@@ -1,15 +1,9 @@
-import {
-      useLoaderData,
-      useAsyncValue,
-      Link,
-      useFetcher,
-} from "react-router-dom";
+import { useAsyncValue, useFetcher } from "react-router-dom";
 import { useState } from "react";
 import { NavBar } from "../../components/navBar/navBar";
-import { CharactersBartGraph } from "../statsPage/charactersBarGraph";
-import { WordsBarGraph } from "./wordsBarGraph";
+
 import styles from "./statsPage.module.css";
-import { PracticeWord } from "../homePage/practiseWord";
+
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import {
@@ -18,34 +12,18 @@ import {
       highestAverageSpeedOfAWord,
       highestAverageAcuuracyOfAWord,
 } from "../../utilities/utilities";
-import { getUserStatsOne } from "../../loaders/loaders";
+
 import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions } from "../../utilities/utilities";
 
 export const StatsPage = () => {
-      const [loaderData, setLoaderData] = useState(useAsyncValue());
+      const [loaderData, setLoaderData] = useState(useAsyncValue()[0].value);
+      const [loaderTwoData, setLoaderTwoData] = useState(
+            useAsyncValue()[1].value
+      );
+      const [settingsData] = useState(useAsyncValue()[2].value);
       const [showLoader, setShowLoader] = useState(false);
-
-      const [y, setY] = useState(useLoaderData().loaderOneData.payload);
-      let { settingsData } = useLoaderData();
-      if (settingsData.status === "error") {
-            settingsData = {
-                  payload: {
-                        settings: {
-                              theme: "blue-theme",
-                              sound: "confettiEdited",
-                              timer: 15,
-                        },
-                  },
-            };
-      }
-
-      if (loaderData?.payload?.testMode) {
-            lastTwentyTestsAverages(loaderData.payload);
-            highestAverageSpeedOfAWord(loaderData.payload);
-            highestAverageAcuuracyOfAWord(loaderData.payload);
-      }
-
+      console.log(useAsyncValue());
       const languageStatsFetcherOne = useFetcher();
       const languageStatsFetcherOneStatus =
             languageStatsFetcherOne.data &&
@@ -56,11 +34,7 @@ export const StatsPage = () => {
                   const data = languageStatsFetcherOne.data;
                   if (data.status === "success") {
                         console.log(data.payload);
-                        setY(
-                              data.payload.sort((a, b) => {
-                                    return a.optionIndex - b.optionIndex;
-                              })
-                        );
+                        setLoaderTwoData(data);
                         toast.success("fetched successfully", toastOptions);
                   } else {
                         toast.error(data.message, toastOptions);
@@ -108,27 +82,41 @@ export const StatsPage = () => {
             }
       }, [languageStatsFetcher]);
 
-      //   if (loaderData.status === "error") {
-      //         return (
-      //               <div
-      //                     className={
-      //                           styles["page"] +
-      //                           " " +
-      //                           styles[`home-page-green-theme`]
-      //                     }
-      //               >
-      //                     {loaderData.message}
-      //               </div>
-      //         );
-      //   } else {
-      console.log(y);
+      if (
+            settingsData.status === "error" ||
+            loaderData.status === "error" ||
+            loaderTwoData.status === "error"
+      ) {
+            return (
+                  <div
+                        className={
+                              styles["page"] +
+                              " " +
+                              styles[`home-page-green-theme`]
+                        }
+                  >
+                        <NavBar></NavBar>
+                        something went wrong
+                  </div>
+            );
+      }
+
+      if (loaderData?.payload?.testMode) {
+            lastTwentyTestsAverages(loaderData.payload);
+            highestAverageSpeedOfAWord(loaderData.payload);
+            highestAverageAcuuracyOfAWord(loaderData.payload);
+      }
+      console.log(settingsData.payload.settings.theme);
       return (
             <>
                   <div
                         className={
                               styles["page"] +
                               " " +
-                              styles[settingsData.payload.settings.theme]
+                              styles[
+                                    "page-" +
+                                          settingsData.payload.settings.theme
+                              ]
                         }
                   >
                         <NavBar></NavBar>
@@ -158,7 +146,7 @@ export const StatsPage = () => {
                                     >
                                           <tr>
                                                 <th
-                                                      colspan="7"
+                                                      colSpan="7"
                                                       className={
                                                             styles[
                                                                   "language-overall-stats-table-head"
@@ -247,112 +235,121 @@ export const StatsPage = () => {
                                                 </th>
                                           </tr>
 
-                                          {y.map((subTypeStats) => {
-                                                if (subTypeStats.testMode) {
-                                                      lastTwentyTestsAverages(
-                                                            subTypeStats
+                                          {loaderTwoData.payload
+                                                .sort((a, b) => {
+                                                      return (
+                                                            a.optionIndex -
+                                                            b.optionIndex
                                                       );
-                                                      highestAverageSpeedOfAWord(
-                                                            subTypeStats
-                                                      );
-                                                      highestAverageAcuuracyOfAWord(
-                                                            subTypeStats
-                                                      );
-                                                }
-                                                return (
-                                                      <tr>
-                                                            <th
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-head"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.subName
-                                                                        ? subTypeStats.subName
-                                                                        : "-"}
-                                                            </th>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.testMode
-                                                                        ? `${Math.round(
-                                                                                subTypeStats
-                                                                                      .testMode
-                                                                                      .averageWpm
-                                                                          )} wpm /
+                                                })
+                                                .map((subTypeStats) => {
+                                                      if (
+                                                            subTypeStats.testMode
+                                                      ) {
+                                                            lastTwentyTestsAverages(
+                                                                  subTypeStats
+                                                            );
+                                                            highestAverageSpeedOfAWord(
+                                                                  subTypeStats
+                                                            );
+                                                            highestAverageAcuuracyOfAWord(
+                                                                  subTypeStats
+                                                            );
+                                                      }
+                                                      return (
+                                                            <tr>
+                                                                  <th
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-head"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.subName
+                                                                              ? subTypeStats.subName
+                                                                              : "-"}
+                                                                  </th>
+                                                                  <td
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-data"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.testMode
+                                                                              ? `${Math.round(
+                                                                                      subTypeStats
+                                                                                            .testMode
+                                                                                            .averageWpm
+                                                                                )} wpm /
                                                                           ${Math.round(
                                                                                 subTypeStats
                                                                                       .testMode
                                                                                       .averageAccuracy
                                                                           )} %`
-                                                                        : "-"}
-                                                            </td>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.testMode
-                                                                        ? `${Math.round(
-                                                                                subTypeStats
-                                                                                      .testMode
-                                                                                      .lastTwentyTestsAverageWpm
-                                                                          )} wpm /
+                                                                              : "-"}
+                                                                  </td>
+                                                                  <td
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-data"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.testMode
+                                                                              ? `${Math.round(
+                                                                                      subTypeStats
+                                                                                            .testMode
+                                                                                            .lastTwentyTestsAverageWpm
+                                                                                )} wpm /
                                                                           ${Math.round(
                                                                                 subTypeStats
                                                                                       .testMode
                                                                                       .lastTwentyTestsAverageAccuracy
                                                                           )} %`
-                                                                        : "-"}
-                                                            </td>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.testMode
-                                                                        ? `${subTypeStats.testMode.highestWpmOfATest} wpm`
-                                                                        : "-"}
-                                                            </td>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.testMode
-                                                                        ? subTypeStats
-                                                                                .testMode
-                                                                                .totalNumberOfFinishedTests
-                                                                        : "-"}
-                                                            </td>
-                                                            <td
-                                                                  className={
-                                                                        styles[
-                                                                              "language-overall-stats-table-data"
-                                                                        ]
-                                                                  }
-                                                            >
-                                                                  {subTypeStats.testMode
-                                                                        ? subTypeStats
-                                                                                .testMode
-                                                                                .totalTimeSpentsInTests +
-                                                                          " s"
-                                                                        : "-"}
-                                                            </td>
-                                                      </tr>
-                                                );
-                                          })}
+                                                                              : "-"}
+                                                                  </td>
+                                                                  <td
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-data"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.testMode
+                                                                              ? `${subTypeStats.testMode.highestWpmOfATest} wpm`
+                                                                              : "-"}
+                                                                  </td>
+                                                                  <td
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-data"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.testMode
+                                                                              ? subTypeStats
+                                                                                      .testMode
+                                                                                      .totalNumberOfFinishedTests
+                                                                              : "-"}
+                                                                  </td>
+                                                                  <td
+                                                                        className={
+                                                                              styles[
+                                                                                    "language-overall-stats-table-data"
+                                                                              ]
+                                                                        }
+                                                                  >
+                                                                        {subTypeStats.testMode
+                                                                              ? subTypeStats
+                                                                                      .testMode
+                                                                                      .totalTimeSpentsInTests +
+                                                                                " s"
+                                                                              : "-"}
+                                                                  </td>
+                                                            </tr>
+                                                      );
+                                                })}
                                     </table>
                               </section>
 
@@ -497,8 +494,10 @@ export const StatsPage = () => {
                                                 styles["last-ten-tests-table"] +
                                                 " " +
                                                 styles[
-                                                      settingsData.payload
-                                                            .settings.theme
+                                                      "last-ten-tests-table-" +
+                                                            settingsData.payload
+                                                                  .settings
+                                                                  .theme
                                                 ]
                                           }
                                     >

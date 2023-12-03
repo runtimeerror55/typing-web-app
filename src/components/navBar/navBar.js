@@ -40,12 +40,6 @@ export const NavBar = ({ theme }) => {
                                           >
                                                 LOGIN
                                           </Link>
-                                          <Link
-                                                to="/practise"
-                                                className={styles["nav-link"]}
-                                          >
-                                                PRACTISE
-                                          </Link>
                                     </>
                               ) : null}
                               {decodedToken ? (

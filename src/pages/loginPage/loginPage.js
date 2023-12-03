@@ -51,6 +51,7 @@ export const LoginPage = () => {
                                           className={
                                                 styles["user-details-input"]
                                           }
+                                          autoComplete="off"
                                     ></input>
                               </ButtonWithActionAndLoader>
                               <Link

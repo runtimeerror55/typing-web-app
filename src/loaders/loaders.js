@@ -14,7 +14,7 @@ export const getUserStats = async ({ request }) => {
                   },
                   "?"
             );
-            console.log(queryString);
+
             const response = await fetch(
                   `${backEndUrl}userStats${queryString}`,
                   {
@@ -44,7 +44,7 @@ export const getUserStatsOne = async ({ request }) => {
                   },
                   "?"
             );
-            console.log(queryString);
+
             const response = await fetch(
                   `${backEndUrl}userStatsOne${queryString}`,
                   {
@@ -144,8 +144,10 @@ export const homePageLoader = async ({ request }) => {
 
 export const statsPageLoader = async ({ request }) => {
       return defer({
-            loaderData: getUserStats({ request }),
-            loaderOneData: await getUserStatsOne({ request }),
-            settingsData: await getUserSettings(),
+            loaderData: Promise.allSettled([
+                  getUserStats({ request }),
+                  getUserStatsOne({ request }),
+                  getUserSettings(),
+            ]),
       });
 };

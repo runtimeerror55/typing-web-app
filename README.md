@@ -11,28 +11,29 @@
 8.    couting frequency of word appeared in a test should be decided, currently it is saving once per test irrespective of its repetition
 9.    random word generating in practise mode to be decided
 10.   in practise mode random word is generated again when generating new words during the test when the words are running out
+11.   login page not taking inputs when clicked on the login link on home page but works when the login page is reloaded
 
       useEffect(() => {
       if (timerState.timerId !== undefined) {
       if (words.length - typingState.currentWordIndex + 1 === 15) {
       const newWords = wordsMixerOne(props);
 
-                              for (let j = 0; j < newWords.length; j++) {
-                                    words.push(newWords[j]);
-                              }
+                                for (let j = 0; j < newWords.length; j++) {
+                                      words.push(newWords[j]);
+                                }
 
-                              const newLetters = [];
+                                const newLetters = [];
 
-                              console.log(words);
-                              for (let i = 0; i < newWords.length; i++) {
-                                    newLetters.push(...newWords[i]);
-                              }
+                                console.log(words);
+                                for (let i = 0; i < newWords.length; i++) {
+                                      newLetters.push(...newWords[i]);
+                                }
 
-                              for (let i = 0; i < newLetters.length; i++) {
-                                    letters.push(newLetters[i]);
-                              }
-                        }
-                  }
+                                for (let i = 0; i < newLetters.length; i++) {
+                                      letters.push(newLetters[i]);
+                                }
+                          }
+                    }
 
       });
 
