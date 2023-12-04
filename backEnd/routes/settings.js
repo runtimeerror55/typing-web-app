@@ -25,15 +25,16 @@ router.route("/settings")
                                     fullName: "english (1-100)",
                                     optionIndex: 0,
                               },
-                              modeOne: "test",
-                              modetwo: "words",
+                              mode: "test",
+                              modeOne: "words",
                               modeThree: 500,
+                              modeTwo: "0",
                         };
                   }
 
                   response.status(200).json({
                         status: "success",
-                        payload: { settings: userSettings },
+                        payload: userSettings,
                   });
             } catch (error) {
                   response
@@ -94,9 +95,10 @@ router.route("/previousSessionSettings").get(
                                     fullName: "english (1-100)",
                                     optionIndex: 0,
                               },
-                              modeOne: "test",
-                              modetwo: "words",
+                              mode: "test",
+                              modeOne: "words",
                               modeThree: 500,
+                              modeTwo: "0",
                         };
                   }
                   const languageDocument = await wordsModel.findOne({

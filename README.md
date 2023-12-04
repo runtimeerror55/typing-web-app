@@ -6,6 +6,7 @@
 4.    in practise mode random word is generated again when generating new words during the test when the words are running out
 5.    login page not taking inputs when clicked on the login link on home page but works when the login page is reloaded
 6.    saving sound needs to coded
+7.    no random word changing when changing mode from test to practise or practise to test
 
 # ecommerce
 

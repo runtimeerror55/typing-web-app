@@ -22,13 +22,19 @@ const sounds = {
 };
 
 const defaultSettings = {
-      theme: "green-theme",
-      sound: "soundA",
       timer: 15,
+
+      theme: "blue-theme",
+      sound: "soundA",
       "language and range": {
             language: "english",
+            fullName: "english (1-100)",
             optionIndex: 0,
       },
+      mode: "test",
+      modeOne: "words",
+      modeThree: 500,
+      modeTwo: "0",
 };
 
 const allLetters = [
@@ -267,6 +273,9 @@ export const HomePage = () => {
       useEffect(() => {
             setTimer(settingsData.payload.timer);
             setTheme(settingsData.payload.theme);
+            setMode(settingsData.payload.mode);
+            setModeTwo(settingsData.payload.modeTwo);
+            setModeThree(settingsData.payload.modeThree);
       }, [settingsData]);
 
       if (wordsData.status === "error") {

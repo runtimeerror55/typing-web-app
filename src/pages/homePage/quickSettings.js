@@ -337,7 +337,7 @@ export const QuickSettings = ({
                               {/* mode one */}
                               {mode === "practise" ? (
                                     <select
-                                          name="mode-one"
+                                          name="modeOne"
                                           onChange={(event) => {
                                                 setModeOne(event.target.value);
                                                 if (
@@ -364,7 +364,7 @@ export const QuickSettings = ({
                               {/* mode two */}
                               {mode === "practise" && modeOne === "letters" ? (
                                     <select
-                                          name="mode-two"
+                                          name="modeTwo"
                                           onChange={(event) => {
                                                 setModeTwo(event.target.value);
                                           }}
@@ -383,7 +383,7 @@ export const QuickSettings = ({
                               {/* mode two */}
                               {mode === "practise" && modeOne === "words" ? (
                                     <select
-                                          name="mode-two"
+                                          name="modeTwo"
                                           onChange={(event) => {
                                                 setModeTwo(event.target.value);
                                           }}
@@ -402,6 +402,7 @@ export const QuickSettings = ({
                               {/* mode three */}
                               {mode === "practise" && modeOne === "words" ? (
                                     <select
+                                          name="modeThree"
                                           onChange={(event) => {
                                                 if (!decodedToken) {
                                                       toast.error(

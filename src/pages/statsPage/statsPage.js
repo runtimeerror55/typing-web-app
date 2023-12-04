@@ -82,13 +82,10 @@ export const StatsPage = () => {
                         className={
                               styles["page"] +
                               " " +
-                              styles[
-                                    "page-" +
-                                          settingsData.payload.settings.theme
-                              ]
+                              styles["page-" + settingsData.payload.theme]
                         }
                   >
-                        <NavBar></NavBar>
+                        <NavBar theme={settingsData.payload.theme}></NavBar>
                         <ToastContainer></ToastContainer>
 
                         <main className={styles["main"]}>
@@ -108,7 +105,6 @@ export const StatsPage = () => {
                                                 styles[
                                                       "language-overall-stats-table-" +
                                                             settingsData.payload
-                                                                  .settings
                                                                   .theme
                                                 ]
                                           }
@@ -363,7 +359,6 @@ export const StatsPage = () => {
                                                 styles[
                                                       "last-ten-tests-table-" +
                                                             settingsData.payload
-                                                                  .settings
                                                                   .theme
                                                 ]
                                           }
