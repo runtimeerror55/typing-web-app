@@ -325,7 +325,8 @@ router.route("/userStats")
                               if (value.endedAt !== undefined) {
                                     if (y[key] === undefined) {
                                           y[key] = {
-                                                totalNumberOfTestsAppeared: 1,
+                                                totalNumberOfTestsAppeared:
+                                                      value.count,
                                                 averageWpm: value.wpm,
                                                 averageAccuracy: value.accuracy,
                                                 lastTwentyTests: [
@@ -354,7 +355,8 @@ router.route("/userStats")
                                                       .totalNumberOfTestsAppeared +
                                                       1);
 
-                                          y[key].totalNumberOfTestsAppeared++;
+                                          y[key].totalNumberOfTestsAppeared +=
+                                                value.count;
 
                                           if (
                                                 y[key].lastTwentyTests
