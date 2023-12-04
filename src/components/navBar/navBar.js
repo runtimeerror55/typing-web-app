@@ -21,6 +21,12 @@ export const NavBar = ({ theme }) => {
                               <Link to={"/"} className={styles["nav-link"]}>
                                     HOME
                               </Link>
+                              <Link
+                                    to={"/guide"}
+                                    className={styles["nav-link"]}
+                              >
+                                    GUIDE
+                              </Link>
 
                               <Link
                                     className={

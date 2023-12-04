@@ -15,6 +15,7 @@ import { RegisterPage } from "./pages/registerPage/registerPage";
 import { LoginPage } from "./pages/loginPage/loginPage";
 import { AuthProvider } from "./context/auth";
 import { PractisePage } from "./pages/practisePage/practisePage";
+import { GuidePage } from "./pages/guidePage/guidePage";
 
 const router = createBrowserRouter([
       {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             path: "/statsPage",
             element: <AwaitStatsPage></AwaitStatsPage>,
             loader: statsPageLoader,
+      },
+      {
+            path: "/guide",
+            element: <GuidePage></GuidePage>,
       },
       {
             path: "/stats",

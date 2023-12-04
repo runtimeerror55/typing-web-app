@@ -24,7 +24,7 @@ const sounds = {
 const defaultSettings = {
       timer: 15,
 
-      theme: "blue-theme",
+      theme: "green-theme",
       sound: "soundA",
       "language and range": {
             language: "english",

@@ -60,97 +60,77 @@ export const LanguageStats = ({
                               {/* <tr>
                                     <th colspan="3">Test mode</th>
                               </tr> */}
-                              <tr>
-                                    <th>all tests averages</th>
-                                    {/* <th>all tests avg accuracy</th> */}
-                                    <th>last 20 tests averages</th>
-                                    {/* <th>last 20 tests avg accuracy</th> */}
-                                    <th>highest speed of a test</th>
-                                    <th>total tests</th>
-                              </tr>
-                              <tr>
-                                    {/* <th>speed</th> */}
-                                    <td>
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.averageWpm
-                                                      )}{" "}
-                                                      wpm /{" "}
-                                                      {Math.floor(
-                                                            testMode.averageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td>
-                                    {/* <td>
-                                          {" "}
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.averageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td> */}
-                                    <td>
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.lastTwentyTestsAverageWpm
-                                                      )}{" "}
-                                                      wpm /{" "}
-                                                      {Math.floor(
-                                                            testMode.lastTwentyTestsAverageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td>
-                                    {/* <td>
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.lastTwentyTestsAverageAccuracy
-                                                      )}{" "}
-                                                      %
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td> */}
-                                    <td>
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.highestWpmOfATest
-                                                      )}{" "}
-                                                      wpm
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td>
-                                    <td>
-                                          {testMode ? (
-                                                <>
-                                                      {Math.floor(
-                                                            testMode.totalNumberOfFinishedTests
-                                                      )}
-                                                </>
-                                          ) : (
-                                                "not attempted"
-                                          )}
-                                    </td>
-                              </tr>
+                              <tbody>
+                                    <tr>
+                                          <th>all tests averages</th>
+                                          {/* <th>all tests avg accuracy</th> */}
+                                          <th>last 20 tests averages</th>
+                                          {/* <th>last 20 tests avg accuracy</th> */}
+                                          <th>highest speed of a test</th>
+                                          <th>total tests</th>
+                                    </tr>
+                              </tbody>
+                              <tbody>
+                                    <tr>
+                                          <td>
+                                                {testMode ? (
+                                                      <>
+                                                            {Math.floor(
+                                                                  testMode.averageWpm
+                                                            )}{" "}
+                                                            wpm /{" "}
+                                                            {Math.floor(
+                                                                  testMode.averageAccuracy
+                                                            )}{" "}
+                                                            %
+                                                      </>
+                                                ) : (
+                                                      "not attempted"
+                                                )}
+                                          </td>
+
+                                          <td>
+                                                {testMode ? (
+                                                      <>
+                                                            {Math.floor(
+                                                                  testMode.lastTwentyTestsAverageWpm
+                                                            )}{" "}
+                                                            wpm /{" "}
+                                                            {Math.floor(
+                                                                  testMode.lastTwentyTestsAverageAccuracy
+                                                            )}{" "}
+                                                            %
+                                                      </>
+                                                ) : (
+                                                      "not attempted"
+                                                )}
+                                          </td>
+
+                                          <td>
+                                                {testMode ? (
+                                                      <>
+                                                            {Math.floor(
+                                                                  testMode.highestWpmOfATest
+                                                            )}{" "}
+                                                            wpm
+                                                      </>
+                                                ) : (
+                                                      "not attempted"
+                                                )}
+                                          </td>
+                                          <td>
+                                                {testMode ? (
+                                                      <>
+                                                            {Math.floor(
+                                                                  testMode.totalNumberOfFinishedTests
+                                                            )}
+                                                      </>
+                                                ) : (
+                                                      "not attempted"
+                                                )}
+                                          </td>
+                                    </tr>
+                              </tbody>
                         </table>
                   </div>
             </div>
