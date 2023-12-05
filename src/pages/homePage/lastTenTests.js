@@ -17,22 +17,29 @@ export const LastTenTests = ({ statsData, theme, setShowLastTenTests }) => {
                               styles[theme]
                         }
                   >
-                        <tr>
-                              <th>speed</th>
-                              <th>Accuracy</th>
-                              <th>Time</th>
-                              <th>Date(mm-dd-yyyy)</th>
-                        </tr>
+                        <tbody>
+                              <tr>
+                                    <th>s.no</th>
+                                    <th>speed</th>
+                                    <th>Accuracy</th>
+                                    <th>Time</th>
+                                    <th>Date(mm-dd-yyyy)</th>
+                              </tr>
+                        </tbody>
                         {statsData.payload?.testMode?.lastTwentyTests
                               .slice(-10)
-                              .map((test) => {
+                              .toReversed()
+                              .map((test, index) => {
                                     return (
-                                          <tr>
-                                                <td>{test.wpm} wpm</td>
-                                                <td>{test.accuracy} %</td>
-                                                <td>{test.timer} s</td>
-                                                <td>{test.date}</td>
-                                          </tr>
+                                          <tbody key={index}>
+                                                <tr>
+                                                      <td>{index + 1}</td>
+                                                      <td>{test.wpm} wpm</td>
+                                                      <td>{test.accuracy} %</td>
+                                                      <td>{test.timer} s</td>
+                                                      <td>{test.date}</td>
+                                                </tr>
+                                          </tbody>
                                     );
                               })}
                   </table>

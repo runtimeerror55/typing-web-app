@@ -89,25 +89,40 @@ export const QuickSettings = ({
 
             setShowParagraphLoader(false);
       };
-      const [speedDistribution, setSpeedDistribution] = useState({});
+      const [speedDistribution, setSpeedDistribution] = useState({
+            leastValue: 500,
+            speeds: {},
+      });
 
       useEffect(() => {
             const testMode = statsData.payload?.testMode;
-            const speedDistribution = {};
+            const speedDistribution = { leastValue: 1000, speeds: {} };
             if (testMode) {
                   Object.values(testMode.wordsStats).forEach((value) => {
                         for (let i = 30; i < 300; i += 10) {
                               if (value.averageWpm < i) {
-                                    if (speedDistribution[i] === undefined) {
-                                          speedDistribution[i] = 1;
+                                    if (i < speedDistribution.leastValue) {
+                                          speedDistribution.leastValue = i;
+                                    }
+                                    if (
+                                          speedDistribution.speeds[i] ===
+                                          undefined
+                                    ) {
+                                          speedDistribution.speeds[i] = 1;
                                     } else {
-                                          speedDistribution[i]++;
+                                          speedDistribution.speeds[i]++;
                                     }
                               }
                         }
                   });
+                  setSpeedDistribution(speedDistribution);
+                  if (
+                        !speedDistribution.speeds[modeThree] &&
+                        modeThree !== 1000
+                  ) {
+                        setModeThree(speedDistribution.leastValue);
+                  }
             }
-            setSpeedDistribution(speedDistribution);
       }, []);
 
       const settingsChangeHandler = async (event) => {
@@ -195,7 +210,7 @@ export const QuickSettings = ({
 
                                           //   setAllWords(allWords);
                                           setModeOne("words");
-                                          setModeTwo(0);
+
                                           setWordIndex(0);
                                     }}
                                     value={mode}
@@ -335,7 +350,7 @@ export const QuickSettings = ({
                               </select>
 
                               {/* mode one */}
-                              {mode === "practise" ? (
+                              {/* {mode === "practise" ? (
                                     <select
                                           name="modeOne"
                                           onChange={(event) => {
@@ -359,7 +374,7 @@ export const QuickSettings = ({
                                                 letters
                                           </option>
                                     </select>
-                              ) : null}
+                              ) : null} */}
 
                               {/* mode two */}
                               {mode === "practise" && modeOne === "letters" ? (
@@ -421,7 +436,7 @@ export const QuickSettings = ({
                                                       event.stopPropagation();
                                                 } else {
                                                       setModeThree(
-                                                            event.target.value
+                                                            +event.target.value
                                                       );
                                                       setWordIndex(0);
                                                 }
@@ -432,7 +447,7 @@ export const QuickSettings = ({
                                           statsData.payload?.testMode ? (
                                                 <>
                                                       {Object.entries(
-                                                            speedDistribution
+                                                            speedDistribution.speeds
                                                       ).map(([key, value]) => {
                                                             return (
                                                                   <option
@@ -447,7 +462,7 @@ export const QuickSettings = ({
                                                                   </option>
                                                             );
                                                       })}
-                                                      <option value={500}>
+                                                      <option value={1000}>
                                                             All
                                                       </option>
                                                 </>
@@ -502,7 +517,7 @@ export const QuickSettings = ({
                                                       <option value={30}>
                                                             &lt; {160} wpm ({0})
                                                       </option>
-                                                      <option value={500}>
+                                                      <option value={1000}>
                                                             All
                                                       </option>
                                                 </>

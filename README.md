@@ -1,12 +1,10 @@
 # to do
 
 1.    buy domain minitype.in
-2.    saving when settings change, in practise mode ,word index to be noted
-3.    couting frequency of word appeared in a test should be decided, currently it is saving once per test irrespective of its repetition
-4.    in practise mode random word is generated again when generating new words during the test when the words are running out
-5.    login page not taking inputs when clicked on the login link on home page but works when the login page is reloaded
-6.    saving sound needs to coded
-7.    no random word ,changing when changing mode from test to practise or practise to test
+2.    in practise mode random word is generated again when generating new words during the test when the words are running out
+3.    login page not taking inputs when clicked on the login link on home page but works when the login page is reloaded
+4.    mode three value to be defaulted to least speed if there are stats else 1000
+5.    speed categorisation should be done using last 20 speeds
 
 # ecommerce
 

@@ -33,7 +33,7 @@ const defaultSettings = {
       },
       mode: "test",
       modeOne: "words",
-      modeThree: 500,
+      modeThree: 1000,
       modeTwo: "0",
 };
 
@@ -187,7 +187,7 @@ export const HomePage = () => {
       const [mode, setMode] = useState("test");
       const [modeOne, setModeOne] = useState("words");
       const [modeTwo, setModeTwo] = useState("0");
-      const [modeThree, setModeThree] = useState(500);
+      const [modeThree, setModeThree] = useState(1000);
       const [typingSoundPath, setTypingSoundPath] = useState(
             settingsData.payload.sound
       );
@@ -276,6 +276,7 @@ export const HomePage = () => {
             setMode(settingsData.payload.mode);
             setModeTwo(settingsData.payload.modeTwo);
             setModeThree(settingsData.payload.modeThree);
+            setTypingSoundPath(settingsData.payload.sound);
       }, [settingsData]);
 
       if (wordsData.status === "error") {

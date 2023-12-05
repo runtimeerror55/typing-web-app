@@ -297,7 +297,10 @@ export const wordsMixerOne = (props) => {
                         }
                   }
             } else {
-                  if (props.modeTwo === "1") {
+                  if (
+                        props.modeTwo === "1" &&
+                        props.practiseModeAllWords.length > 0
+                  ) {
                         const word =
                               props.practiseModeAllWords[props.wordIndex];
                         const randomWord =
@@ -325,7 +328,7 @@ export const wordsMixerOne = (props) => {
                         }
                   } else {
                         for (let i = 0; i < 100; i++) {
-                              if (props.practiseModeAllWords) {
+                              if (props.practiseModeAllWords.length > 0) {
                                     words.push(
                                           props.practiseModeAllWords[
                                                 props.wordIndex

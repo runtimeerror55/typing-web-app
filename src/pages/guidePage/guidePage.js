@@ -137,6 +137,7 @@ export const GuidePage = () => {
                                     total tests of all tests and also for last
                                     20 tests
                               </li>
+                              <li>stats for every set of words</li>
                               <li>
                                     displaying stats on the typing page for
                                     quicker access
@@ -148,7 +149,7 @@ export const GuidePage = () => {
                                     20 speeds.
                               </li>
                               <li>
-                                    genrationg word positions in a way that all
+                                    genrating word positions in a way that all
                                     the words are typed almost evenly which
                                     inturn gives correct stats.
                               </li>

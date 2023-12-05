@@ -351,7 +351,7 @@ export const StatsPage = () => {
                               <section
                                     className={styles["last-ten-tests-section"]}
                               >
-                                    <h2>Last ten tests</h2>
+                                    <h2>Last 20 tests</h2>
                                     <table
                                           className={
                                                 styles["last-ten-tests-table"] +
@@ -363,25 +363,19 @@ export const StatsPage = () => {
                                                 ]
                                           }
                                     >
-                                          <tr>
-                                                <th>speed</th>
-                                                <th>Accuracy</th>
-                                                <th>Time</th>
-                                                <th>Date(mm-dd-yyyy)</th>
-                                          </tr>
+                                          <tbody>
+                                                <tr>
+                                                      <th>s.no</th>
+                                                      <th>speed</th>
+                                                      <th>Accuracy</th>
+                                                      <th>Time</th>
+                                                      <th>Date(mm-dd-yyyy)</th>
+                                                </tr>
+                                          </tbody>
                                           {(() => {
                                                 let newArray = [];
-                                                console.log(
-                                                      loaderTwoData.payload.sort(
-                                                            (a, b) => {
-                                                                  return (
-                                                                        a.optionIndex -
-                                                                        b.optionIndex
-                                                                  );
-                                                            }
-                                                      )
-                                                );
-                                                for (let i = 19; i >= 0; i--) {
+
+                                                for (let i = 0; i < 20; i++) {
                                                       console.log(i);
                                                       if (
                                                             loaderTwoData.payload.sort(
@@ -397,57 +391,69 @@ export const StatsPage = () => {
                                                                   i
                                                             ]
                                                       ) {
-                                                            const test =
-                                                                  loaderTwoData
-                                                                        .payload[
+                                                            const reversedArray =
+                                                                  loaderTwoData.payload[
                                                                         lastTenTestsIndex
-                                                                  ].testMode
-                                                                        .lastTwentyTests[
+                                                                  ].testMode.lastTwentyTests.toReversed();
+                                                            const test =
+                                                                  reversedArray[
                                                                         i
                                                                   ];
                                                             newArray.push(
-                                                                  <tr>
-                                                                        <td>
-                                                                              {
-                                                                                    test.wpm
-                                                                              }{" "}
-                                                                              wpm
-                                                                        </td>
-                                                                        <td>
-                                                                              {
-                                                                                    test.accuracy
-                                                                              }{" "}
-                                                                              %
-                                                                        </td>
-                                                                        <td>
-                                                                              {
-                                                                                    test.timer
-                                                                              }{" "}
-                                                                              s
-                                                                        </td>
-                                                                        <td>
-                                                                              {
-                                                                                    test.date
-                                                                              }
-                                                                        </td>
-                                                                  </tr>
+                                                                  <tbody>
+                                                                        <tr>
+                                                                              <td>
+                                                                                    {i +
+                                                                                          1}
+                                                                              </td>
+                                                                              <td>
+                                                                                    {
+                                                                                          test.wpm
+                                                                                    }{" "}
+                                                                                    wpm
+                                                                              </td>
+                                                                              <td>
+                                                                                    {
+                                                                                          test.accuracy
+                                                                                    }{" "}
+                                                                                    %
+                                                                              </td>
+                                                                              <td>
+                                                                                    {
+                                                                                          test.timer
+                                                                                    }{" "}
+                                                                                    s
+                                                                              </td>
+                                                                              <td>
+                                                                                    {
+                                                                                          test.date
+                                                                                    }
+                                                                              </td>
+                                                                        </tr>
+                                                                  </tbody>
                                                             );
                                                       } else {
                                                             newArray.push(
-                                                                  <tr>
-                                                                        <td>
-                                                                              -
-                                                                        </td>
-                                                                        <td>
-                                                                              -
-                                                                        </td>
-                                                                        <td>
-                                                                              -
-                                                                        </td>
-                                                                        <td>
-                                                                              -
-                                                                        </td>
-                                                                  </tr>
+                                                                  <tbody>
+                                                                        <tr>
+                                                                              <td>
+                                                                                    {i +
+                                                                                          1}
+                                                                              </td>
+                                                                              <td>
+                                                                                    -
+                                                                              </td>
+                                                                              <td>
+                                                                                    -
+                                                                              </td>
+                                                                              <td>
+                                                                                    -
+                                                                              </td>
+                                                                              <td>
+                                                                                    -
+                                                                              </td>
+                                                                        </tr>
+                                                                  </tbody>
                                                             );
                                                       }
                                                 }
