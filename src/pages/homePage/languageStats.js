@@ -10,8 +10,8 @@ export const LanguageStats = ({
 }) => {
       const testMode = statsData?.payload?.testMode;
 
-      const lastTwentyTestsAverages = (testMode) => {
-            const [wpmSum, accuracySum] = testMode.lastTwentyTests.reduce(
+      const lastTwentyTestsAverages = (lastTwentyTests) => {
+            const [wpmSum, accuracySum] = lastTwentyTests.reduce(
                   (total, current) => {
                         return [
                               total[0] + current.wpm,
@@ -20,14 +20,21 @@ export const LanguageStats = ({
                   },
                   [0, 0]
             );
-            testMode.lastTwentyTestsAverageWpm =
+            const lastTwentyTestsAverageWpm =
                   wpmSum / testMode.lastTwentyTests.length;
-            testMode.lastTwentyTestsAverageAccuracy =
+            const lastTwentyTestsAverageAccuracy =
                   accuracySum / testMode.lastTwentyTests.length;
+
+            return [lastTwentyTestsAverageWpm, lastTwentyTestsAverageAccuracy];
       };
 
       if (testMode) {
-            lastTwentyTestsAverages(statsData.payload.testMode);
+            [
+                  testMode.lastTwentyTestsAverageWpm,
+                  testMode.lastTwentyTestsAverageAccuracy,
+            ] = lastTwentyTestsAverages(
+                  statsData.payload.testMode.lastTwentyTests
+            );
       }
 
       return (
@@ -75,11 +82,11 @@ export const LanguageStats = ({
                                           <td>
                                                 {testMode ? (
                                                       <>
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.averageWpm
                                                             )}{" "}
                                                             wpm /{" "}
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.averageAccuracy
                                                             )}{" "}
                                                             %
@@ -92,11 +99,11 @@ export const LanguageStats = ({
                                           <td>
                                                 {testMode ? (
                                                       <>
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.lastTwentyTestsAverageWpm
                                                             )}{" "}
                                                             wpm /{" "}
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.lastTwentyTestsAverageAccuracy
                                                             )}{" "}
                                                             %
@@ -109,7 +116,7 @@ export const LanguageStats = ({
                                           <td>
                                                 {testMode ? (
                                                       <>
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.highestWpmOfATest
                                                             )}{" "}
                                                             wpm
@@ -121,7 +128,7 @@ export const LanguageStats = ({
                                           <td>
                                                 {testMode ? (
                                                       <>
-                                                            {Math.floor(
+                                                            {Math.round(
                                                                   testMode.totalNumberOfFinishedTests
                                                             )}
                                                       </>

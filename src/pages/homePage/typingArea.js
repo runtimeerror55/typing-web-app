@@ -315,7 +315,7 @@ export const TypingArea = forwardRef((props, ref) => {
             focusableElements.elements =
                   document.querySelectorAll("[tabindex='0']");
 
-            window.addEventListener("keydown", (event) => {
+            const callBack = (event) => {
                   event.preventDefault();
                   event.stopPropagation();
                   if (event.key === "Tab") {
@@ -334,7 +334,12 @@ export const TypingArea = forwardRef((props, ref) => {
                   } else if (event.key === "Enter") {
                         focusableElements.index = -1;
                   }
-            });
+            };
+            window.addEventListener("keydown", callBack);
+
+            return () => {
+                  window.removeEventListener("keydown", callBack);
+            };
       }, []);
 
       return (

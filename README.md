@@ -2,9 +2,9 @@
 
 1.    buy domain minitype.in
 2.    in practise mode random word is generated again when generating new words during the test when the words are running out
-3.    login page not taking inputs when clicked on the login link on home page but works when the login page is reloaded
-4.    mode three value to be defaulted to least speed if there are stats else 1000
-5.    speed categorisation should be done using last 20 speeds
+3.    mode three value to be defaulted to least speed if there are stats else 1000
+4.    speed categorisation should be done using last 20 speeds
+5.    need to know what auto complete is in input tags
 
 # ecommerce
 

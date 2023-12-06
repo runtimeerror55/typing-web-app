@@ -160,12 +160,8 @@ export const QuickSettings = ({
                                     <option value="" disabled>
                                           TIMER
                                     </option>
-                                    <option value="5" selected>
-                                          5 seconds
-                                    </option>
-                                    <option value="15" selected>
-                                          15 seconds
-                                    </option>
+                                    <option value="5">5 seconds</option>
+                                    <option value="15">15 seconds</option>
                                     <option value="30">30 seconds</option>
                                     <option value="60">60 seconds</option>
                               </select>
