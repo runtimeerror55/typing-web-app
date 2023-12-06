@@ -6,6 +6,7 @@ import { toastOptions } from "../../utilities/utilities";
 import { getWords, getUserStats } from "../../loaders/loaders";
 import { updateSettings } from "../../actions/actions";
 import { authContext } from "../../context/auth";
+import { lastTwentyTestsAverages } from "../../utilities/utilities";
 
 export const QuickSettings = ({
       setTimer,
@@ -99,8 +100,12 @@ export const QuickSettings = ({
             const speedDistribution = { leastValue: 1000, speeds: {} };
             if (testMode) {
                   Object.values(testMode.wordsStats).forEach((value) => {
+                        [
+                              value.lastTwentyTestsAverageWpm,
+                              value.lastTwentyTestsAverageAccuracy,
+                        ] = lastTwentyTestsAverages(value.lastTwentyTests);
                         for (let i = 30; i < 300; i += 10) {
-                              if (value.averageWpm < i) {
+                              if (value.lastTwentyTestsAverageWpm < i) {
                                     if (i < speedDistribution.leastValue) {
                                           speedDistribution.leastValue = i;
                                     }
