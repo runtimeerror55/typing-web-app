@@ -211,9 +211,19 @@ export const StatsPage = () => {
                                                       if (
                                                             subTypeStats.testMode
                                                       ) {
-                                                            lastTwentyTestsAverages(
+                                                            [
                                                                   subTypeStats
-                                                            );
+                                                                        .testMode
+                                                                        .lastTwentyTestsAverageWpm,
+                                                                  subTypeStats
+                                                                        .testMode
+                                                                        .lastTwentyTestsAverageAccuracy,
+                                                            ] =
+                                                                  lastTwentyTestsAverages(
+                                                                        subTypeStats
+                                                                              .testMode
+                                                                              .lastTwentyTests
+                                                                  );
                                                             highestAverageSpeedOfAWord(
                                                                   subTypeStats
                                                             );

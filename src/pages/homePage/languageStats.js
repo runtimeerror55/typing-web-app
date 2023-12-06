@@ -1,4 +1,5 @@
 import styles from "./languageStats.module.css";
+import { lastTwentyTestsAverages } from "../../utilities/utilities";
 export const LanguageStats = ({
       languageAndRange,
       theme,
@@ -9,24 +10,6 @@ export const LanguageStats = ({
       setShowLastTenTests,
 }) => {
       const testMode = statsData?.payload?.testMode;
-
-      const lastTwentyTestsAverages = (lastTwentyTests) => {
-            const [wpmSum, accuracySum] = lastTwentyTests.reduce(
-                  (total, current) => {
-                        return [
-                              total[0] + current.wpm,
-                              total[1] + current.accuracy,
-                        ];
-                  },
-                  [0, 0]
-            );
-            const lastTwentyTestsAverageWpm =
-                  wpmSum / testMode.lastTwentyTests.length;
-            const lastTwentyTestsAverageAccuracy =
-                  accuracySum / testMode.lastTwentyTests.length;
-
-            return [lastTwentyTestsAverageWpm, lastTwentyTestsAverageAccuracy];
-      };
 
       if (testMode) {
             [
