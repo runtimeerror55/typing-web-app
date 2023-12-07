@@ -268,6 +268,27 @@ router.route("/userStats")
                   if (testStats.mode === "test") {
                         let x = userStats.testMode;
 
+                        const remainder = testStats.wpm % 10;
+                        const quotient = testStats.wpm - remainder;
+                        let startingPoint;
+                        let endingPoint;
+                        let range;
+                        if (remainder === 0) {
+                              startingPoint = quotient - 10 + 1;
+                              endingPoint = quotient;
+                              range = `${startingPoint}-${endingPoint}`;
+                        } else {
+                              startingPoint = quotient + 1;
+                              endingPoint = quotient + 10;
+                              range = `${startingPoint}-${endingPoint}`;
+                        }
+
+                        if (!x.speedDistribution[startingPoint]) {
+                              x.speedDistribution[startingPoint] = 1;
+                        } else {
+                              x.speedDistribution[startingPoint]++;
+                        }
+
                         if (!x.firstTest) {
                               x.firstTest = testStats.date;
                         }
@@ -377,6 +398,7 @@ router.route("/userStats")
                               }
                         }
                         userStats.markModified("testMode.wordsStats");
+                        userStats.markModified("testMode.speedDistribution");
                         await userStats.save();
                   } else if (testStats.mode === "practise") {
                         let y = userStats.practiseMode.wordsStats;

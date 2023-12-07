@@ -51,12 +51,12 @@ export const updateCharactersStats = (action, testStats, currentCharacter) => {
 
 export const updateWpmAndAccuracy = (timerState, testStats) => {
       testStats.wpm =
-            Math.floor(
+            Math.round(
                   (testStats.totalNumberOfRightHits / 5) *
                         (60 / timerState.elapsedTime)
             ) || 0;
       testStats.accuracy =
-            Math.floor(
+            Math.round(
                   (testStats.totalNumberOfRightHits /
                         (testStats.totalNumberOfRightHits +
                               testStats.totalNumberOfWrongHits)) *
@@ -89,10 +89,16 @@ export const createtypingParagraphJsx = (
                   let className = "";
                   index++;
                   if (i < typingState.currentWordIndex) {
-                        className = styles["active-right-" + theme];
+                        className =
+                              styles["active-right-" + theme] +
+                              " " +
+                              styles["scale-out-animation"];
                   } else if (i === typingState.currentWordIndex) {
                         if (j < typingState.currentLetterIndex) {
-                              className = styles["active-right-" + theme];
+                              className =
+                                    styles["active-right-" + theme] +
+                                    " " +
+                                    styles["scale-out-animation"];
                         } else if (j === typingState.currentLetterIndex) {
                               if (
                                     typingState.currentLetterClass ===

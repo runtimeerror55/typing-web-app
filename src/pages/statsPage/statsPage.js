@@ -3,7 +3,6 @@ import { useState } from "react";
 import { NavBar } from "../../components/navBar/navBar";
 
 import styles from "./statsPage.module.css";
-
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import {
@@ -15,6 +14,7 @@ import {
 
 import { ColorRing } from "react-loader-spinner";
 import { colorRingOptions } from "../../utilities/utilities";
+import { WordsBarGraph } from "./wordsBarGraph";
 
 export const StatsPage = () => {
       const [loaderTwoData, setLoaderTwoData] = useState(
@@ -470,6 +470,18 @@ export const StatsPage = () => {
                                                 return newArray;
                                           })()}
                                     </table>
+                              </section>
+
+                              <section
+                                    className={
+                                          styles["characters-bar-graph-section"]
+                                    }
+                              >
+                                    <WordsBarGraph
+                                          loaderData={loaderTwoData}
+                                          lastTenTestsIndex={lastTenTestsIndex}
+                                          theme={settingsData.payload.theme}
+                                    ></WordsBarGraph>
                               </section>
                         </main>
                   </div>

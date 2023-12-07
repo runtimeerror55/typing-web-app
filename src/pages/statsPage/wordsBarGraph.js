@@ -23,17 +23,36 @@ const options = {
       //   indexAxis: "y",
       responsive: true,
       maintainAspectRatio: false,
+
+      //   scales: {
+      //         y: {
+      //               ticks: { color: "white", beginAtZero: true },
+      //         },
+      //         x: {
+      //               ticks: { color: "white", beginAtZero: true },
+      //         },
+      //   },
+      barPercentage: 0.4,
       scales: {
             y: {
+                  zeroLineColor: "#ffcc33",
                   ticks: { color: "white", beginAtZero: true },
+                  grid: {},
+                  border: {
+                        color: "black",
+                  },
             },
             x: {
                   ticks: { color: "white", beginAtZero: true },
+                  grid: {},
+                  border: {
+                        color: "black",
+                  },
             },
       },
 };
 
-export const WordsBarGraph = ({ loaderData, theme }) => {
+export const WordsBarGraph = ({ loaderData, theme, lastTenTestsIndex }) => {
       const themes = {
             "green-theme": "#5fdc72",
             "blue-theme": "#5facdc",
@@ -51,21 +70,24 @@ export const WordsBarGraph = ({ loaderData, theme }) => {
                         ],
 
                         backgroundColor: themes[theme],
+                        barWidth: "10px",
                   },
             ],
       };
 
-      let array = Object.entries(loaderData.payload.testMode.wordsStats);
+      let array = Object.entries(
+            loaderData.payload[lastTenTestsIndex]?.testMode?.speedDistribution
+      );
       console.log(array);
       array.sort((a, b) => {
-            return Math.floor(a[1].averageWpm) - Math.floor(b[1].averageWpm);
+            return +a[0] - +b[0];
       });
 
       data.labels = array.map(([key, value]) => {
-            return key;
+            return key + "-" + (+key + 9);
       });
       data.datasets[0].data = array.map(([key, value]) => {
-            return Math.floor(value.averageWpm);
+            return value;
       });
 
       console.log(data);
