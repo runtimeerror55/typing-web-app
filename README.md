@@ -3,8 +3,40 @@
 1.    buy domain minitype.in
 2.    in practise mode random word is generated again when generating new words during the test when the words are running out
 3.    mode three value to be defaulted to least speed if there are stats else 1000
-4.    speed categorisation should be done using last 20 speeds
-5.    need to know what auto complete is in input tags
+4.    need to know what auto complete is in input tags
+5.    edge case when the test wpm is zero
+6.    first character which is " " is getting registered in right hits count which makes minimum speed to be 1wpm rather it should be 0
+
+// two animations
+
+7. .scale-out-animation {
+   animation: type 0.2s linear;
+   transform: scale(1);
+   }
+
+@keyframes type {
+from {
+transform: scale(1);
+}
+to {
+transform: scale(1.3);
+}
+}
+
+8. .scale-out-animation {
+   animation: type 0.2s linear;
+   transform: scale(0);
+   }
+
+@keyframes type {
+from {
+transform: scale(1);
+}
+to {
+transform: scale(0);
+}
+
+}
 
 # ecommerce
 
