@@ -273,7 +273,9 @@ router.route("/userStats")
                         let startingPoint;
                         let endingPoint;
                         let range;
-                        if (remainder === 0) {
+                        if (testStats.wpm <= 10) {
+                              startingPoint = 0;
+                        } else if (remainder === 0) {
                               startingPoint = quotient - 10 + 1;
                               endingPoint = quotient;
                               range = `${startingPoint}-${endingPoint}`;

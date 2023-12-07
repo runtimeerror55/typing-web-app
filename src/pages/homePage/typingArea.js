@@ -124,13 +124,14 @@ export const TypingArea = forwardRef((props, ref) => {
                                     testStats,
                               },
                         });
-
-                        updateCharactersStats(
-                              { type: "right hit" },
-                              testStats,
-                              letters[typingState.paragraphNextIndex],
-                              timerState
-                        );
+                        if (typingState.currentWordIndex > 0) {
+                              updateCharactersStats(
+                                    { type: "right hit" },
+                                    testStats,
+                                    letters[typingState.paragraphNextIndex],
+                                    timerState
+                              );
+                        }
                   } else {
                         dispatch({
                               type: "wrong hit",
@@ -139,12 +140,14 @@ export const TypingArea = forwardRef((props, ref) => {
                                     testStats,
                               },
                         });
-                        updateCharactersStats(
-                              { type: "wrong hit" },
-                              testStats,
-                              letters[typingState.paragraphNextIndex],
-                              timerState
-                        );
+                        if (typingState.currentWordIndex > 0) {
+                              updateCharactersStats(
+                                    { type: "wrong hit" },
+                                    testStats,
+                                    letters[typingState.paragraphNextIndex],
+                                    timerState
+                              );
+                        }
                   }
 
                   if (timerState.timerId === undefined) {

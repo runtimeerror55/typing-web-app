@@ -41,6 +41,11 @@ const options = {
                   border: {
                         color: "black",
                   },
+                  title: {
+                        text: "count",
+                        display: "true",
+                        color: "white",
+                  },
             },
             x: {
                   ticks: { color: "white", beginAtZero: true },
@@ -48,6 +53,22 @@ const options = {
                   border: {
                         color: "black",
                   },
+                  title: {
+                        text: "ranges",
+                        display: "true",
+                        color: "white",
+                  },
+            },
+      },
+      plugins: {
+            legend: {
+                  labels: {
+                        color: "white",
+                        font: {
+                              size: "16",
+                        },
+                  },
+                  position: "top",
             },
       },
 };
@@ -63,7 +84,7 @@ export const WordsBarGraph = ({ loaderData, theme, lastTenTestsIndex }) => {
             labels: ["a", "a", "a", "a", "a", "a", "a"],
             datasets: [
                   {
-                        label: "accuracy",
+                        label: "count",
                         data: [
                               60, 70, 80, 90, 60, 70, 80, 90, 55, 45, 72, 53,
                               98, 12, 19,
