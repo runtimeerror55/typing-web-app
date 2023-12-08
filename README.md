@@ -4,7 +4,8 @@
 2.    in practise mode random word is generated again when generating new words during the test when the words are running out
 3.    mode three value to be defaulted to least speed if there are stats else 1000
 4.    guide page theme
-5.    .scale-out-animation {
+5.    in quick settings wordsfiltercurrent value is deleted need to be checked if anything goes wrong
+6.    .scale-out-animation {
       animation: type 0.2s linear;
       transform: scale(1);
       }

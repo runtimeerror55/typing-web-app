@@ -77,7 +77,7 @@ export const QuickSettings = ({
             setShowParagraphLoader(false);
       };
       const [speedDistribution, setSpeedDistribution] = useState({
-            leastValue: 500,
+            leastValue: 1000,
             speeds: {},
       });
 
@@ -113,6 +113,8 @@ export const QuickSettings = ({
                   ) {
                         setModeThree(speedDistribution.leastValue);
                   }
+            } else {
+                  setModeThree(1000);
             }
       }, []);
 
