@@ -33,6 +33,8 @@ const options = {
       //         },
       //   },
       barPercentage: 0.4,
+
+      maxBarThickness: 30,
       scales: {
             y: {
                   zeroLineColor: "#ffcc33",
