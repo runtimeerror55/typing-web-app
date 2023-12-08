@@ -35,6 +35,7 @@ export const StatsPage = () => {
                   if (data.status === "success") {
                         console.log(data.payload);
                         setLoaderTwoData(data);
+                        setLastTenTestsIndex(0);
                         toast.success("fetched successfully", toastOptions);
                   } else {
                         toast.error(data.message, toastOptions);
@@ -336,6 +337,7 @@ export const StatsPage = () => {
                                     <select
                                           className={styles["language-filter"]}
                                           onChange={languageFilterHandler}
+                                          value={lastTenTestsIndex}
                                     >
                                           <option disabled>
                                                 languages and ranges

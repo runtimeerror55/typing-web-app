@@ -81,24 +81,21 @@ export const WordsBarGraph = ({ loaderData, theme, lastTenTestsIndex }) => {
       };
 
       const data = {
-            labels: ["a", "a", "a", "a", "a", "a", "a"],
+            labels: [],
             datasets: [
                   {
                         label: "count",
-                        data: [
-                              60, 70, 80, 90, 60, 70, 80, 90, 55, 45, 72, 53,
-                              98, 12, 19,
-                        ],
+                        data: [],
 
                         backgroundColor: themes[theme],
                         barWidth: "10px",
                   },
             ],
       };
+      const speedDistribution =
+            loaderData.payload[lastTenTestsIndex]?.testMode?.speedDistribution;
 
-      let array = Object.entries(
-            loaderData.payload[lastTenTestsIndex]?.testMode?.speedDistribution
-      );
+      let array = speedDistribution ? Object.entries(speedDistribution) : [];
       console.log(array);
       array.sort((a, b) => {
             return +a[0] - +b[0];

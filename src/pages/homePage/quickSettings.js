@@ -1,6 +1,6 @@
 import { Form } from "react-router-dom";
 import styles from "./quickSettings.module.css";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { toastOptions } from "../../utilities/utilities";
 import { getWords, getUserStats } from "../../loaders/loaders";
@@ -11,7 +11,6 @@ import { lastTwentyTestsAverages } from "../../utilities/utilities";
 export const QuickSettings = ({
       setTimer,
       setTypingSoundPath,
-      settings,
       setTheme,
       theme,
       setMode,
@@ -20,8 +19,6 @@ export const QuickSettings = ({
       modeOne,
       setModeTwo,
       setAllWords,
-      allLetters,
-      allWords,
       setWordIndex,
       statsData,
       setModeThree,
@@ -37,26 +34,11 @@ export const QuickSettings = ({
       testStarted,
 }) => {
       const { decodedToken } = useContext(authContext);
-      const wordsFilterRef = useRef();
-      const [wordsFilterRefPreviousValue, setWordsFilterRefPreviousValue] =
-            useState(
-                  JSON.stringify({
-                        language: "english",
-                        optionIndex: 0,
-                  })
-            );
-      const [wordsFilterRefCurrentValue, setWordsFilterRefCurrentValue] =
-            useState(
-                  JSON.stringify({
-                        language: "english",
-                        optionIndex: 0,
-                  })
-            );
 
       const wordsChangeHandler = async (event) => {
+            event.stopPropagation();
             const value = JSON.parse(event.target.value);
-
-            setWordsFilterRefCurrentValue(event.target.value);
+            console.log(value);
 
             const responseOne = getWords({
                   request: {
@@ -79,13 +61,17 @@ export const QuickSettings = ({
 
                   setAllWords(responses[0].value.payload);
                   setStatsData(responses[1].value);
-                  setModeThree(500);
+                  setModeThree(1000);
                   setWordIndex(0);
-                  setWordsFilterRefPreviousValue(value);
+
+                  const data = await updateSettings({
+                        [event.target.name]: JSON.stringify(value),
+                  });
+                  if (data.status === "error" && decodedToken) {
+                        toast.error(data.message, toastOptions);
+                  }
             } else {
                   toast.error("something went wrong", toastOptions);
-
-                  wordsFilterRef.current.value = wordsFilterRefPreviousValue;
             }
 
             setShowParagraphLoader(false);
@@ -131,6 +117,7 @@ export const QuickSettings = ({
       }, []);
 
       const settingsChangeHandler = async (event) => {
+            console.log("hello");
             const data = await updateSettings({
                   [event.target.name]: event.target.value,
             });
@@ -226,18 +213,6 @@ export const QuickSettings = ({
                               {/* language and range */}
                               <select
                                     name="language and range"
-                                    ref={wordsFilterRef}
-                                    //   onChange={(event) => {
-                                    //         //     event.currentTarget.value = JSON.stringify({
-                                    //         //         language: "english",
-                                    //         //         startIndex: 0,
-                                    //         //         endIndex: 99,
-                                    //         //   })
-                                    //         const value = JSON.parse(
-                                    //               event.target.value
-                                    //         );
-                                    //         // setLanguageAndRange(value);
-                                    //   }}
                                     onChange={wordsChangeHandler}
                                     value={JSON.stringify(languageAndRange)}
                               >
@@ -378,7 +353,7 @@ export const QuickSettings = ({
                               ) : null} */}
 
                               {/* mode two */}
-                              {mode === "practise" && modeOne === "letters" ? (
+                              {/*mode === "practise" && modeOne === "letters" ? (
                                     <select
                                           name="modeTwo"
                                           onChange={(event) => {
@@ -394,7 +369,7 @@ export const QuickSettings = ({
                                                 no random letter
                                           </option>
                                     </select>
-                              ) : null}
+                              ) : null */}
 
                               {/* mode two */}
                               {mode === "practise" && modeOne === "words" ? (

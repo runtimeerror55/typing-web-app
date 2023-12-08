@@ -1,4 +1,4 @@
-import { redirect } from "react-router-dom";
+import { json, redirect } from "react-router-dom";
 import { getToken } from "../utilities/utilities.js";
 
 export const postTestStats = async (testStats) => {
@@ -21,10 +21,10 @@ export const postTestStats = async (testStats) => {
       }
 };
 export const updateSettings = async (body) => {
+      console.log(body);
+      let y = JSON.stringify(body);
+      console.log(y);
       try {
-            // const formData = await request.formData();
-            // const body = Object.fromEntries(formData);
-            console.log(typeof body);
             const response = await fetch("http://localhost:8080/settings", {
                   headers: {
                         "Content-Type": "application/json",

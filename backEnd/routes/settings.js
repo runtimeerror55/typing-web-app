@@ -49,6 +49,7 @@ router.route("/settings")
                               request.body["language and range"]
                         );
                   }
+                  console.log(request.body);
                   let userSettings = await settingsModel.findOne({
                         user: request.user._id,
                   });
